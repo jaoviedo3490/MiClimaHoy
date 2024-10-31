@@ -1,0 +1,7 @@
+body{
+  background-image: url('../src/clima.jpg');
+  background-size: cover;
+}
+button{
+  margin:0% auto;
+}
