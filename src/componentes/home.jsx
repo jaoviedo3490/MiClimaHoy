@@ -17,7 +17,7 @@ const Home = () =>{
             .then(response=>response.json())
             .then(data=>{
                 const ciudad = data.address.county;
-                fetch(`http://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${ciudad}&aqi=yes`)
+                fetch(`http://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=Brisbane&aqi=yes`)
                 .then(response=>response.json())
                 .then(data=>{
                     setClimateAlert(data.current);
