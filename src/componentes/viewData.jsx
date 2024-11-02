@@ -1,5 +1,6 @@
 import Target from "./targeta";
 import Alert from "./alert";
+
 const ViewData = () => {
     return (
         <div className="container">
@@ -13,7 +14,7 @@ const ViewData = () => {
             </div>
             <div className="row">
                 <div className="col">
-                    <Target/>
+                    <Target />
                 </div>
             </div>
         </div>
