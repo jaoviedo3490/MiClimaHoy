@@ -76,5 +76,3 @@ const Alert = (props) => {
     
 }
 export default Alert;
-
-
