@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ViewData from "./viewData";
 import { DataContext } from "../Context/MetricsContext";
 import UpdateDate from "./updateDate";
@@ -8,7 +8,9 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     //const [json , setJson] = useState('');
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
+    const [pushButton , setPushButton] = useState(false)
 
+    
     const localize = () => {
         setLoading(true);
         navigator.geolocation.getCurrentPosition(
@@ -26,25 +28,27 @@ const Home = () => {
                                 console.log(data);
                                 try {
                                     setLoading(false);
-                                    setClimateAlert(data.current);
-                                    //alert(JSON.stringify(data));
+                                    setClimateAlert(data);
+                                    alert(JSON.stringify(data));
                                     setShowData(true);
+                                    setPushButton(false)
                                 } catch (error) {
                                     alert(error);
                                 }
                             })
                     });
             }, (error) => {
-                //alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}:`);
+                alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}`);
             }
         );
     }
+    
     return (
         <div>
             {loading && (
                 <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
                     <div className="text-center text-light">
-                        <div className="spinner-border text-light" role="status"></div>
+                        <div className="spinner-grow text-light" role="status"></div>
                         <div className="mt-2"><span className="visually">Cargando...</span></div>
                     </div>
                 </div>

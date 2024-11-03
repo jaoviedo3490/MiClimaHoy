@@ -14,9 +14,13 @@ const ViewData = () => {
             </div>
             <div className="row">
                 <div className="col">
-                    <Target />
+                    <Target tipo="pronostico" />
+                </div>
+                <div className="col">
+                    <Target tipo="calidad-aire" />
                 </div>
             </div>
+
         </div>
     );
 }
