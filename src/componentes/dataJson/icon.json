@@ -3,23 +3,25 @@
     "day": {
       "day-sunny": "/day-sunny.png",
       "day-Light-rain-shower": "/day-light-rain.png",
-      "day-Freezing-fog": "/day-Freezing-fog.png",
+      "day-Freezing-fog": "/Freezing-fog.png",
       "day-Overcast": "/day-Overcast.png",
       "day-Heavy-snow": "/day-Heavy-snow.png",
       "day-Partly-cloudy": "/day-Partly-Cloudy.png",
       "day-Patchy-rain-nearby": "/day-Patchy-rain-nearby.png",
       "day-Patchy-light-drizzle": "/day-Patchy-light-drizzle.png",
-      "day-Patchy-light-rain-in-area-with-thunder": "/day-Patchy-light-rain-in-area-with-thunder.png"
+      "day-Patchy-light-rain-in-area-with-thunder": "/day-Patchy-light-rain-in-area-with-thunder.png",
+      "day-Light-snow":"/light-snow.png"
     },
     "nigth": {
       "nigth-Clear": "/nigth-clear.png",
       "nigth-Patchy-rain-nearby": "/nigth-Patchy-rain-nearby.png",
-      "nigth-Light-rain-shower": "Light-rain-shower.png",
-      "nigth-Partly-cloudy": "/nigth-Partly-Cloudy.png",
+      "nigth-Light-rain-shower": "/Light-rain-shower.png",
+      "nigth-Partly-Cloudy": "/nigth-Partly-Cloudy.png",
       "nigth-Overcast": "/nigth-Overcast.png",
       "nigth-Mist": "/nigth-Mist.png",
-      "nigth-Freezing-fog": "/day-Freezing-fog.png",
-      "nigth-Patchy-light-drizzle": "/nigth-Patchy-light-drizzle.png"
+      "nigth-Freezing-fog": "/Freezing-fog.png",
+      "nigth-Patchy-light-drizzle": "/nigth-Patchy-light-drizzle.png",
+      "nigth-Light-snow":"/light-snow.png"
     }
   }
 }

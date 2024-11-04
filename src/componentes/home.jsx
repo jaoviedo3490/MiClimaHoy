@@ -29,7 +29,7 @@ const Home = () => {
                                 try {
                                     setLoading(false);
                                     setClimateAlert(data);
-                                    alert(JSON.stringify(data));
+                                 
                                     setShowData(true);
                                     setPushButton(false)
                                 } catch (error) {
@@ -38,7 +38,7 @@ const Home = () => {
                             })
                     });
             }, (error) => {
-                alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}`);
+                //alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}`);
             }
         );
     }
