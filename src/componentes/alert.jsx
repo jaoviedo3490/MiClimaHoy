@@ -50,9 +50,8 @@ const Alert = (props) => {
             const nivelAlertaTemp = getAlert(climateAlert.current.temp_c, typeAlert);
             return (
                 <div className={`alert alert-dismissible alert-${alertas["temperatura"][nivelAlertaTemp].estilo}`}>
-                    <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
                     <h4 className="alert-heading">¡{alertas["temperatura"][nivelAlertaTemp].titulo}!</h4>
-                    <p className="mb-0">
+                    <p className="mb-0" style={{textAlign:'justify'}}>
                        {alertas["temperatura"][nivelAlertaTemp].Message}
                     </p>
                 </div>
@@ -63,7 +62,7 @@ const Alert = (props) => {
                 <div className={`alert alert-dismissible alert-${alertas["rayos uv"][nivelAlertaUV].estilo}`}>
                     <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
                     <h4 className="alert-heading">¡{alertas["rayos uv"][nivelAlertaUV].titulo}!</h4>
-                    <p className="mb-0">
+                    <p className="mb-0" style={{textAlign:'justify'}}>
                        {alertas["rayos uv"][nivelAlertaUV].Message}
                     </p>
                 </div>

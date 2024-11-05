@@ -1,0 +1,9 @@
+{
+    "Definition":{
+        "Light drizzle":"Forma de precipitación en la que pequeñas gotas de agua caen de manera ligera y continua, se recomienda recorrer las superficies con precaucion.",
+        "Fog":"Presencia de pequeñas gotas de agua suspendidas en el aire cerca de la superficie terrestre. Este fenómeno puede reducir significativamente la visibilidad, creando una atmósfera densa y borrosa",
+        "Freezing fog":"Se presenta cuando la temperatura del aire esta en el punto de congelación. las pequeñas gotas de agua en el aire se congelan al contacto con las superficies, formando una capa de hielo resbaladizo. Se recomienda conducir o caminar con precaucion",
+        "Moderate snow":"Se espera acumulacion de capas de nieve en las superficies de entre 2.5 a 7.5 cm (1 a 3 pulgadas) por hora, lo que puede dificultar el tránsito y las actividades al aire libre , asegúrate de usar transporte adecuado y mantener suministros esenciales, como alimentos y agua, tanto de día como de noche. Limita las actividades al aire libre y toma descansos para calentar el cuerpo, vigila constantemente los síntomas de hipotermia.",
+        "Moderate or heavy snow showers":"Precipitaciones de nieve intensas que ocurren de manera repentina. Se recomienda los desplazamientos innecesarios durante estos eventos. Vestirse adecuadamente con varias capas de ropa para mantener el calor y permanecer en interiores por un tiempo prolongado."
+    }
+}

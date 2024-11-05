@@ -3,7 +3,7 @@ const PopoverComponent = (props) => {
     const popover = (
         <Popover id="climate-popover" className={`bg-${props.alert}`}>
             <Popover.Header as="h3">{props.header}</Popover.Header>
-            <Popover.Body className="text-white">{props.text}</Popover.Body>
+            <Popover.Body className="text-white" style={{textAlign:'justify'}}>{props.text}</Popover.Body>
         </Popover>
     );
     const tipo = props.tipo

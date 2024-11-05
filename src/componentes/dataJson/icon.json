@@ -10,7 +10,10 @@
       "day-Patchy-rain-nearby": "/day-Patchy-rain-nearby.png",
       "day-Patchy-light-drizzle": "/day-Patchy-light-drizzle.png",
       "day-Patchy-light-rain-in-area-with-thunder": "/day-Patchy-light-rain-in-area-with-thunder.png",
-      "day-Light-snow":"/light-snow.png"
+      "day-Light-snow":"/light-snow.png",
+      "day-Fog":"/Fog.png",
+      "day-Moderate-snow":"/Moderate-snow.png",
+      "day-Moderate-or-heavy-snow-showers":"/Moderate-or-heavy-snow-showers.png"
     },
     "nigth": {
       "nigth-Clear": "/nigth-clear.png",
@@ -21,7 +24,11 @@
       "nigth-Mist": "/nigth-Mist.png",
       "nigth-Freezing-fog": "/Freezing-fog.png",
       "nigth-Patchy-light-drizzle": "/nigth-Patchy-light-drizzle.png",
-      "nigth-Light-snow":"/light-snow.png"
+      "nigth-Light-snow":"/light-snow.png",
+      "nigth-Light-drizzle":"/night-Light-drizzle.png",
+      "nigth-Fog":"/Fog.png",
+      "nigth-Moderate-snow":"/Moderate-snow.png",
+      "nigth-Moderate-or-heavy-snow-showers":"/Moderate-or-heavy-snow-showers.png"
     }
   }
 }
