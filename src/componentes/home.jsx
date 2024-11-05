@@ -11,6 +11,7 @@ const Home = () => {
     const [pushButton , setPushButton] = useState(false)
 
     
+    
     const localize = () => {
         setLoading(true);
         navigator.geolocation.getCurrentPosition(
@@ -22,7 +23,7 @@ const Home = () => {
                     .then(response => response.json())
                     .then(data => {
                         const ciudad = data.address.county;
-                        fetch(`http://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${ciudad}&aqi=yes`)
+                        fetch(`http://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=Vostok&aqi=yes`)
                             .then(response => response.json())
                             .then(data => {
                                 console.log(data);
@@ -42,7 +43,9 @@ const Home = () => {
             }
         );
     }
-    
+    useEffect(()=>{
+        if(pushButton) localize();
+    },[pushButton]);
     return (
         <div>
             {loading && (
@@ -57,7 +60,7 @@ const Home = () => {
             <div className="container">
                 <div className="row">
                     <div className="col mx-auto">
-                        <button onClick={localize} className="btn btn-primary m-4 text-center">
+                        <button onClick={()=>setPushButton(true)} className="btn btn-primary m-4 text-center">
                             Obtener Informe de Clima Local
                         </button>{showData ? (<div className="text-end"><UpdateDate/></div>) : (<h4 className="text-light text-end"></h4>)}
                         {showData && <ViewData />}
