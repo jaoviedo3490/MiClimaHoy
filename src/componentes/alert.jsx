@@ -6,8 +6,9 @@ const Alert = (props) => {
     const [typeAlert, setTypeAlert] = useState(props.tipo);
 
     const rangos = {
-        "temperatura": [{ 'danger-freeze': [-500, -10], 'warning-freeze': [-9, 0], 'success-freeze': [1, 19], 'success': [20, 30], "success-hot": [31, 35], "warning-hot": [36, 39], "danger-hot": [40, 10000], }],
-        "rayos uv": [{ 'success': [0, 2], 'info': [3, 5], 'warning': [6, 7] , "danger":[8,100]}]
+        "temperatura": [{ 'danger-freeze': [-500, -10], 'warning-freeze': [-9, 0], 'success-freeze': [1, 19], 'success': [20, 29], "success-hot": [30, 34], "warning-hot": [35, 39], "danger-hot": [40, 10000], }],
+        "rayos uv": [{ 'success': [0, 2], 'info': [3, 5], 'warning': [6, 7] , "danger":[8,100]}],
+        "Air-Quality":[{"success":[]}]
     };
 
     const alertas = {
@@ -21,8 +22,8 @@ const Alert = (props) => {
             'danger-hot': { "estilo": "danger","titulo":"Peligro", "Message": `La temperatura actual es de ${climateAlert.current.temp_c} C°, esta temperatura es altamente peligrosa, se recomienda acudir inmediatamente a un sitio de menor temperatura, mantenerse hidratado y evitar realizar movimientos innecesarios.` }
         },
         "rayos uv": {
-            "success": { "estilo": "success", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es bajo, es seguro la exposición al sol.` },
-            "info": { "estilo": "info", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es moderado, es seguro la exposición al sol, sin embargo se recomienda por poco tiempo.` },
+            "success": { "estilo": "success", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es bajo, es seguro la exposición la misma.` },
+            "info": { "estilo": "info", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es moderado, es seguro la exposición  la misma, sin embargo se recomienda por poco tiempo.` },
             "warning": { "estilo": "warning","titulo":"Advertencia", "Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es alto, se recomienda el uso de protector solar para evitar quemaduras en la piel y por poco tiempo.` },
             "danger": { "estilo": "danger","titulo":"Peligro", "Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es muy alto, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` }
         }
@@ -60,7 +61,7 @@ const Alert = (props) => {
             const nivelAlertaUV = getAlert(climateAlert.current.uv, typeAlert);
             return (
                 <div className={`alert alert-dismissible alert-${alertas["rayos uv"][nivelAlertaUV].estilo}`}>
-                    <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+                    
                     <h4 className="alert-heading">¡{alertas["rayos uv"][nivelAlertaUV].titulo}!</h4>
                     <p className="mb-0" style={{textAlign:'justify'}}>
                        {alertas["rayos uv"][nivelAlertaUV].Message}
