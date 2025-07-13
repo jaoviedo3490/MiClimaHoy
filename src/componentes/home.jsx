@@ -2,16 +2,18 @@ import { useContext, useEffect, useState } from "react";
 import ViewData from "./viewData";
 import { DataContext } from "../Context/MetricsContext";
 import UpdateDate from "./updateDate";
+import SandBox from "./SandBox"
 
 const Home = () => {
     const [showData, setShowData] = useState(false);
+    const [showSandBox, setSandBox] = useState(false);
     const [loading, setLoading] = useState(false);
     //const [json , setJson] = useState('');
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
-    const [pushButton , setPushButton] = useState(false)
+    const [pushButton, setPushButton] = useState(false);
 
-    
-    
+
+
     const localize = () => {
         setLoading(true);
         navigator.geolocation.getCurrentPosition(
@@ -19,33 +21,54 @@ const Home = () => {
 
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
+
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&zoom=10`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`Ocurrio un error en la solicitud: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        const ciudad = data.address.county;
-                        fetch(`http://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=Vostok&aqi=yes`)
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log(data);
-                                try {
+                        console.log(data);
+                        if (JSON.stringify(data).indexOf('error') != -1) {
+                            alert(`La solicitud devolvio el siguente mensaje: ${data.error}`);
+                        } else {
+                            const ciudad = data.address.city;
+
+                            fetch(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${ciudad}&aqi=yes`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`Error en la solicitud: ${response.status}`);
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
                                     setLoading(false);
                                     setClimateAlert(data);
-                                 
                                     setShowData(true);
-                                    setPushButton(false)
-                                } catch (error) {
-                                    alert(error);
-                                }
-                            })
-                    });
+                                    setPushButton(false);
+                                })
+                                .catch(error => {
+                                    console.error('Hubo un error:', error);
+                                    alert('Ocurrió un error al obtener los datos del clima');
+                                    setLoading(false);
+                                });
+                        }
+                    }).catch(error => {
+                        alert(`Ocurrio un error en la solicitud: ${error}`);
+                    })
             }, (error) => {
-                //alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}`);
+                alert(`Ocurrio un error al intentar obtener la ubicacion: ${JSON.stringify(error)}`);
             }
         );
     }
-    useEffect(()=>{
-        if(pushButton) localize();
-    },[pushButton]);
+    useEffect(() => {
+        if (pushButton) localize();
+    }, [pushButton]);
+
+   
+
     return (
         <div>
             {loading && (
@@ -56,14 +79,35 @@ const Home = () => {
                     </div>
                 </div>
             )}
-            
+
             <div className="container">
                 <div className="row">
                     <div className="col mx-auto">
-                        <button onClick={()=>setPushButton(true)} className="btn btn-primary m-4 text-center">
+                        <button onClick={() => {
+                            setPushButton(true);
+                            setSandBox(false);
+                        }
+                        } className="btn btn-primary m-4 text-center">
                             Obtener Informe de Clima Local
-                        </button>{showData ? (<div className="text-end"><UpdateDate/></div>) : (<h4 className="text-light text-end"></h4>)}
+                        </button>
+                    </div>
+                    <div className="col mx-auto">
+                        <button onClick={() => {
+                            setSandBox(true);
+                            setShowData(false);
+                            setPushButton(false);
+                        }
+                        } className='btn btn-primary m-4 text-center'>Sandbox App</button>
+                    </div>
+                </div>
+            </div>
+            <div className="container">
+                <div className="row">
+                    <div className="col mx-auto">
+                        {showData && (<div className="text-end"><UpdateDate /></div>)}
                         {showData && <ViewData />}
+                        {showSandBox && <SandBox />}
+                  
                     </div>
                 </div>
             </div>
