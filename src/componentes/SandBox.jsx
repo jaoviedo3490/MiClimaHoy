@@ -6,7 +6,8 @@ import ViewData from "./viewData";
 
 const SandBox = () => {
     const [Countries, setCountries] = useState([]);
-    const [Seleccionado, setSelect] = useState(null);
+    const [SeleccionadoP, setSelectP] = useState(null);
+    const [SeleccionadoC, setSelectC] = useState(null);
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(false);
     const [showDataSandbox,setShowD] = useState(false);
@@ -16,7 +17,7 @@ const SandBox = () => {
     const button = (event) => {
         event.preventDefault();
         setLoading(true);
-        fetch(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${Seleccionado.value}&aqi=yes`)
+        fetch(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${SeleccionadoP.value}&aqi=yes`)
 
             .then(response => {
                 if (!response.ok) {
@@ -39,7 +40,7 @@ const SandBox = () => {
             });
     }
     const onChangeCity = (opcion) =>{
-        setSelect(opcion);
+        setSelectC(opcion);
     }
     useEffect(() => {
 
@@ -61,7 +62,8 @@ const SandBox = () => {
     }, []);
 
     const handleEvent = (opcion) => {
-        setSelect(opcion);
+        setSelectP(opcion);
+        setSelectC(null);
         fetch('https://countriesnow.space/api/v0.1/countries/cities', {
             method: "POST",
             headers: { "Content-Type": 'application/json' },
@@ -96,10 +98,10 @@ const SandBox = () => {
                     <div className="col mx-auto">
                         <form>
                             <div className="form-group">
-                                <Select onChange={handleEvent} options={Countries} /> {cities.length > 0 && (<Select onChange={onChangeCity} options={cities} />)}
+                                <Select placeholder="Selecciona un Pais" onChange={handleEvent} options={Countries} /> {cities.length > 0 && (<Select placeholder="Selecciona una Ciudad" value={SeleccionadoC} onChange={onChangeCity} options={cities} />)}
                             </div>
                             <div className="form-group">
-                                <button  onClick={button} className="btn btn-success mt-2">Informe de Clima</button>
+                                <button  onClick={button} className="btn btn-secondary mt-2">Informe de Clima</button>
                             </div>
                         </form>
                     </div>

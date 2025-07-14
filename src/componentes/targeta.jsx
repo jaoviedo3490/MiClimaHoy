@@ -11,25 +11,14 @@ import QA_AIR from "../componentes/dataJson/Air-Quality-definition.json";
 const Target = (props) => {
   const { climateAlert, setClimateAlert } = useContext(DataContext);
   const [typeTarget, setTypeTarget] = useState(props.tipo);
-  //const [messge,setMessage] = useState('');
   const text_alert = {
     "nubosidad": [{ "success": [0, 25], "info": [26, 50], "warning": [51, 75], "danger": [76, 100] }],
     "humedad": [{ "success": [0, 25], "info": [26, 50], "warning": [51, 75], "danger": [76, 100] }],
     "visibilidad": [{ "success": [11, 50], "info": [6, 10], "warning": [1, 5], "danger": [0, 1] }],
     "Air-Quality": [{ "success": [[1, 1], [2, 2]], "info": [3, 3], "warning": [4, 4], "danger": [[5, 5], [6, 6]] }],
     "co": [{ "success": [0, 9], "info": [10, 50], "warning": [51, 100], "danger": [101, 200], "primary": [201, 500] }],
-    "no2": [{
-      "success": [[0, 0.05], [0.06, 0.1]],
-      "info": [[0.1, 0.2]],
-      "warning": [[0.21, 0.5]],
-      "danger": [[0.51, 1.0], [1.1, 500]]
-    }],
-    "so2": [{
-      "success": [[0, 0.25], [0.26, 0.1]],
-      "info": [1, 3],
-      "warning": [3.1, 5],
-      "danger": [5, 100]
-    }]
+    "no2": [{ "success": [[0, 0.053]], "info": [[0.054, 0.1]], "warning": [[0.101, 0.2]], "danger": [[0.2, 500]] }],
+    "so2": [{ "success": [[0, 0.017]], "info": [[0.01701, 0.075]], "warning": [[0.076, 0.5]], "danger": [[0.5, 5]] }]
   };
 
 
@@ -95,19 +84,33 @@ const Target = (props) => {
         (co > 100 && co <= 200) ? "Monoxido de carbono: Nivel altamente peligroso (mayor a 100 - 200 ppm : partes por millon). Pérdida de coordinación, confusión y posible desmayo tras exposiciones prolongadas. Evacuar el area afectada evitando al maximo la exposición. Buscar atención médica si se presentan síntomas. Implementar medidas para eliminar fuentes de CO y mejorar la ventilación." :
           (co > 200) ? "Niveles de monoxido extremos se presenta riesgo de daño cerebral, coma y muerte con exposiciones prolongadas. Evacuación inmediata del área, buscar atención médica urgente para los afectados. Identificar y eliminar de inmediato las fuentes de CO." : "Definción no encontrada";
 
-  const messageNO2 = (no2 >= 0 && no2 <= 0.05) ? "Dioxido de nitrogeno: Nivel seguro (0 - 0.05 ppm : partes por millon). No hay efectos adversos en la mayoría de las personas. No se requieren precauciones." :
-    (no2 > 0.05 && no2 <= 0.1) ? "Dioxido de nitrogeno: Nivel moderado (Mayor a 0.5 - 0.1 ppm : partes por millon). Puede causar irritación leve en ojos, nariz y garganta, especialmente en personas sensibles. Reducir actividades físicas intensas al aire libre si hay molestias. Mantenerse informado sobre la calidad del aire." :
-      (no2 > 0.1 && no2 <= 0.2) ? "Dioxido de nitrogeno: Nivel de peligro bajo (Mayor a 0.1 - 0.2 ppm : partes por millon). Puede causar tos, dificultad leve para respirar, afecta a personas con enfermedades pulmonares. Personas con asma o problemas respiratorios deben evitar actividades al aire libre. Usar mascarillas si la exposición es prolongada." :
-        (no2 > 0.2 && no2 <= 0.5) ? "Dioxido de nitrogeno: Nivel de peligro Moderado (Mayor a 0.2 - 0.5 ppm : partes por millon). Irritación severa, inflamación de vías respiratorias, aumento de síntomas asmáticos. Evitar la exposición prolongada al aire libre. Priorizar espacios cerrados con purificadores de aire." :
-          (no2 > 0.5 && no2 <= 1.0) ? "Dioxido de nitrogeno: Nivel de peligro Alto (Mayor a 0.5 - 1.0 ppm : partes por millon). Dificultad respiratoria significativa, riesgo de bronquitis, inflamación pulmonar. Permanecer en interiores, cerrar ventanas y puertas. Usar filtros de aire. Personas con problemas respiratorios deben buscar asistencia médica si presentan síntomas." :
-            (no2 > 1.0) ? "Niveles de Dioxido de nitrogeno fatales, la exposición prolongada puede causar edema pulmonar, disminución severa de la función pulmonar, riesgo de muerte. Evacuar inmediatamente el área afectada, usar equipo de protección respiratoria y buscar Atención médica urgente para los afectados. Identificar y eliminar la fuente de contaminación." : "Definición no encontrada";
+  const messageNO2 =
+    (no2 >= 0 && no2 <= 0.053) ?
+      "Dióxido de nitrógeno: Nivel bueno (0 - 0.053 ppm). Calidad de aire óptima. No se esperan efectos adversos para la población general." :
+      (no2 > 0.053 && no2 <= 0.1) ?
+        "Dióxido de nitrógeno: Nivel moderado (0.054 - 0.1 ppm). Puede causar irritación leve en ojos y vías respiratorias en personas sensibles. Se recomienda reducir actividad física intensa si hay molestias." :
+        (no2 > 0.1 && no2 <= 0.2) ?
+          "Dióxido de nitrógeno: Nivel malo (0.101 - 0.2 ppm). Puede generar tos, irritación respiratoria, afecta especialmente a personas con asma o enfermedades pulmonares. Limitar actividades al aire libre. Grupos vulnerables deben permanecer en interiores." :
+          (no2 > 0.2 && no2 <= 0.5) ?
+            "Dióxido de nitrógeno: Nivel muy malo (0.201 - 0.5 ppm). Riesgo elevado de inflamación de vías respiratorias, agravamiento de enfermedades pulmonares y síntomas asmáticos severos. Evitar exposición prolongada. Permanecer en interiores y usar filtros de aire." :
+            (no2 > 0.5) ?
+              "Dióxido de nitrógeno: Nivel peligroso (>0.5 ppm). Exposición muy peligrosa, posible daño pulmonar severo con exposición prolongada. Evitar completamente el área afectada, usar protección respiratoria y buscar atención médica si hay síntomas graves." :
+              "Definición no encontrada";
 
-  const messageSO2 = (so2 >= 0 && so2 <= 0.25) ? "Dioxido de azufre: Nivel seguro (0 - 0.25 ppm : Partes por millon). No se esperan efectos adversos en la salud, No se requieren medidas de precaución." :
-    (so2 >= 0.26 && so2 <= 1) ? "Dioxido de azufre: Nivel Bajo (Mayor a 0.25 - 1 ppm : Partes por millon). Puede producir irritación leve de las vías respiratorias (nariz, garganta) , Uso de equipos de protección personal (EPP) como mascarillas con filtro de gases, limitar la exposición prolongada" :
-      (so2 > 1 && so2 <= 3) ? "Dioxido de azufre: Nivel Moderado (Mayor a 1 - 3 ppm : Partes por millon). Se presenta tos, dificultad para respirar, ardor en nariz y garganta , Implementar sistemas de extracción local, uso de respiradores con cartuchos específicos para SO₂, monitoreo continuo del aire" :
-        (so2 > 3 && so2 <= 5) ? "Dioxido de azufre: Nivel Peligroso (Mayor a 1 - 3 ppm : Partes por millon). Se presenta Síntomas respiratorios agudos, dolor de pecho, ojos llorosos , Evacuación inmediata de la zona afectada, uso de respiradores autónomos, establecer zonas de seguridad y procedimientos de emergencia." :
-          (so2 > 5) ? "Dioxido de azufre: Nivel altamente peligroso (Mayor 5 ppm: Partes por millon). Se presenta riesgo de daño pulmonar grave, posible edema pulmonar , evacuar inmediatamente la zona afectada , seguir y/o Activar planes de emergencia, uso de equipos de respiración autónoma, atención médica urgente, descontaminación de la zona." :
-            "definición no encontrada";
+
+  const messageSO2 =
+    (so2 >= 0 && so2 <= 0.017) ?
+      "Dióxido de azufre: Nivel bueno (0 - 0.017 ppm). Calidad de aire segura, sin riesgos para la población general. No se requieren precauciones." :
+      (so2 > 0.017 && so2 <= 0.075) ?
+        "Dióxido de azufre: Nivel moderado (0.017 - 0.075 ppm). Puede causar irritación leve de las vías respiratorias en personas sensibles (niños, ancianos, asmáticos). Evitar esfuerzos físicos intensos al aire libre si hay molestias." :
+        (so2 > 0.075 && so2 <= 0.5) ?
+          "Dióxido de azufre: Nivel malo (0.076 - 0.5 ppm). Aumenta riesgo de tos, ardor nasal, dificultad para respirar, especialmente en población vulnerable. Reducir actividades al aire libre y permanecer en interiores cuando sea posible." :
+          (so2 > 0.5 && so2 <= 5) ?
+            "Dióxido de azufre: Nivel muy malo (0.5 - 5 ppm). Exposición potencialmente peligrosa: inflamación de vías respiratorias, broncoespasmo, irritación ocular severa. Evitar completamente la exposición prolongada. Permanecer en interiores con filtros de aire y cerrar ventanas." :
+            (so2 > 5) ?
+              "Dióxido de azufre: Nivel extremadamente peligroso (>5 ppm). Riesgo severo de daño pulmonar agudo y edema pulmonar. Evacuar la zona inmediatamente, usar protección respiratoria autónoma y activar protocolos de emergencia." :
+              "Definición no encontrada";
+
 
   const getAlert = (value, tipo) => {
     let alertType = "undefined";
