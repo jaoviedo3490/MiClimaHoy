@@ -97,7 +97,7 @@ const Home = () => {
                             setShowData(false);
                             setPushButton(false);
                         }
-                        } className='btn btn-primary m-4 text-center'>Sandbox App</button>
+                        } className='btn btn-primary m-4 text-center'>Aplicacion SandBox</button>
                     </div>
                 </div>
             </div>
