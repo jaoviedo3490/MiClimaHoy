@@ -67,51 +67,66 @@ const Home = () => {
         if (pushButton) localize();
     }, [pushButton]);
 
-   
+
 
     return (
-        <div>
+        <main>
             {loading && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
                     <div className="text-center text-light">
                         <div className="spinner-grow text-light" role="status"></div>
-                        <div className="mt-2"><span className="visually">Cargando...</span></div>
+                        <div className="mt-2">
+                            <span className="visually-hidden">Cargando...</span>
+                        </div>
                     </div>
                 </div>
             )}
 
-            <div className="container">
+            <section className="container">
                 <div className="row">
-                    <div className="col mx-auto">
-                        <button onClick={() => {
-                            setPushButton(true);
-                            setSandBox(false);
-                        }
-                        } className="btn btn-primary m-4 text-center">
-                            Obtener Informe de Clima Local
-                        </button>
-                    </div>
-                    <div className="col mx-auto">
-                        <button onClick={() => {
-                            setSandBox(true);
-                            setShowData(false);
-                            setPushButton(false);
-                        }
-                        } className='btn btn-primary m-4 text-center'>Aplicacion SandBox</button>
+                    <div className="col-12 col-md-6 mx-auto text-center">
+                        <div className="d-flex flex-column flex-md-row justify-content-center">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPushButton(true);
+                                    setSandBox(false);
+                                }}
+                                className="btn btn-primary m-4">
+                                Obtener Informe de Clima Local
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setSandBox(true);
+                                    setShowData(false);
+                                    setPushButton(false);
+                                }}
+                                className="btn btn-primary m-4">
+                                Aplicación SandBox
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div className="container">
+            </section>
+
+            <section className="container">
                 <div className="row">
                     <div className="col mx-auto">
-                        {showData && (<div className="text-end"><UpdateDate /></div>)}
-                        {showData && <ViewData />}
+                        {showData && (
+                            <>
+                                <div className="text-end">
+                                    <UpdateDate />
+                                </div>
+                                <ViewData />
+                            </>
+                        )}
                         {showSandBox && <SandBox />}
-                  
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
+
     );
 };
 

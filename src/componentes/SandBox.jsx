@@ -10,14 +10,14 @@ const SandBox = () => {
     const [SeleccionadoC, setSelectC] = useState(null);
     const [cities, setCities] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [showDataSandbox,setShowD] = useState(false);
-    const {ClimateAlert,setClimateAlert} = useContext(DataContext);
-    
+    const [showDataSandbox, setShowD] = useState(false);
+    const { ClimateAlert, setClimateAlert } = useContext(DataContext);
+
 
     const button = (event) => {
         event.preventDefault();
         setLoading(true);
-        fetch(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${SeleccionadoP.value}&aqi=yes`)
+        fetch(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${SeleccionadoC.value}&aqi=yes`)
 
             .then(response => {
                 if (!response.ok) {
@@ -30,16 +30,16 @@ const SandBox = () => {
                 setLoading(false);
                 setShowD(true);
                 setClimateAlert(data);
-              
+
             })
             .catch(error => {
                 alert(`Ocurrió un error al obtener los datos del clima:`);
-                
+
                 //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${Seleccionado.label}&aqi=yes`);
                 setLoading(false);
             });
     }
-    const onChangeCity = (opcion) =>{
+    const onChangeCity = (opcion) => {
         setSelectC(opcion);
     }
     useEffect(() => {
@@ -85,32 +85,69 @@ const SandBox = () => {
     };
 
     return (
-        <div>{loading && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75" style={{ zIndex: 1050 }}>
+        <div>
+            {loading && (
+                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
                     <div className="text-center text-light">
                         <div className="spinner-grow text-light" role="status"></div>
-                        <div className="mt-2"><span className="visually">Cargando...</span></div>
+                        <div className="mt-2">
+                            <span className="visually-hidden">Cargando...</span>
+                        </div>
                     </div>
                 </div>
             )}
-            <div className="container">
+
+            <section className="container">
                 <div className="row">
-                    <div className="col mx-auto">
+                    <div className="col-12 mx-auto">
                         <form>
-                            <div className="form-group">
-                                <Select placeholder="Selecciona un Pais" onChange={handleEvent} options={Countries} /> {cities.length > 0 && (<Select placeholder="Selecciona una Ciudad" value={SeleccionadoC} onChange={onChangeCity} options={cities} />)}
+                            <div className="mb-3">
+                                <Select
+                                    placeholder="Selecciona un País"
+                                    onChange={handleEvent}
+                                    options={Countries}
+                                    className="w-100"
+                                    classNamePrefix="select"
+                                />
                             </div>
-                            <div className="form-group">
-                                <button  onClick={button} className="btn btn-secondary mt-2">Informe de Clima</button>
-                            </div>
+
+                            {cities.length > 0 && (
+                                <div className="mb-3">
+                                    <Select
+                                        placeholder="Selecciona una Ciudad"
+                                        value={SeleccionadoC}
+                                        onChange={onChangeCity}
+                                        options={cities}
+                                        className="w-100"
+                                        classNamePrefix="select"
+                                    />
+                                </div>
+                            )}
+
+                            <button
+                                type="button"
+                                onClick={button}
+                                className="btn btn-secondary w-100"
+                            >
+                                Informe de Clima
+                            </button>
                         </form>
                     </div>
                 </div>
-            </div>
-            <div> {showDataSandbox && (<div className="text-end"><UpdateDate /></div>)}
-                        {showDataSandbox && <ViewData />}
-            </div>
+            </section>
+
+            {showDataSandbox && (
+                <section className="container mt-4">
+                    <div className="text-end">
+                        <UpdateDate />
+                    </div>
+                    <ViewData />
+                </section>
+            )}
         </div>
+
+
+
 
     );
 };
