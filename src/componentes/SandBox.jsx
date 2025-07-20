@@ -34,8 +34,6 @@ const SandBox = () => {
             })
             .catch(error => {
                 alert(`Ocurrió un error al obtener los datos del clima:`);
-
-                //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${Seleccionado.label}&aqi=yes`);
                 setLoading(false);
             });
     }
@@ -76,7 +74,6 @@ const SandBox = () => {
                 return response.json();
             })
             .then(dataT => {
-                //console.log(dataT.data);
                 const ciudades = dataT.data.map(item => ({ value: item, label: item }));
                 setCities(ciudades);
 
