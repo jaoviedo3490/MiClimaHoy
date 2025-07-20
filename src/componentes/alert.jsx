@@ -6,7 +6,7 @@ const Alert = (props) => {
     const [typeAlert, setTypeAlert] = useState(props.tipo);
 
     const rangos = {
-        "temperatura": [{ 'danger-freeze': [-500, -10], 'warning-freeze': [-9, 0], 'success-freeze': [1, 19], 'success': [20, 29], "success-hot": [30, 34], "warning-hot": [35, 39], "danger-hot": [40, 10000], }],
+        "temperatura": [{ 'danger-freeze': [-500, -10], 'warning-freeze': [-9, 0], 'success-freeze': [1, 19], 'success': [20, 29], "success-hot": [30, 34], "warning-hot": [35, 37], "danger-hot": [38, 10000], }],
         "rayos uv": [{ 'success': [0, 2], 'info': [3, 5], 'warning': [6, 7] , "danger":[8,100]}],
         "Air-Quality":[{"success":[]}]
     };
