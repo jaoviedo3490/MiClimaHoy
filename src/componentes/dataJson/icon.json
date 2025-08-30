@@ -21,7 +21,8 @@
       "day-Mist":"/Mist.png",
       "day-Partly-cloudy": "/day-Partly-Cloudy.png",
       "day-Blizzard":"/ventisca.png",
-      "day-Moderate-rain":"/day-Moderate-rain.png"
+      "day-Moderate-rain":"/day-Moderate-rain.png",
+      "day-Clear":"/day-Sunny.png"
     },
     "nigth": {
       "nigth-Clear": "/nigth-clear.png",
