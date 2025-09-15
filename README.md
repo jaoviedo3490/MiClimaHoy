@@ -1,4 +1,4 @@
-# 🌦️ Clima Fácil
+# 🌦️ Mi Clima Hoy
 
 Aplicación sencilla de **frontend** que ofrece recomendaciones al usuario en función del clima local.  
 Considera factores como **temperatura, humedad, calidad del aire y radiación UV**.  
