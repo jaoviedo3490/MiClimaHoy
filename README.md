@@ -34,7 +34,7 @@ Permite geolocalizar al usuario y consultar otras localidades del planeta.
 ## 🚀 Instalación y uso
 ```bash
 # Clonar repositorio
-git clone https://github.com/tuusuario/tu-repo.git
+git clone (https://github.com/jaoviedo3490/MiClimaHoy/)
 
 # Instalar dependencias
 npm install
