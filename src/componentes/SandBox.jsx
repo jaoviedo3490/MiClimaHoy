@@ -9,8 +9,8 @@ import { InferenceClient } from "@huggingface/inference";
 const client = new InferenceClient(process.env.REACT_APP_HF_TOKEN);
 
 const SandBox = () => {
-    let nomenclature ='';
     const [response, setResponse] = useState(null);
+    const [langSearch,setSearch] = useState('');
     const [model, setModel] = useState(null);
     const [Countries, setCountries] = useState([]);
     const [button_disable, setDissable] = useState(true);

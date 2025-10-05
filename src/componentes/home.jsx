@@ -3,6 +3,8 @@ import ViewData from "./viewData";
 import { DataContext } from "../Context/MetricsContext";
 import UpdateDate from "./updateDate";
 import SandBox from "./SandBox"
+import CallBckApi from "../callBack-API/callBackApi";
+import MainPanel from "./Migration/mainPanel";
 
 const Home = () => {
     const [showData, setShowData] = useState(false);
@@ -10,8 +12,15 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     //const [json , setJson] = useState('');
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
+    const {langSearch, apiSearch } = useContext(DataContext);
+    const {cities,setCities} = useContext(DataContext);
     const [pushButton, setPushButton] = useState(false);
-
+    const [CitiesHottest,setCitiesHottest] = useState([]);
+    const [CittiesFresh,setCitiesFresh] = useState([]);
+const fetchCities = async ()=>{
+    await apiSearch('Colombia','Dame 5 ciudades mas frias',setCitiesFresh);
+    await apiSearch('Colombia','Dame 5 ciudades mas calidas',setCitiesHottest);
+}
 
 
     const localize = () => {
@@ -44,6 +53,7 @@ const Home = () => {
                                     return response.json();
                                 })
                                 .then(data => {
+                                  
                                     setLoading(false);
                                     setClimateAlert(data);
                                     setShowData(true);
@@ -70,7 +80,13 @@ const Home = () => {
 
 
     return (
-        <main>
+        <MainPanel/>
+
+    );
+};
+
+export default Home;
+/*<main>
             {loading && (
                 <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
                     <div className="text-center text-light">
@@ -125,9 +141,4 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-        </main>
-
-    );
-};
-
-export default Home;
+        </main>*/
