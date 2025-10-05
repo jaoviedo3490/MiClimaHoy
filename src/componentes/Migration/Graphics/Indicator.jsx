@@ -9,7 +9,7 @@ const IndicatorGraph = (props) => {
                 endAngle: -20,
                 min: props.min,
                 max: props.max,
-                splitNumber: 10,
+                interval: (props.max - props.min) / 10,
                 itemStyle: { color: '#FFAB91' },
                 progress: {
                     show: true,
