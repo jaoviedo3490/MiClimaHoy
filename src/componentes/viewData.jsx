@@ -9,10 +9,10 @@ const ViewData = () => {
         <div className="container">
             <section className="row g-3">
                 <div className="col-12 col-md-6">
-                    <Alert tipo="temperatura" />
+                    <Alert tipo="Temperatura" />
                 </div>
                 <div className="col-12 col-md-6">
-                    <Alert tipo="rayos uv" />
+                    <Alert tipo="Radiacion UV" />
                 </div>
             </section>
             <section className="row g-3 mt-3">

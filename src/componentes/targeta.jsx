@@ -24,7 +24,7 @@ const Target = (props) => {
 
   const temp_c = climateAlert.current.temp_c;
 
-  const message = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
+  const message = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la Temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
     (climateAlert.current.temp_c >= -40 && climateAlert.current.temp_c <= 15) ? (
       (climateAlert.current.cloud >= 0 && climateAlert.current.cloud <= 25) ? `Cielos despejados con alta visibilidad. Abrígate bien y usa gafas de sol para reducir el deslumbramiento en áreas de nieve o hielo. Lleva ropa térmica.` :
         (climateAlert.current.cloud > 25 && climateAlert.current.cloud <= 50) ? `Cielos parcialmente nublados. Aunque algo menos frío, usa ropa de invierno. Lleva gorro, bufanda y guantes para mantener el calor.` :
@@ -33,8 +33,8 @@ const Target = (props) => {
     ) : (climateAlert.current.temp_c > 15 && climateAlert.current.temp_c <= 25) ? (
       (climateAlert.current.cloud >= 0 && climateAlert.current.cloud <= 25) ? `Ambiente despejado. Usa ropa ligera y protector solar si es de día, y mantente hidratado si el aire está seco.` :
         (climateAlert.current.cloud > 25 && climateAlert.current.cloud <= 50) ? `Nubosidad ligera. Puedes optar por ropa cómoda y ligera, y no olvides protegerte del sol durante el día.` :
-          (climateAlert.current.cloud > 50 && climateAlert.current.cloud <= 75) ? `Moderada cobertura nubosa. Viste de manera cómoda, y una chaqueta ligera si la temperatura baja en la noche.` :
-            (climateAlert.current.cloud > 75 && climateAlert.current.cloud <= 100) ? `Nubosidad densa. La temperatura se mantendrá estable. Viste de manera cómoda y lleva una capa ligera si fuera necesario.` : `Definición no encontrada`
+          (climateAlert.current.cloud > 50 && climateAlert.current.cloud <= 75) ? `Moderada cobertura nubosa. Viste de manera cómoda, y una chaqueta ligera si la Temperatura baja en la noche.` :
+            (climateAlert.current.cloud > 75 && climateAlert.current.cloud <= 100) ? `Nubosidad densa. La Temperatura se mantendrá estable. Viste de manera cómoda y lleva una capa ligera si fuera necesario.` : `Definición no encontrada`
     ) : (climateAlert.current.temp_c > 25 && climateAlert.current.temp_c <= 40) ? (
       (climateAlert.current.cloud >= 0 && climateAlert.current.cloud <= 25) ? `Cielos despejados con calor intenso. Usa ropa fresca, gorra y protector solar. Lleva agua para mantenerte hidratado.` :
         (climateAlert.current.cloud > 25 && climateAlert.current.cloud <= 50) ? `Algunas nubes que proporcionan sombra parcial. Usa ropa fresca y mantente hidratado para evitar el agotamiento.` :
@@ -42,7 +42,7 @@ const Target = (props) => {
             (climateAlert.current.cloud > 75 && climateAlert.current.cloud <= 100) ? `Alta cobertura nubosa. Puede sentirse bochornoso. Usa ropa ligera y fresca, y mantente hidratado.` : `Definición no encontrada`
     ) : "Definición no encontrada";
 
-  const messageHumidity = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
+  const messageHumidity = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la Temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
     (climateAlert.current.temp_c >= -40 && climateAlert.current.temp_c <= 15) ? (
       (climateAlert.current.humidity >= 0 && climateAlert.current.humidity <= 30) ? `Clima frío y seco. Hidrata tu piel y vías respiratorias, y considera un humidificador portátil si estarás mucho tiempo al aire libre.` :
         (climateAlert.current.humidity > 30 && climateAlert.current.humidity <= 60) ? `Clima frío y con humedad moderada. Lleva abrigo impermeable y asegúrate de mantenerte caliente, especialmente si la humedad causa sensación de frío.` :
@@ -58,7 +58,7 @@ const Target = (props) => {
     ) : "Definición no encontrada";
 
 
-  const messageVisibilty = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
+  const messageVisibilty = (climateAlert.current.temp_c < -40 || climateAlert.current.temp_c > 40) ? "Peligro extremo: la Temperatura es muy peligrosa. Busca refugio en un ambiente más estable y evita salir al exterior." :
     (climateAlert.current.vis_km >= 0 && climateAlert.current.vis_km <= 1) ? "Visibilidad extremadamente baja. Evita conducir o salir si no es necesario, y usa luces de emergencia si debes moverte." :
       (climateAlert.current.vis_km > 1 && climateAlert.current.vis_km <= 5) ? "Visibilidad reducida. Si sales, toma precauciones al moverte, especialmente al conducir, y usa luces bajas para mejor visibilidad." :
         (climateAlert.current.vis_km > 5 && climateAlert.current.vis_km <= 10) ? "Visibilidad moderada. Es seguro salir, pero mantente alerta en áreas con poca iluminación o en caminos desconocidos." :

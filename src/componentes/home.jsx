@@ -5,23 +5,33 @@ import UpdateDate from "./updateDate";
 import SandBox from "./SandBox"
 import CallBckApi from "../callBack-API/callBackApi";
 import MainPanel from "./Migration/mainPanel";
+import Image from "../../src/clima.jpg";
 
 const Home = () => {
+    document.body.style.backgroundImage = `url(${Image})`;
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundPosition = "center center";
+    document.body.style.backgroundAttachment = "fixed";
+    
     const [showData, setShowData] = useState(false);
     const [showSandBox, setSandBox] = useState(false);
     const [loading, setLoading] = useState(false);
     //const [json , setJson] = useState('');
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
-    const {langSearch, apiSearch } = useContext(DataContext);
-    const {cities,setCities} = useContext(DataContext);
+    const { langSearch, apiSearch } = useContext(DataContext);
+    const { cities, setCities } = useContext(DataContext);
     const [pushButton, setPushButton] = useState(false);
-    const [CitiesHottest,setCitiesHottest] = useState([]);
-    const [CittiesFresh,setCitiesFresh] = useState([]);
-const fetchCities = async ()=>{
-    await apiSearch('Colombia','Dame 5 ciudades mas frias',setCitiesFresh);
-    await apiSearch('Colombia','Dame 5 ciudades mas calidas',setCitiesHottest);
-}
-
+    const [CitiesHottest, setCitiesHottest] = useState([]);
+    const [CittiesFresh, setCitiesFresh] = useState([]);
+    const { migrateVersion, setMigrateVersion } = useContext(DataContext);
+    const fetchCities = async () => {
+        await apiSearch('Colombia', 'Dame 5 ciudades mas frias', setCitiesFresh);
+        await apiSearch('Colombia', 'Dame 5 ciudades mas calidas', setCitiesHottest);
+    }
+    const handleMigrateVersion = () => {
+        setMigrateVersion(true);
+    }
 
     const localize = () => {
         setLoading(true);
@@ -53,7 +63,7 @@ const fetchCities = async ()=>{
                                     return response.json();
                                 })
                                 .then(data => {
-                                  
+
                                     setLoading(false);
                                     setClimateAlert(data);
                                     setShowData(true);
@@ -80,65 +90,75 @@ const fetchCities = async ()=>{
 
 
     return (
-        <MainPanel/>
+        <>
+            <main>
+                {loading && (
+                    <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
+                        <div className="text-center text-light">
+                            <div className="spinner-grow text-light" role="status"></div>
+                            <div className="mt-2">
+                                <span className="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <section className="container">
+                    <div className="row">
+                        <div className="col-12 col-md-6 mx-auto text-center">
+                            <div className="d-flex flex-column flex-md-row justify-content-center">
+                                {!migrateVersion && (<button
+                                    type="button"
+                                    onClick={() => {
+                                        setPushButton(true);
+                                        setSandBox(false);
+                                    }}
+                                    className="btn btn-primary m-4">
+                                    Obtener Informe de Clima Local
+                                </button>)}
+                                {!migrateVersion && (<button
+                                    type="button"
+                                    onClick={() => {
+                                        setSandBox(true);
+                                        setShowData(false);
+                                        setPushButton(false);
+                                    }}
+                                    className="btn btn-primary m-4">
+                                    Aplicación SandBox
+                                </button>)}
+                                {!migrateVersion && (<button
+                                    type="button"
+                                    onClick={handleMigrateVersion}
+                                    className="btn btn-primary m-4">
+                                    Version en Migración
+                                </button>)}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {!migrateVersion && (<section className="container">
+                    <div className="row">
+                        <div className="col mx-auto">
+                            {showData && (
+                                <>
+                                    <div className="text-end">
+                                        <UpdateDate />
+                                    </div>
+                                    <ViewData />
+                                </>
+                            )}
+                            {showSandBox && <SandBox />}
+                        </div>
+                    </div>
+                </section>)}
+            </main>
+            {migrateVersion && (<MainPanel />)}
+        </>
+
 
     );
+
 };
 
 export default Home;
-/*<main>
-            {loading && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
-                    <div className="text-center text-light">
-                        <div className="spinner-grow text-light" role="status"></div>
-                        <div className="mt-2">
-                            <span className="visually-hidden">Cargando...</span>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <section className="container">
-                <div className="row">
-                    <div className="col-12 col-md-6 mx-auto text-center">
-                        <div className="d-flex flex-column flex-md-row justify-content-center">
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setPushButton(true);
-                                    setSandBox(false);
-                                }}
-                                className="btn btn-primary m-4">
-                                Obtener Informe de Clima Local
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setSandBox(true);
-                                    setShowData(false);
-                                    setPushButton(false);
-                                }}
-                                className="btn btn-primary m-4">
-                                Aplicación SandBox
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="container">
-                <div className="row">
-                    <div className="col mx-auto">
-                        {showData && (
-                            <>
-                                <div className="text-end">
-                                    <UpdateDate />
-                                </div>
-                                <ViewData />
-                            </>
-                        )}
-                        {showSandBox && <SandBox />}
-                    </div>
-                </div>
-            </section>
-        </main>*/
