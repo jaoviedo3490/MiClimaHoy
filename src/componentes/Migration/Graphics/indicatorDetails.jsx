@@ -8,20 +8,22 @@ const IndicatorDetails = (props) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : 0;
+    const ValuePercentaje = (props.valor<0) ? (Math.round((props.valor*-1) * 100 / 40)): (Math.round(props.valor * 100 / value));
+    const ValuePercentajeOptional = (props.valorOpcional<0) ? (Math.round((props.valorOpcional*-1) * 100 / 40)) : (Math.round(props.valorOpcional * 100 / value))
 
     const dataT = [{
-        value: (Math.round(props.valor * 100 / value)),
+        value: ValuePercentaje,
         name: props.title1,
         title: { offsetCenter: ['0%', '-60%'] },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-40%'] }
     },
     {
-        value: (Math.round(props.valorOpcional * 100 / value)),
+        value: ValuePercentajeOptional,
         name: props.title2,
         title: { offsetCenter: ['0%', '-10%'] },
         detail: { valueAnimation: true, offsetCenter: ['0%', '10%'] }
     }, {
-        value: (Math.round(37 * 100 / value)),
+        value: (props.valor<0) ? (Math.round(20 * 100 / 40)) : (Math.round(37 * 100 / value)),
         name: 'Rango Saludable',
         title: { offsetCenter: ['0%', '35%'] },
         detail: { valueAnimation: true, offsetCenter: ['0%', '55%'] }

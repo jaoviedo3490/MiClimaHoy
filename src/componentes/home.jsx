@@ -6,14 +6,21 @@ import SandBox from "./SandBox"
 import CallBckApi from "../callBack-API/callBackApi";
 import MainPanel from "./Migration/mainPanel";
 import Image from "../../src/clima.jpg";
+import {
+    
+    useMediaQuery,
+    useTheme,
+   
+} from "@mui/material";
 
 const Home = () => {
     document.body.style.backgroundImage = `url(${Image})`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundRepeat = "no-repeat";
-    document.body.style.backgroundPosition = "center center";
+
     document.body.style.backgroundAttachment = "fixed";
-    
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const [showData, setShowData] = useState(false);
     const [showSandBox, setSandBox] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -153,7 +160,11 @@ const Home = () => {
                     </div>
                 </section>)}
             </main>
-            {migrateVersion && (<MainPanel />)}
+            {migrateVersion && (
+                <div style={{ marginLeft: isMobile ? 'auto' : -100, padding: 0, width: isMobile ? '100%' : "97vw" }}>
+                    <MainPanel />
+                </div>
+            )}
         </>
 
 

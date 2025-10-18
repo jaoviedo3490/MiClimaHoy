@@ -1,117 +1,163 @@
-import ReactECharts from "echarts-for-react";
-import { Box, Stack } from "@mui/material";
-import { Button } from "@mui/material";
+import React from "react";
+
+import { Box, Stack, Button } from "@mui/material";
 import { DataContext } from "../../../Context/MetricsContext";
 import { useContext } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
+import Plotly from "react-plotly.js";
+
 const IndicatorGraph = (props) => {
+  const {
+    setOpenModal,
+    setCloseModal,
+    setDataModal,
+    setRecomendations,
+    SetdataType,
+    setdataOptional,
+  } = useContext(DataContext);
 
-    const { setOpenModal } = useContext(DataContext);
-    const { setCloseModal } = useContext(DataContext);
-    const { setDataModal } = useContext(DataContext);
-    const { setRecomendations } = useContext(DataContext);
-    const { dataType, SetdataType } = useContext(DataContext);
-    const { dataOptional, setdataOptional } = useContext(DataContext);
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const handleOpenModal = () => {
-        setOpenModal(true);
-        setCloseModal(true);
-        setDataModal(props.data);
-        setRecomendations(props.recomendaciones);
-        SetdataType(props.type);
-        setdataOptional(props.optionalData)
-    }
-    const option = {
-        toolbox: {
-            show: true,
-            feature: {
-                restore: { show: true },
-                saveAsImage: { show: true },
-            },
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+    setCloseModal(true);
+    setDataModal(props.data);
+    setRecomendations(props.recomendaciones);
+    SetdataType(props.type);
+    setdataOptional(props.optionalData);
+  };
+
+  // Determinar unidad
+
+  // Usar rango real (no porcentaje)
+  /*const min = props.min ?? 0;
+  const max = props.max ?? 100;
+  const value = props.data ?? 0;
+
+  // Calcular cuánto se llena el gauge (ApexCharts solo acepta 0–100)
+  const fillPercent = ((value - min) / (max - min)) * 100;*/
+
+  /*const options = {
+    chart: {
+      type: "radialBar",
+      sparkline: { enabled: true },
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 800,
+      },
+    },
+    plotOptions: {
+      radialBar: {
+        startAngle: 0,
+        endAngle: 360,
+        hollow: {
+          size: "70%",
+          background: "#fff",
         },
-        series: [
-            {
-                type: "gauge",
-                startAngle: 180,
-                endAngle: 0,
-                min: props.min,
-                max: props.max,
-                splitNumber: props.split,
-                itemStyle: {
-                    color: props.color,//"#58D9F9",
-                    shadowColor: "rgba(0,138,255,0.45)",
-                    shadowBlur: 10,
-                    shadowOffsetX: 2,
-                    shadowOffsetY: 2,
-                },
-                progress: {
-                    show: true,
-                    roundCap: true,
-                    width: isMobile ? 7 : 5,
-                },
-                pointer: {
-                    icon: "path://M2090.36389,615.30999 L2090.36389,615.30999 C2091.48372,615.30999 2092.40383,616.194028 2092.44859,617.312956 L2096.90698,728.755929 C2097.05155,732.369577 2094.2393,735.416212 2090.62566,735.56078 C2090.53845,735.564269 2090.45117,735.566014 2090.36389,735.566014 L2090.36389,735.566014 C2086.74736,735.566014 2083.81557,732.63423 2083.81557,729.017692 C2083.81557,728.930412 2083.81732,728.84314 2083.82081,728.755929 L2088.2792,617.312956 C2088.32396,616.194028 2089.24407,615.30999 2090.36389,615.30999 Z",
-                    length: isMobile ? '50%' : "40%",
-                    width: 5,
-                    offsetCenter: [0, "5%"],
-                },
-                axisLine: {
-                    roundCap: true,
-                    lineStyle: { width: isMobile ? 15 : 10 },
-                },
-                axisTick: {
-                    splitNumber: 2,
-                    lineStyle: { width: 2, color: "#999" },
-                },
-                splitLine: {
-                    length: 5,
-                    lineStyle: { width: 3, color: "#999" },
-                },
-                axisLabel: {
-                    distance: 15,
-                    color: "#999",
-                    fontSize: 10,
-                },
-                title: { show: false },
-                detail: {
-                    backgroundColor: "#fff",
-                    borderColor: "#999",
-                    borderWidth: 2,
-                    width: isMobile ? '100%' : "60%",
-                    lineHeight: 10,
-                    height: 20,
-                    borderRadius: 8,
-                    offsetCenter: [0, "35%"],
-                    valueAnimation: true,
-                    formatter: (value) =>
-                        `{value|${value.toFixed(0)}}{unit|${props.indicator}}`,
-                    rich: {
-                        value: {
-                            fontSize: isMobile ? 15 : 10,
-                            fontWeight: "bolder",
-                            color: "#777",
-                        },
-                        unit: {
-                            fontSize: isMobile ? 25 : 20,
-                            color: "#999",
-                            padding: [0, 0, -20, 10],
-                        },
-                    },
-                },
-                data: [{ value: props.data }],
-            },
-        ],
-    };
+        track: {
+          background: "#f2f2f2",
+          strokeWidth: "100%",
+        },
+        dataLabels: {
+          name: {
+            show: true,
+            color: "#555",
+            fontSize: isMobile ? "13px" : "14px",
+            offsetY: 20,
+            formatter: () => props.type || "",
+          },
+          value: {
+            show: true,
+            color: "#333",
+            fontSize: isMobile ? "22px" : "24px",
+            fontWeight: 700,
+            offsetY: -10,
+            formatter: () => `${value.toFixed(1)}${unit}`,
+          },
+        },
+      },
+    },
+    fill: {
+      colors: [props.color],
+      type: "solid",
+    },
+    stroke: {
+      lineCap: "round",
+    },
+    labels: [props.type || "Metric"],
+  };
 
-    return (
-        <Box sx={{ width: isMobile ? 370 : 250, height: isMobile ? 200 : 200 }}>
-            <Stack direction='column' spacing={0}>
-                <ReactECharts option={option} style={{ width: "100%", height: "200%" }} />
-                <Button sx={{ width: '95%', marginTop: -5, marginLeft: 2 }} variant='outlined' onClick={handleOpenModal}>{props.type}</Button>
-            </Stack>
-        </Box>
-    );
+  const series = [fillPercent]; // ApexCharts necesita porcentaje, pero mostramos valor real
+*/
+  const data = [
+    {
+      type: "indicator",
+      mode: "gauge+number+delta",
+      value: props.data,
+      title: {
+        text: props.type,
+        font: { size: 20, color: "#2E2E2E", family: "Inter, sans-serif" }
+      },
+      delta: {
+        reference: 0,
+        increasing: { color: "#0077B6" }
+      },
+      gauge: {
+        axis: {
+          range: [(props.type === "Temperatura") ? -50 : 0, (props.type === "Temperatura") ? 100 : 20],
+          tickwidth: 1.5,
+          tickcolor: "#A0A0A0",
+          tickfont: { color: "#444" }
+        },
+        bar: { color: props.color },
+        bgcolor: "#F8F9FA",
+        borderwidth: 2,
+        bordercolor: "#E0E0E0",
+        steps: [
+          { range: [props.min, (props.type === "Temperatura") ? -5 : 4], color: "#E3F2FD" },
+          { range: [(props.type === "Temperatura") ? -5 : 0, (props.type === "Temperatura") ? 36 : 10], color: "#BBDEFB" }
+        ],
+        threshold: {
+          line: { color: "#D32F2F", width: 4 },
+          thickness: 0.75,
+          value: (props.type === "Temperatura") ? ((props.data <0) ? -5 : 41) : 11,
+          
+        }
+      }
+    }
+  ];
+
+  const layout = {
+    autosize: true,
+    margin: { t: 60, r: 20, l: 40, b: 20 }, 
+    paper_bgcolor: "#FFFFFF",
+    font: { color: "#212121", family: "Inter, sans-serif" },
+    
+  };
+  return (
+    <Box
+      sx={{
+        p: 2,
+        width: isMobile ? "100%" : "220px",
+        textAlign: "center",
+      }}
+    >
+      <Stack alignItems="center" spacing={1}>
+        <Plotly style={{height:'150px', width:'220px'}} data={data} layout={layout}/>
+        {/*<ReactApexChart
+          options={options}
+          series={series}
+          type="radialBar"
+          height={220}
+        />*/}
+        <Button  variant="outlined" size="small" sx={{width:'100%'}} onClick={handleOpenModal}>
+          Ver Detalles
+        </Button>
+      </Stack>
+    </Box>
+  );
 };
 
 export default IndicatorGraph;

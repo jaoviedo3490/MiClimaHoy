@@ -159,7 +159,7 @@ const Target = (props) => {
 
       return (
         <div className="card" style={{ width: '18rem' }}>
-          <img src={`.iconjson`} className="card-img-top" alt="Imagen" />
+          <img src={`${iconjson}`} className="card-img-top" alt="Imagen" />
           <div className="card-body">
             <PopoverComponent
               alert="info"

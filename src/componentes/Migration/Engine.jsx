@@ -38,11 +38,29 @@ const Engine = (props) => {
             "info": { "color": "#3fa6c5ff", "titulo": "Importante", "Message": `El nivel actual de Radiación UV es ${props.data}, este nivel de radiación es moderado, es seguro la exposición  la misma, sin embargo se recomienda por poco tiempo.` },
             "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": `El nivel actual de Radiación UV es ${props.data}, este nivel de radiación es alto, se recomienda el uso de protector solar para evitar quemaduras en la piel y por poco tiempo.` },
             "danger": { "color": "#c53f3fff", "titulo": "Peligro", "Message": `El nivel actual de Radiación UV es ${props.data}, este nivel de radiación es muy alto, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` },
-            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": `El nivel actual de Radiación UV es ${props.data}, este nivel de radiación es peligroso, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` }
-        }, "Pronostico": {
-
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": `El nivel actual de Radiación UV es ${props.data}, este nivel de radiación es peligroso, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` },
+        },
+        "Nubosidad": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": `` },
+            "info": { "color": "#3fa6c5ff", "titulo": "Importante", "Message": `` },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": `` },
+            "danger": { "color": "#c53f3fff", "titulo": "Peligro", "Message": `` },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": `` }
+        },
+        "Humedad": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": `` },
+            "info": { "color": "#3fa6c5ff", "titulo": "Importante", "Message": `` },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": `` },
+            "danger": { "color": "#c53f3fff", "titulo": "Peligro", "Message": `` },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": `` }
+        },
+        "Visibilidad": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": `` },
+            "info": { "color": "#3fa6c5ff", "titulo": "Importante", "Message": `` },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": `` },
+            "danger": { "color": "#c53f3fff", "titulo": "Peligro", "Message": `` },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": `` }
         }
-
     }
 
     const getAlert = (value, tipo) => {
@@ -77,7 +95,7 @@ const Engine = (props) => {
 
         switch (typeAlert) {
             case "Temperatura":
-                const nivelAlert = getAlert(-20, typeAlert);
+                const nivelAlert = getAlert(props.data, typeAlert);
 
                 if (alertas["Temperatura"][nivelAlert]?.titulo === 'Peligro') {
 
@@ -199,6 +217,28 @@ const Engine = (props) => {
                         return arrTemp;
                     });
                 }
+                if (alertas["Temperatura"][nivelAlert]?.titulo !== 'Advertencia' && alertas["Temperatura"][nivelAlert]?.titulo !== 'Peligro') {
+
+                    /*
+                    *Si el nivel de alerta no es ni "Peligro" ni "Advertencia", 
+                    *se limpian ambos arreglos de cualquier registro previo de esta metrica
+                    *para evitar que se muestren alertas o advertencias que ya no aplican
+                    */
+
+                    setAlerts((prev) => {
+                        const arrTemp = prev.filter(
+                            (obj, i, arr) => i === arr.findIndex(o => o.type !== `${typeAlert} (Valores Peligrosos)`)
+                        );
+                        return arrTemp;
+                    });
+
+                    setWarnings((prev) => {
+                        const arrTemp = prev.filter(
+                            (obj, i, arr) => i === arr.findIndex(o => o.type !== `${typeAlert} (Valores de riesgo moderado)`)
+                        );
+                        return arrTemp;
+                    });
+                }
                 setComponent(
                     /*
                     *Este componente es aislado de la logica de creacion de alertas ,
@@ -220,7 +260,7 @@ const Engine = (props) => {
                 break;
 
             case "Radiacion UV":
-                const nivelAlertUv = getAlert(10, typeAlert);
+                const nivelAlertUv = getAlert(props.data, typeAlert);
                 setNivelAlertaUV(nivelAlertUv);
 
                 if (alertas["Radiacion UV"][nivelAlertUv]?.titulo === 'Peligro') {
@@ -376,7 +416,28 @@ const Engine = (props) => {
                         optionalData={props.optionalData}
                     />)
                 break;
+            case 'Nubosidad':
+                const nivelAlertNubosidad = getAlert(props.data, typeAlert);
 
+                setComponent(
+                    /*
+                    *Este componente es aislado de la logica de creacion de alertas ,
+                    *el componente <IndicatorGraph>, renderiza mediante Gauges los valores
+                    *de la radiacion y la temperatura , sin embargo hace uso de la funcion getAlert para determinar
+                    *el color con el que se renderizara el grafico
+                    */
+                    <IndicatorGraph
+                        min={props.min}
+                        max={props.max}
+                        type={props.type}
+                        indicator={props.indicator}
+                        split={props.split}
+                        data={props.data}
+                        color={alertas["Nubosidad"][nivelAlertNubosidad]?.color || '#4fd6ffff'}
+                        recomendaciones={alertas["Nubosidad"][nivelAlertNubosidad]?.Message || 'No disponible'}
+                        optionalData={props.optionalData}
+                    />)
+                break;
             default:
 
                 break;
