@@ -3,13 +3,17 @@ import { useContext } from "react";
 import { DataContext } from "../../Context/MetricsContext";
 const AppBarContent = () => {
     const { migrateVersion, setMigrateVersion } = useContext(DataContext);
+    const { dark_theme_letters, setDarkLetters } = useContext(DataContext);
     const handleMigrateVersion = () => {
         setMigrateVersion(false);
     }
     return (
-        <AppBar>
+        <AppBar sx={{
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(5px)'
+        }}>
             <Toolbar>
-                <Button onClick={handleMigrateVersion} sx={{color:'white'}}>Menu Principal</Button>
+                <Button onClick={handleMigrateVersion} sx={{ color:dark_theme_letters ? 'white' : 'black'}}>Menu Principal</Button>
             </Toolbar>
         </AppBar>
     );

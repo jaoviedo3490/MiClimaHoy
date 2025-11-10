@@ -18,6 +18,8 @@ const UserProvide = ({ children }) => {
     const [migrateVersion, setMigrateVersion] = useState(false);
     const [Alerts,setAlerts] = useState([]);
     const [Warnings,setWarnings] = useState([]);
+    const [dark_theme_letters,setDarkLetters] = useState(false);
+    const [background_image, setBackground] = useState();
 
 
     const apiSearch = async (value, query, setCities) => {
@@ -53,7 +55,7 @@ const UserProvide = ({ children }) => {
     //apiSearch();
     return (
         <div>
-            <DataContext.Provider value={{ Warnings,setWarnings,Alerts,setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
+            <DataContext.Provider value={{background_image, setBackground,dark_theme_letters,setDarkLetters, Warnings,setWarnings,Alerts,setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
                 {children}
             </DataContext.Provider>
         </div>

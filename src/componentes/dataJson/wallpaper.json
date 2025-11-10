@@ -1,0 +1,55 @@
+{
+  "wallpapers": [
+    "/wall11_light.jpg",
+    "/wall10_light.jpg",
+    "/wall9_light.jpg",
+    "/wall15_light.jpg",
+    "/wall16_dark.jpg",
+    "/wall14_light.jpg",
+    "/wall8_light.jpg",
+    "/wall17_light.jpg",
+    "/wall12_dark.jpg",
+    "/wall18_light.jpg",
+    "/wall19_dark.jpg",
+    "/wall7_light.jpg",
+    "/wall6_dark.jpg",
+    "/wall5_light.jpg",
+    "/wall3_dark.jpg",
+    "/wall1_dark.jpg"
+  ],
+  "wallPapersCategory": {
+    "low_temp_fatal": [
+      "/wall11_light.jpg",
+      "/wall10_light.jpg",
+      "/wall9_light.jpg",
+      "/wall15_light.jpg"
+    ],
+    "low_temp_non_fatal": [
+      "/wall14_light.jpg",
+      "/wall8_light.jpg",
+      "/wall17_light.jpg"
+    ],
+    "low_temp": [
+      "/wall5_light.jpg",
+      "/wall7_light.jpg"
+    ],
+    "normal_temp": [
+      "/wall6_light.jpg",
+      "/wall3_dark.jpg",
+      "/wall12_light.jpg"
+    ],
+    "hight_temp_non_fatal": [
+      "/wall16_dark.jpg",
+      "/wall18_light.jpg",
+      "/wall19_light.jpg"
+    ],
+    "hight_temp_fatal": [
+      "/wall1_dark.jpg"
+    ],
+    "nigth-Light-snow":"/nigth-Light-snow_dark.jpg",
+    "day-Mist":"/day-Mist_light.png",
+    "nigth-Partly-cloudy":"/nigth_Partly_cloudy_dark.jpg",
+    "nigth-Light-rain-shower":"/nigth_Light_rain_shower_dark.png",
+    "nigth-Light-rain":"/nigth_Light_rain_dark.png"
+  }
+}

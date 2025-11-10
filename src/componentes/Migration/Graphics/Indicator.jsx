@@ -14,6 +14,7 @@ const IndicatorGraph = (props) => {
     setRecomendations,
     SetdataType,
     setdataOptional,
+    dark_theme_letters
   } = useContext(DataContext);
 
   const theme = useTheme();
@@ -112,7 +113,7 @@ const IndicatorGraph = (props) => {
           tickfont: { color: "#444" }
         },
         bar: { color: props.color },
-        bgcolor: "#F8F9FA",
+        paper_bgcolor: 'rgba(255, 255, 255, 0.2)',
         borderwidth: 2,
         bordercolor: "#E0E0E0",
         steps: [
@@ -122,8 +123,8 @@ const IndicatorGraph = (props) => {
         threshold: {
           line: { color: "#D32F2F", width: 4 },
           thickness: 0.75,
-          value: (props.type === "Temperatura") ? ((props.data <0) ? -5 : 41) : 11,
-          
+          value: (props.type === "Temperatura") ? ((props.data < 0) ? -5 : 41) : 11,
+
         }
       }
     }
@@ -131,10 +132,12 @@ const IndicatorGraph = (props) => {
 
   const layout = {
     autosize: true,
-    margin: { t: 60, r: 20, l: 40, b: 20 }, 
-    paper_bgcolor: "#FFFFFF",
+    margin: { t: 60, r: 20, l: 40, b: 20 },
     font: { color: "#212121", family: "Inter, sans-serif" },
+    paper_bgcolor: 'rgba(255, 255, 255, 0.2)',
+    plot_bgcolor: 'rgba(255, 255, 255, 0.2)',
     
+    font: { color: dark_theme_letters ? "white" :'black'}
   };
   return (
     <Box
@@ -142,17 +145,18 @@ const IndicatorGraph = (props) => {
         p: 2,
         width: isMobile ? "100%" : "220px",
         textAlign: "center",
+        borderRadius:'10px'  
       }}
     >
       <Stack alignItems="center" spacing={1}>
-        <Plotly style={{height:'150px', width:'220px'}} data={data} layout={layout}/>
+        <Plotly style={{ height: '150px', width: '220px'}} data={data} layout={layout} />
         {/*<ReactApexChart
           options={options}
           series={series}
           type="radialBar"
           height={220}
         />*/}
-        <Button  variant="outlined" size="small" sx={{width:'100%'}} onClick={handleOpenModal}>
+        <Button variant="outlined" color='black' size="small" sx={{ width: '100%' ,color:'black'}} onClick={handleOpenModal}>
           Ver Detalles
         </Button>
       </Stack>

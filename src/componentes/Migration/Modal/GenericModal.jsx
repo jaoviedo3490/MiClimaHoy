@@ -15,7 +15,8 @@ const GenericModal = (props) => {
         <Modal sx={{
             position: 'fixed',
             width: '90%',
-            maxWidth: '700px'
+            maxWidth: '700px',
+
         }} open={props.open} onClose={props.onClose} BackdropProps={{
             onClick: (e) => e.stopPropagation()
         }}>
@@ -30,6 +31,9 @@ const GenericModal = (props) => {
                 transform: 'translate(-50%,-50%)',
                 boxShadow: '24',
                 p: '2%',
+                borderRadius: '10px',
+                
+                    
             }}>
                 <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
                     <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Saludable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
