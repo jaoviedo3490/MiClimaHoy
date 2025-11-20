@@ -37,7 +37,7 @@ const IndicatorGraph = (props) => {
       value: props.data,
       title: {
         text: props.type,
-        font: { size: 20, color: "#2E2E2E", family: "Inter, sans-serif" }
+        font: { size: 20, color: dark_theme_letters ? "white" :'black', family: "Inter, sans-serif" }
       },
       delta: {
         reference: 0,
@@ -48,7 +48,7 @@ const IndicatorGraph = (props) => {
           range: [(props.type === "Temperatura") ? -50 : props.min, (props.type === "Temperatura") ? 100 : props.max],
           tickwidth: 1.5,
           tickcolor: "#A0A0A0",
-          tickfont: { color: "#444" }
+          tickfont: { color: dark_theme_letters ? "white" :'black' }
         },
         bar: { color: props.color },
         paper_bgcolor: 'rgba(255, 255, 255, 0.2)',
@@ -71,9 +71,9 @@ const IndicatorGraph = (props) => {
   const layout = {
     autosize: true,
     margin: { t: 60, r: 20, l: 40, b: 20 },
-    font: { color: "#212121", family: "Inter, sans-serif" },
-    paper_bgcolor: 'rgba(255, 255, 255, 0.2)',
-    plot_bgcolor: 'rgba(255, 255, 255, 0.2)',
+    font: { color: "#000000ff", family: "Inter, sans-serif" },
+    paper_bgcolor: 'rgba(255, 255, 255, 0)',
+    plot_bgcolor: 'rgba(255, 255, 255, 0)',
     
     font: { color: dark_theme_letters ? "white" :'black'}
   };
@@ -94,7 +94,7 @@ const IndicatorGraph = (props) => {
           type="radialBar"
           height={220}
         />*/}
-        <Button variant="outlined" color='black' size="small" sx={{ width: '100%' ,color:'black'}} onClick={handleOpenModal}>
+        <Button variant="outlined" color={dark_theme_letters ? 'white': 'black'} size="small" sx={{ width: '100%' ,color: dark_theme_letters ? "white" :'black'}} onClick={handleOpenModal}>
           Ver Detalles
         </Button>
       </Stack>

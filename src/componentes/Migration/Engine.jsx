@@ -140,7 +140,7 @@ const Engine = (props) => {
 
         switch (typeAlert) {
             case "Temperatura":
-                const nivelAlert = getAlert(-5, typeAlert);
+                const nivelAlert = getAlert(props.data, typeAlert);
 
                 if (alertas["Temperatura"][nivelAlert]?.titulo === 'Peligro') {
 
@@ -305,7 +305,7 @@ const Engine = (props) => {
                 break;
 
             case "Radiacion UV":
-                const nivelAlertUv = getAlert(10, typeAlert);
+                const nivelAlertUv = getAlert(props.data, typeAlert);
                 setNivelAlertaUV(nivelAlertUv);
 
                 if (alertas["Radiacion UV"][nivelAlertUv]?.titulo === 'Peligro') {
@@ -567,7 +567,7 @@ const Engine = (props) => {
                 break;
             case "Quality-Air":
 
-                const nivelAlertaQualityAir = getAlert(4, typeAlert);
+                const nivelAlertaQualityAir = getAlert(props.data, typeAlert);
                 if (alertas["Quality-Air"][nivelAlertaQualityAir]?.titulo === 'Peligro') {
 
                     /*Notification.requestPermission().then(function (result) {
@@ -746,7 +746,7 @@ const Engine = (props) => {
 
                 break;
             case "Precipitacion":
-                const nivelAlertaPrecipitation = getAlert(50, typeAlert);
+                const nivelAlertaPrecipitation = getAlert(props.data, typeAlert);
                 if (alertas["Precipitacion"][nivelAlertaPrecipitation]?.titulo === 'Peligro') {
 
                     /*Notification.requestPermission().then(function (result) {
@@ -910,7 +910,7 @@ const Engine = (props) => {
                     />)
                 break;
             case "Velocidad-Viento":
-                const nivelAlertaVelocidadViento = getAlert(45, typeAlert);
+                const nivelAlertaVelocidadViento = getAlert(props.data, typeAlert);
                 if (alertas["Velocidad-Viento"][nivelAlertaVelocidadViento]?.titulo === 'Peligro') {
 
                     /*Notification.requestPermission().then(function (result) {

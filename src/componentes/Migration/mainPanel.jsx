@@ -21,7 +21,7 @@ const MainPanel = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const [valueTab, setValueTab] = useState('1');
-    const { dark_theme_letters, setDarkLetters, background_image, setBackground } = useContext(DataContext);
+    const { dark_theme_letters, setDarkLetters, background_image, setBackground,climateAlert } = useContext(DataContext);
 
     const onChangeTab = (event, newValue) => {
         setValueTab(newValue);
@@ -42,7 +42,7 @@ const MainPanel = () => {
         img.onerror = () => console.warn("No se pudo cargar la imagen de fondo:", background);
         const themeD = /_dark/.test(background);
         setDarkLetters(themeD);
-    }, [background_image, dark_theme_letters]);
+    }, [background_image, dark_theme_letters,climateAlert]);
 
 
     return (

@@ -296,8 +296,20 @@ const Pronostics = () => {
                                         recomendedLimit={45}
                                     />
                                 </Stack>
-                                <Divider component="div" role="presentation">
-                                    <Typography>Panel de Alertas</Typography>
+                                <Divider
+                                    component="div"
+                                    role="presentation"
+                                    // Usamos 'borderColor' para el color de la línea del Divider
+                                    sx={{
+                                        '&::before, &::after': {
+                                            borderColor: (isDay === 'nigth') ? 'white' : 'black',
+                                        }
+                                    }}
+                                >
+                                    {/* El color del texto sí usa la propiedad 'color' */}
+                                    <Typography sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>
+                                        Panel de Alertas
+                                    </Typography>
                                 </Divider>
                                 <Box
                                     sx={{
@@ -307,11 +319,11 @@ const Pronostics = () => {
                                         backgroundColor: 'rgba(255, 255, 255, 0.2)',
                                     }}
                                 >
-                               
+
                                     {(Array.isArray(Alerts_Module_second) && Alerts_Module_second.length > 0) ||
                                         (Array.isArray(Warnings_Module_second) && Warnings_Module_second.length > 0) ? (
                                         <>
-                                           
+
                                             {Array.isArray(Alerts_Module_second) && Alerts_Module_second.length > 0 &&
                                                 Alerts_Module_second.map((object, inx) => (
                                                     <Alert
@@ -326,7 +338,7 @@ const Pronostics = () => {
                                                 ))
                                             }
 
-                                          
+
                                             {Array.isArray(Warnings_Module_second) && Warnings_Module_second.length > 0 &&
                                                 Warnings_Module_second.map((object, inx) => (
                                                     <Alert
@@ -342,9 +354,9 @@ const Pronostics = () => {
                                             }
                                         </>
                                     ) : (
-                                
-                                        <Box sx={{ marginTop: isMobile ? '40%' : '15%', marginLeft: isMobile ? '35%' : '43%' }}>
-                                            <Typography variant="caption">Sin novedades</Typography>
+
+                                        <Box sx={{ marginTop: isMobile ? '40%' : '20%', marginLeft: isMobile ? '35%' : '43%' }}>
+                                            <Typography variant='body' sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>Sin novedades</Typography>
                                         </Box>
                                     )}
                                 </Box>

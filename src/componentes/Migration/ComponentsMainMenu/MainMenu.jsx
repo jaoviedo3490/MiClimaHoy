@@ -113,7 +113,7 @@ const MainMenu = () => {
 
     useEffect(() => {
         localize();
-    }, []);
+    }, [location]);
 
     useEffect(() => {
         if (Temperatura <= -5) {
