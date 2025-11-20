@@ -9,7 +9,7 @@ const IndicatorDetails = (props) => {
     const theme = useTheme();
 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : 0;
+    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : (props.type === 'Quality-Air') ? 6 : (props.type === 'Precipitacion') ? 90 : (props.type==='Velocidad-Viento') ? 90 : 0;
     const ValuePercentaje = (props.valor < 0) ? (Math.round((props.valor * -1) * 100 / 40)) : (Math.round(props.valor * 100 / value));
     const ValuePercentajeOptional = (props.valorOpcional < 0) ? (Math.round((props.valorOpcional * -1) * 100 / 40)) : (Math.round(props.valorOpcional * 100 / value));
     const graphType = (props.GraphType !== undefined ? 1 : 0);
@@ -18,19 +18,19 @@ const IndicatorDetails = (props) => {
             ? props.valor > 10
                 ? '#3fa6c5ff'
                 : props.valor > 5
-                    ? '#3fc555ff' 
+                    ? '#3fc555ff'
                     : props.valor > 1
                         ? '#F18B00'
                         : props.valor >= 0
-                            ? '#c53f3fff' 
-                            : '#3fa6c5ff' 
+                            ? '#c53f3fff'
+                            : '#3fa6c5ff'
             : props.valor >= 75
-                ? '#c53f3fff' 
+                ? '#c53f3fff'
                 : props.valor >= 50
-                    ? '#F18B00' 
+                    ? '#F18B00'
                     : props.valor > 0
                         ? '#3fc555ff'
-                        : 'black'; 
+                        : 'black';
 
     const dataT = [{
         value: ValuePercentaje,
@@ -63,9 +63,47 @@ const IndicatorDetails = (props) => {
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
+    const dataQualityAir = [{
+        value: (Math.round(props.valor * 100 / value)),
+        name: props.title1,
+        title: { offsetCenter: ['0%', '-30%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
+    },
+    {
+        value: (Math.round(props.valorOpcional * 100 / value)),
+        name: props.title2,
+        title: { offsetCenter: ['0%', '10%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
+    }];
+
+    const dataPrecipitacion = [{
+        value: (Math.round(props.valor * 100 / value)),
+        name: props.title1,
+        title: { offsetCenter: ['0%', '-30%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
+    },
+    {
+        value: (Math.round(props.valorOpcional * 100 / value)),
+        name: props.title2,
+        title: { offsetCenter: ['0%', '10%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
+    }];
+    const dataVelocidadViento = [{
+        value: (Math.round(props.valor * 100 / value)),
+        name: props.title1,
+        title: { offsetCenter: ['0%', '-30%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
+    },
+    {
+        value: (Math.round(props.valorOpcional * 100 / value)),
+        name: props.title2,
+        title: { offsetCenter: ['0%', '10%'] },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
+    }];
+
     const dataGeneric = [{
         value: (props.type === 'Visibilidad') ? (Math.round(props.valor * 100 / 15)) : props.valor,
-        name: props.title1,
+        name: "aqiu?",
         title: { offsetCenter: ['0%', '0%'] },
         detail: { valueAnimation: true, offsetCenter: ['10%', '0%'] },
         itemStyle: { color: dataColor }
@@ -79,7 +117,7 @@ const IndicatorDetails = (props) => {
             saveAsImage: { show: true },
         },
     })
-    const gaugeData = (props.type === 'Temperatura') ? dataT : (props.type === 'Radiacion UV' ? dataR : dataGeneric);
+    const gaugeData = (props.type === 'Temperatura') ? dataT : (props.type === 'Radiacion UV' ? dataR : (props.type === 'Quality-Air' ? dataQualityAir : (props.type === 'Precipitacion' ? dataPrecipitacion : (props.type === 'Velocidad-Viento' ? dataVelocidadViento : dataGeneric))));
 
     const option = {
         tooltip: {

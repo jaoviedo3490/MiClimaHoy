@@ -1,4 +1,4 @@
-import React from "react";
+
 
 import { Box, Stack, Button } from "@mui/material";
 import { DataContext } from "../../../Context/MetricsContext";
@@ -29,69 +29,7 @@ const IndicatorGraph = (props) => {
     setdataOptional(props.optionalData);
   };
 
-  // Determinar unidad
 
-  // Usar rango real (no porcentaje)
-  /*const min = props.min ?? 0;
-  const max = props.max ?? 100;
-  const value = props.data ?? 0;
-
-  // Calcular cuánto se llena el gauge (ApexCharts solo acepta 0–100)
-  const fillPercent = ((value - min) / (max - min)) * 100;*/
-
-  /*const options = {
-    chart: {
-      type: "radialBar",
-      sparkline: { enabled: true },
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 800,
-      },
-    },
-    plotOptions: {
-      radialBar: {
-        startAngle: 0,
-        endAngle: 360,
-        hollow: {
-          size: "70%",
-          background: "#fff",
-        },
-        track: {
-          background: "#f2f2f2",
-          strokeWidth: "100%",
-        },
-        dataLabels: {
-          name: {
-            show: true,
-            color: "#555",
-            fontSize: isMobile ? "13px" : "14px",
-            offsetY: 20,
-            formatter: () => props.type || "",
-          },
-          value: {
-            show: true,
-            color: "#333",
-            fontSize: isMobile ? "22px" : "24px",
-            fontWeight: 700,
-            offsetY: -10,
-            formatter: () => `${value.toFixed(1)}${unit}`,
-          },
-        },
-      },
-    },
-    fill: {
-      colors: [props.color],
-      type: "solid",
-    },
-    stroke: {
-      lineCap: "round",
-    },
-    labels: [props.type || "Metric"],
-  };
-
-  const series = [fillPercent]; // ApexCharts necesita porcentaje, pero mostramos valor real
-*/
   const data = [
     {
       type: "indicator",
@@ -107,7 +45,7 @@ const IndicatorGraph = (props) => {
       },
       gauge: {
         axis: {
-          range: [(props.type === "Temperatura") ? -50 : 0, (props.type === "Temperatura") ? 100 : 20],
+          range: [(props.type === "Temperatura") ? -50 : props.min, (props.type === "Temperatura") ? 100 : props.max],
           tickwidth: 1.5,
           tickcolor: "#A0A0A0",
           tickfont: { color: "#444" }
@@ -118,12 +56,12 @@ const IndicatorGraph = (props) => {
         bordercolor: "#E0E0E0",
         steps: [
           { range: [props.min, (props.type === "Temperatura") ? -5 : 4], color: "#E3F2FD" },
-          { range: [(props.type === "Temperatura") ? -5 : 0, (props.type === "Temperatura") ? 36 : 10], color: "#BBDEFB" }
+          { range: [(props.type === "Temperatura") ? -5 : props.recomendedLimit, (props.type === "Temperatura") ? 36 : 0], color: "#BBDEFB" }
         ],
         threshold: {
           line: { color: "#D32F2F", width: 4 },
           thickness: 0.75,
-          value: (props.type === "Temperatura") ? ((props.data < 0) ? -5 : 41) : 11,
+          value: (props.type === "Temperatura") ? ((props.data < 0) ? -5 : 41) : props.recomendedLimit,
 
         }
       }

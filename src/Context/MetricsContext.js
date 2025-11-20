@@ -16,10 +16,21 @@ const UserProvide = ({ children }) => {
     const [dataType, SetdataType] = useState([]);
     const [dataOptional, setdataOptional] = useState([]);
     const [migrateVersion, setMigrateVersion] = useState(false);
-    const [Alerts,setAlerts] = useState([]);
-    const [Warnings,setWarnings] = useState([]);
-    const [dark_theme_letters,setDarkLetters] = useState(false);
+    const [Alerts, setAlerts] = useState([]);
+    const [Alerts_Module_second,setAlert_Module_Second] = useState([]);
+    const [Warnings_Module_second,setWarnings_Module_Second] = useState([]);
+    const [Warnings, setWarnings] = useState([]);
+    const [dark_theme_letters, setDarkLetters] = useState(false);
     const [background_image, setBackground] = useState();
+    const [dataNubosidad, setDataNubosidad] = useState([]);
+    const [dataHumedad, setDataHumedad] = useState([]);
+    const [dataQualityAir, setDataQualityAir] = useState([]);
+    const [dataVisibilidad, setDataVisibilidad] = useState([]);
+    const [isDay_global, setIsDay_global] = useState([]);
+    const [dataMonoCarbono,setMonoCarbono] = useState([]);
+    const [dataDioNitrogeno,setDataDioNitrogeno] = useState([]);
+    const [dataDioAzufre,setDataDioAzufre] = useState([]);
+
 
 
     const apiSearch = async (value, query, setCities) => {
@@ -55,7 +66,7 @@ const UserProvide = ({ children }) => {
     //apiSearch();
     return (
         <div>
-            <DataContext.Provider value={{background_image, setBackground,dark_theme_letters,setDarkLetters, Warnings,setWarnings,Alerts,setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
+            <DataContext.Provider value={{Warnings_Module_second,setWarnings_Module_Second,Alerts_Module_second,setAlert_Module_Second,dataDioAzufre,setDataDioAzufre,dataDioNitrogeno,setDataDioNitrogeno,dataMonoCarbono, setMonoCarbono,dataQualityAir, isDay_global, setDataQualityAir, setIsDay_global, dataVisibilidad, setDataVisibilidad, dataHumedad, setDataHumedad, dataNubosidad, setDataNubosidad, background_image, setBackground, dark_theme_letters, setDarkLetters, Warnings, setWarnings, Alerts, setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
                 {children}
             </DataContext.Provider>
         </div>

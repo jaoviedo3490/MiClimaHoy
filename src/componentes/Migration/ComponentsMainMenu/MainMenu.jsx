@@ -17,6 +17,7 @@ import Engine from "../Engine.jsx";
 import GenericModal from "../Modal/GenericModal.jsx";
 import Snackbar from '@mui/material/Snackbar';
 import JsonImage from '../../dataJson/wallpaper.json';
+import { Vibrant } from "node-vibrant/browser";
 
 
 const MainMenu = () => {
@@ -65,6 +66,7 @@ const MainMenu = () => {
 
 
 
+
                         setMapComponent(
                             <iframe
                                 src={mapUrl}
@@ -92,6 +94,23 @@ const MainMenu = () => {
         );
     };
 
+    const getColor = async (param) => {
+        try {
+            const palette = await Vibrant.from(param).getPalette(); // <-- espera a la promesa
+            const dominant = palette.Vibrant || palette.Muted;
+
+            if (!dominant) return "#000000";
+
+            const [r, g, b] = dominant.rgb;
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+            return brightness > 128 ? "#000000" : "#FFFFFF";
+        } catch (error) {
+            console.error(error);
+            return "#000000";
+        }
+    };
+
     useEffect(() => {
         localize();
     }, []);
@@ -100,37 +119,44 @@ const MainMenu = () => {
         if (Temperatura <= -5) {
             const images = JsonImage.wallPapersCategory.low_temp_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp_fatal.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
+
 
             setDarkLetters(themeD);
-        }else if(Temperatura <0 && Temperatura >=-5){
+        } else if (Temperatura < 0 && Temperatura >= -5) {
             const images = JsonImage.wallPapersCategory.low_temp_non_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp_non_fatal.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
 
             setDarkLetters(themeD);
-        }else if(Temperatura >=0 && Temperatura <=20){
+        } else if (Temperatura >= 0 && Temperatura <= 20) {
             const images = JsonImage.wallPapersCategory.low_temp[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
 
             setDarkLetters(themeD);
-        }else if(Temperatura >=20 && Temperatura <=30){
+        } else if (Temperatura >= 20 && Temperatura <= 30) {
             const images = JsonImage.wallPapersCategory.normal_temp[Math.floor(Math.random() * JsonImage.wallPapersCategory.normal_temp.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
 
             setDarkLetters(themeD);
-        }else if(Temperatura >=30 && Temperatura <=36){
+        } else if (Temperatura >= 30 && Temperatura <= 36) {
             const images = JsonImage.wallPapersCategory.hight_temp_non_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.hight_temp_non_fatal.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
 
             setDarkLetters(themeD);
-        }else if(Temperatura >=36){
+        } else if (Temperatura >= 36) {
             const images = JsonImage.wallPapersCategory.hight_temp_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.hight_temp_fatal.length)];
             setBackground(images);
-            const themeD = /_dark/.test(images);
+            const themeD = getColor(images);
+            //alert(themeD);
 
             setDarkLetters(themeD);
         }
@@ -173,10 +199,10 @@ const MainMenu = () => {
                                             />
                                             {<Engine
                                                 min={0}
-                                                max={16}
+                                                max={15}
                                                 type="Radiacion UV"
                                                 indicator="UV"
-                                                split={4}
+                                                split={5}
                                                 data={radiacionUV}
                                                 optionalData={10}
 
@@ -196,31 +222,42 @@ const MainMenu = () => {
                                                         backgroundColor: 'rgba(255, 255, 255, 0.2)',
                                                     }}
                                                 >
-                                                    {Array.isArray(Alerts) && Alerts.length > 0 ? (
-                                                        Alerts.map((object, inx) => (
-                                                            <Alert
-                                                                sx={{ width: '95%', height: '38%', marginTop: '15px', marginLeft: '10px', backgroundColor: 'rgba(255, 0, 0, 0.47)' }}
-                                                                variant="filled"
-                                                                severity="error"
-                                                                key={inx}
-                                                            >
-                                                                <AlertTitle>{`¡${object.alertBody?.titulo || "No disponible"}!`}</AlertTitle>
-                                                                <Typography variant="caption">{object?.type || "No disponible"}</Typography>
-                                                            </Alert>
-                                                        ))
-                                                    ) : Array.isArray(Warnings) && Warnings.length > 0 ? (
-                                                        Warnings.map((object, inx) => (
-                                                            <Alert
-                                                                sx={{ width: '95%', height: isMobile ? '40%' : '38%', marginTop: '15px', marginLeft: '10px',backgroundColor: 'rgba(255, 136, 0, 0.47)'  }}
-                                                                variant="filled"
-                                                                severity="warning"
-                                                                key={inx}
-                                                            >
-                                                                <AlertTitle>{`¡${object.alertBody?.titulo || "No disponible"}!`}</AlertTitle>
-                                                                <Typography variant="caption">{object?.type || "No disponible"}</Typography>
-                                                            </Alert>
-                                                        ))
+                                                  
+                                                    {(Array.isArray(Alerts) && Alerts.length > 0) ||
+                                                        (Array.isArray(Warnings) && Warnings.length > 0) ? (
+                                                        <>
+                                                          
+                                                            {Array.isArray(Alerts) && Alerts.length > 0 &&
+                                                                Alerts.map((object, inx) => (
+                                                                    <Alert
+                                                                        sx={{ width: '95%', height: '38%', marginTop: '15px', marginLeft: '10px', backgroundColor: 'rgba(255, 0, 0, 0.47)' }}
+                                                                        variant="filled"
+                                                                        severity="error"
+                                                                        key={inx}
+                                                                    >
+                                                                        <AlertTitle>{`¡${object.alertBody?.titulo || "No disponible"}!`}</AlertTitle>
+                                                                        <Typography variant="caption">{object?.type || "No disponible"}</Typography>
+                                                                    </Alert>
+                                                                ))
+                                                            }
+
+                                        
+                                                            {Array.isArray(Warnings) && Warnings.length > 0 &&
+                                                                Warnings.map((object, inx) => (
+                                                                    <Alert
+                                                                        sx={{ width: '95%', height: isMobile ? '40%' : '38%', marginTop: '15px', marginLeft: '10px', backgroundColor: 'rgba(255, 136, 0, 0.47)' }}
+                                                                        variant="filled"
+                                                                        severity="warning"
+                                                                        key={inx}
+                                                                    >
+                                                                        <AlertTitle>{`¡${object.alertBody?.titulo || "No disponible"}!`}</AlertTitle>
+                                                                        <Typography variant="caption">{object?.type || "No disponible"}</Typography>
+                                                                    </Alert>
+                                                                ))
+                                                            }
+                                                        </>
                                                     ) : (
+                                                     
                                                         <Box sx={{ marginTop: isMobile ? '40%' : '20%', marginLeft: isMobile ? '35%' : '40%' }}>
                                                             <Typography variant="caption">Sin novedades</Typography>
                                                         </Box>

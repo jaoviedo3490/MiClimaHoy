@@ -1,55 +1,73 @@
 {
   "wallpapers": [
-    "/wall11_light.jpg",
-    "/wall10_light.jpg",
-    "/wall9_light.jpg",
-    "/wall15_light.jpg",
-    "/wall16_dark.jpg",
-    "/wall14_light.jpg",
-    "/wall8_light.jpg",
-    "/wall17_light.jpg",
-    "/wall12_dark.jpg",
-    "/wall18_light.jpg",
-    "/wall19_dark.jpg",
-    "/wall7_light.jpg",
-    "/wall6_dark.jpg",
-    "/wall5_light.jpg",
-    "/wall3_dark.jpg",
-    "/wall1_dark.jpg"
+    "/wall11_light.webp",
+    "/wall10_light.webp",
+    "/wall9_light.webp",
+    "/wall15_light.webp",
+    "/wall16_dark.webp",
+    "/wall14_light.webp",
+    "/wall8_light.webp",
+    "/wall17_light.webp",
+    "/wall12_dark.webp",
+    "/wall18_light.webp",
+    "/wall19_dark.webp",
+    "/wall7_light.webp",
+    "/wall6_dark.webp",
+    "/wall5_light.webp",
+    "/wall3_dark.webp",
+    "/wall1_dark.webp"
   ],
   "wallPapersCategory": {
     "low_temp_fatal": [
-      "/wall11_light.jpg",
-      "/wall10_light.jpg",
-      "/wall9_light.jpg",
-      "/wall15_light.jpg"
+      "/wall11_light.webp",
+      "/wall9_light.webp",
+      "/wall15_light.webp"
     ],
     "low_temp_non_fatal": [
-      "/wall14_light.jpg",
-      "/wall8_light.jpg",
-      "/wall17_light.jpg"
+      "/wall14_light.webp",
+      "/wall8_light.webp",
+      "/wall17_light.webp"
     ],
     "low_temp": [
-      "/wall5_light.jpg",
-      "/wall7_light.jpg"
+      "/wall30_dark.webp",
+      "/wall31_light.webp",
+      "/wall35_light.png"
     ],
     "normal_temp": [
-      "/wall6_light.jpg",
-      "/wall3_dark.jpg",
-      "/wall12_light.jpg"
+      "/wall6_light.png",
+      "/wall12_light.png",
+      "/wall32_light.png",
+      "/wall34_light.png"
     ],
     "hight_temp_non_fatal": [
-      "/wall16_dark.jpg",
-      "/wall18_light.jpg",
-      "/wall19_light.jpg"
+      "/wall20_dark.webp",
+      "/wall21_light.webp",
+      "/wall22_light.webp",
+      "/wall23_dark.webp",
+      "wall33_light.png"
     ],
     "hight_temp_fatal": [
-      "/wall1_dark.jpg"
+      "/wall1_dark.webp"
     ],
-    "nigth-Light-snow":"/nigth-Light-snow_dark.jpg",
-    "day-Mist":"/day-Mist_light.png",
-    "nigth-Partly-cloudy":"/nigth_Partly_cloudy_dark.jpg",
-    "nigth-Light-rain-shower":"/nigth_Light_rain_shower_dark.png",
-    "nigth-Light-rain":"/nigth_Light_rain_dark.png"
+    "nigth-Light-snow":"nigth-Light-snow_dark.webp",
+    "nigth-Partly-Cloudy":"nigth_Partly_cloudy_dark.webp",
+    "nigth-Light-rain-shower":"nigth_Light_rain_shower_dark.webp",
+    "nigth-Light-rain":"nigth_Light_rain_dark.webp",
+    "day-Partly-cloudy":"day-Partly-cloudy_light.webp",
+    "nigth-Overcast":"nigth-Overcast_dark.webp",
+    "nigth-Clear":"nigth-Clear_dark.webp",
+    "nigth-Mist":"nigth-Mist_dark.webp",
+    "nigth-Patchy-light-rain":"nigth-Patchy-light-rain_dark.png",
+    "day-Freezing-fog":"day-Freezing-fog_dark.png",
+    "nigth-Freezing-fog":"nigth-Freezing-fog_dark.png",
+    "nigth-Light-sleet":"nigth-Light-sleet_dark.png",
+    "day-Light-snow":"day-Light-snow_dark.png",
+    "day-Overcast":"day-Overcast.png",
+    "day-Cloudy":"/day-Cloudy_light.png",
+    "day-Fog":"day-Fog_light.png",
+    "day-Mist":"day-Mist_light.png",
+    "nigth-Sunny":"nigth-Clear_dark.webp",
+    "nigth-Moderate-or-heavy-rain-with-thunder":"nigth-Moderate-or-heavy-rain-with-thunder_dark.png",
+    "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
   }
 }

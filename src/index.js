@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { UserProvide } from './Context/MetricsContext';
 
-// ✅ Fuente Inter (moderna y compacta)
 const fontHref = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap";
 const link = document.createElement("link");
 link.href = fontHref;
@@ -13,20 +12,16 @@ link.rel = "stylesheet";
 document.head.appendChild(link);
 
 const style = document.createElement("style");
-style.innerHTML = `
-  * {
-    font-family: "Inter", sans-serif !important;
-  }
-`;
+style.innerHTML = `* {font-family: "Inter", sans-serif !important;}`;
 document.head.appendChild(style);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  
-    <UserProvide>
-      <App />
-    </UserProvide>
- 
+
+  <UserProvide>
+    <App />
+  </UserProvide>
+
 );
 
 reportWebVitals();

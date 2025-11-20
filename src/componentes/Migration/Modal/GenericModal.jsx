@@ -16,6 +16,7 @@ const GenericModal = (props) => {
             position: 'fixed',
             width: '90%',
             maxWidth: '700px',
+            
 
         }} open={props.open} onClose={props.onClose} BackdropProps={{
             onClick: (e) => e.stopPropagation()
@@ -32,11 +33,13 @@ const GenericModal = (props) => {
                 boxShadow: '24',
                 p: '2%',
                 borderRadius: '10px',
+                backgroundColor: 'rgba(255, 255, 255, 0.44)',
+                backdropFilter: 'blur(7px)'
                 
                     
             }}>
                 <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
-                    <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Saludable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                    <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType==='Quality-Air' ? 'Calidad del Aire' : dataType==='Precipitacion' ? 'Precipitacion' : dataType==='Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
                     <Stack spacing={2}>
                         <Box>
                             <Alert variant='outlined' severity="info">
@@ -51,7 +54,7 @@ const GenericModal = (props) => {
                             </Stack >
                             <Stack direction='row' spacing={1}>
                                 <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                <Typography variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite saludable'} ({dataOptional})</Typography>
+                                <Typography variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite Recomendable'} ({dataOptional})</Typography>
                             </Stack>
                             {dataType === 'Temperatura' ? (<Stack direction='row' spacing={1}>
                                 <Box sx={{ backgroundColor: 'rgba(238, 225, 51, 1)', height: '15px', width: '15px', borderRadius: '10%' }}></Box>
