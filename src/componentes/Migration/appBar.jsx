@@ -13,7 +13,7 @@ const AppBarContent = () => {
             backdropFilter: 'blur(5px)'
         }}>
             <Toolbar>
-                <Button onClick={handleMigrateVersion} sx={{ color:!isDay_global ? 'white' : 'black'}}>Menu Principal</Button>
+                <Button onClick={handleMigrateVersion} sx={{ color:isDay_global ? 'white' : 'black'}}>Menu Principal</Button>
             </Toolbar>
         </AppBar>
     );

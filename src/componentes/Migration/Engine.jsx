@@ -17,12 +17,12 @@ const Engine = (props) => {
         "Nubosidad": [{ "success": [0, 25], "info": [26, 50], "warning": [51, 75], "danger": [76, 100] }],
         "Humedad": [{ "success": [0, 25], "info": [26, 50], "warning": [51, 75], "danger": [76, 100] }],
         "Visibilidad": [{ "success": [11, 50], "info": [6, 10], "warning": [1, 5], "danger": [0, 1] }],
-        "Quality-Air": [{ "success": [1, 2], "info": [3, 3], "warning": [4, 4], "danger": [5, 6] }],
+        "Quality-Air": [{ "success": [1, 1], "warning": [2, 4], "danger": [5, 6] }],
         "MonoCarbono": [{ "success": [0, 9], "info": [10, 50], "warning": [51, 100], "danger": [101, 200], "primary": [201, 500] }],
         "DioNitrogeno": [{ "success": [0, 0.053], "info": [0.054, 0.1], "warning": [0.101, 0.2], "danger": [0.2, 500] }],
         "DioAzufre": [{ "success": [0, 0.017], "info": [0.01701, 0.075], "warning": [0.076, 0.5], "danger": [0.5, 5] }],
         "Precipitacion": [{ "success": [0, 2], "info": [2.1, 10], "warning": [10.1, 30], "danger": [30, 70] }],
-        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 38], "warning": [38.1, 61], "danger": [61.1, 100] }],
+        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 30.9], "warning": [40, 65], "danger": [66.1, 100] }],
     };
 
     //Estas son las alertas que se generaran para cada metrica teniendo en cuenta los rangos anteriores
@@ -450,6 +450,7 @@ const Engine = (props) => {
                     *el color con el que se renderizara el grafico
                     */
                     <IndicatorGraph
+                        alert={alertas["Radiacion UV"][nivelAlertUv]?.alert}
                         min={props.min}
                         max={props.max}
                         type={props.type}
@@ -714,12 +715,12 @@ const Engine = (props) => {
 
 
 
-                const qualityAirMessage = (climateAlert.current.air_quality['us-epa-index'] == 1) ? `Buena: La calidad del aire es óptima y no representa riesgo para la salud , No se requieren precauciones.` :
-                    (climateAlert.current.air_quality['us-epa-index'] == 2) ? `Moderada: La calidad del aire es aceptable, pero algunas personas sensibles pueden experimentar molestias leves , Si eres sensible (asma o enfermedades respiratorias), limita el esfuerzo físico al aire.` :
-                        (climateAlert.current.air_quality['us-epa-index'] == 3) ? `No saludable para grupos sensibles: La calidad del aire es baja , personas con enfermedades respiratorias, niños y adultos mayores pueden verse afectados , se recomienda evitar actividades al aire libre si perteneces a un grupo de riesgo. Usa mascarilla si es necesario.` :
-                            (climateAlert.current.air_quality['us-epa-index'] == 4) ? `Insalubre: La calidad del aire no es saludable , Toda la población puede experimentar efectos adversos, especialmente personas con problemas respiratorios , Reduce la actividad al aire libre, usa purificadores de aire en casa y evita zonas con alta contaminación.` :
-                                (climateAlert.current.air_quality['us-epa-index'] == 5) ? `Muy Insalubre: La calidad del aire es peligrosa , Aumentan los riesgos de salud para toda la población. Se recomienda evitar la exposición prolongada , Permanece en interiores, usa mascarilla si debes salir y mantén cerradas puertas y ventanas.` :
-                                    (climateAlert.current.air_quality['us-epa-index'] == 6) ? `Peligroso: La calidad del aire es altamente peligrosa,  La contaminación es extrema y puede afectar gravemente a toda la población, evita salir, usa purificadores y sigue indicaciones de las autoridades locales para reducir la exposición.` : `Definicion no encontrada`
+                const qualityAirMessage = (climateAlert.current.air_quality['us-epa-index'] == 1) ? `La calidad del aire es *Buena* y no representa riesgo para la salud , No se requieren precauciones.` :
+                    (climateAlert.current.air_quality['us-epa-index'] == 2) ? `La calidad del aire es *Moderada*, pero algunas personas sensibles pueden experimentar molestias leves , Si eres sensible (asma o enfermedades respiratorias), limita el esfuerzo físico al aire.` :
+                        (climateAlert.current.air_quality['us-epa-index'] == 3) ? ` La calidad del aire es *No saludable para grupos sensibles* , personas con enfermedades respiratorias, niños y adultos mayores pueden verse afectados , se recomienda evitar actividades al aire libre si perteneces a un grupo de riesgo. Usa mascarilla si es necesario.` :
+                            (climateAlert.current.air_quality['us-epa-index'] == 4) ? `La calidad del aire es *Insalubre* , Toda la población puede experimentar efectos adversos, especialmente personas con problemas respiratorios , Reduce la actividad al aire libre, usa purificadores de aire en casa y evita zonas con alta contaminación.` :
+                                (climateAlert.current.air_quality['us-epa-index'] == 5) ? `La calidad del aire es peligrosa , Aumentan los riesgos de salud para toda la población. Se recomienda evitar la exposición prolongada , Permanece en interiores, usa mascarilla si debes salir y mantén cerradas puertas y ventanas.` :
+                                    (climateAlert.current.air_quality['us-epa-index'] == 6) ? `La calidad del aire es altamente peligrosa,  La contaminación es extrema y puede afectar gravemente a toda la población, evita salir, usa purificadores y sigue indicaciones de las autoridades locales para reducir la exposición.` : `Definicion no encontrada`
 
                 alertas['Quality-Air'][nivelAlertaQualityAir].Message = qualityAirMessage;
                 setDataQualityAir(alertas['Quality-Air'][nivelAlertaQualityAir]);
@@ -887,7 +888,19 @@ const Engine = (props) => {
                         return arrTemp;
                     });
                 }
+                const messagePrecipitacion =
+                    (props.data >= 0 && props.data <= 2)
+                        ? `Lluvia ausente o muy ligera. Puedes desplazarte con normalidad. Aun así, lleva una chaqueta ligera si estarás fuera por varias horas, especialmente en moto o bici.`
+                        : (props.data > 2 && props.data <= 10)
+                            ? `Lluvia ligera a moderada. Lleva paraguas o impermeable, y usa calzado que no se resbale. Si conduces, ten precaución: el pavimento puede estar húmedo y más resbaloso de lo normal.`
+                            : (props.data > 10 && props.data <= 30)
+                                ? `Lluvia moderada a fuerte. Evita permanecer mucho tiempo a la intemperie. Revisa que puertas y ventanas estén bien cerradas y procura no circular en moto o bici durante los picos de lluvia. Si conduces, reduce la velocidad y aumenta la distancia con otros vehículos.`
+                                : (props.data > 30 && props.data <= 70)
+                                    ? `Lluvia muy fuerte con riesgo de encharcamientos e inundaciones en zonas vulnerables. Evita salir si no es necesario, sobre todo a pie o en moto. No cruces calles o vías con acumulación de agua y mantente atento a reportes oficiales sobre inundaciones o deslizamientos.`
+                                    : `Definición no encontrada`;
 
+
+                alertas['Precipitacion'][nivelAlertaPrecipitation].Message = messagePrecipitacion;
                 setComponent(
                     /*
                     *Este componente es aislado de la logica de creacion de alertas ,
@@ -895,6 +908,8 @@ const Engine = (props) => {
                     *de la radiacion y la temperatura , sin embargo hace uso de la funcion getAlert para determinar
                     *el color con el que se renderizara el grafico
                     */
+
+
                     <IndicatorGraph
                         min={props.min}
                         max={props.max}
@@ -904,8 +919,8 @@ const Engine = (props) => {
                         data={props.data}
                         color={alertas['Precipitacion'][nivelAlertaPrecipitation]?.color || '#4fd6ffff'}
                         recomendaciones={alertas['Precipitacion'][nivelAlertaPrecipitation]?.Message || 'No disponible'}
-                        recomendedLimit={45}
-                        optionalData={70}
+                        recomendedLimit={props.recomendedLimit}
+                        optionalData={40}
 
                     />)
                 break;
@@ -1051,6 +1066,17 @@ const Engine = (props) => {
                         return arrTemp;
                     });
                 }
+                const messageVelocidadViento =
+                    (props.data >= 0 && props.data <= 19)
+                        ? `Viento suave a moderado. Las actividades al aire libre son seguras. Aun así, asegúrate de que objetos livianos como sombrillas o lonas estén bien sujetos.`
+                        : (props.data > 19 && props.data <= 39.9)
+                            ? `Viento moderado a algo fuerte. Puede incomodar al caminar o ir en bici y mover ramas y objetos livianos. Asegura bien ventanas, puertas y elementos sueltos en balcones o terrazas.`
+                            : (props.data >= 40 && props.data <= 65)
+                                ? `Viento fuerte. Evita usar sombrillas, ten mucha precaución si te desplazas en moto o bicicleta y limita actividades al aire libre en espacios abiertos. Asegura bien techos livianos, avisos y objetos que puedan salir volando.`
+                                : (props.data > 65 && props.data <= 100)
+                                    ? `Viento muy fuerte con riesgo de daños materiales. Evita salir si no es estrictamente necesario, especialmente en moto o bici. Ten cuidado con árboles, postes y estructuras inestables, y mantente atento a comunicados oficiales sobre eventos extremos.`
+                                    : `Definición no encontrada`;
+                alertas["Velocidad-Viento"][nivelAlertaVelocidadViento].Message = messageVelocidadViento;
                 setComponent(
                     /*
                     *Este componente es aislado de la logica de creacion de alertas ,
@@ -1067,8 +1093,8 @@ const Engine = (props) => {
                         data={props.data}
                         color={alertas['Velocidad-Viento'][nivelAlertaVelocidadViento]?.color || '#4fd6ffff'}
                         recomendaciones={alertas['Velocidad-Viento'][nivelAlertaVelocidadViento]?.Message || 'No disponible'}
-                        recomendedLimit={45}
-                        optionalData={70}
+                        recomendedLimit={props.recomendedLimit}
+                        optionalData={props.recomendedLimit}
 
                     />)
                 break;

@@ -14,7 +14,7 @@ const IndicatorGraph = (props) => {
     setRecomendations,
     SetdataType,
     setdataOptional,
-    dark_theme_letters
+    isDay_global
   } = useContext(DataContext);
 
   const theme = useTheme();
@@ -37,7 +37,7 @@ const IndicatorGraph = (props) => {
       value: props.data,
       title: {
         text: props.type,
-        font: { size: 20, color: dark_theme_letters ? "white" :'black', family: "Inter, sans-serif" }
+        font: { size: 20, color: isDay_global ? "white" :'black', family: "Inter, sans-serif" }
       },
       delta: {
         reference: 0,
@@ -48,7 +48,7 @@ const IndicatorGraph = (props) => {
           range: [(props.type === "Temperatura") ? -50 : props.min, (props.type === "Temperatura") ? 100 : props.max],
           tickwidth: 1.5,
           tickcolor: "#A0A0A0",
-          tickfont: { color: dark_theme_letters ? "white" :'black' }
+          tickfont: { color: isDay_global ? "white" :'black' }
         },
         bar: { color: props.color },
         paper_bgcolor: 'rgba(255, 255, 255, 0.2)',
@@ -61,7 +61,7 @@ const IndicatorGraph = (props) => {
         threshold: {
           line: { color: "#D32F2F", width: 4 },
           thickness: 0.75,
-          value: (props.type === "Temperatura") ? ((props.data < 0) ? -5 : 41) : props.recomendedLimit,
+          value: (props.type === "Temperatura") ? ((props.data < 0) ? -5 : 37) : props.recomendedLimit,
 
         }
       }
@@ -75,7 +75,7 @@ const IndicatorGraph = (props) => {
     paper_bgcolor: 'rgba(255, 255, 255, 0)',
     plot_bgcolor: 'rgba(255, 255, 255, 0)',
     
-    font: { color: dark_theme_letters ? "white" :'black'}
+    font: { color: isDay_global ? "white" :'black'}
   };
   return (
     <Box
@@ -94,7 +94,7 @@ const IndicatorGraph = (props) => {
           type="radialBar"
           height={220}
         />*/}
-        <Button variant="outlined" color={dark_theme_letters ? 'white': 'black'} size="small" sx={{ width: '100%' ,color: dark_theme_letters ? "white" :'black'}} onClick={handleOpenModal}>
+        <Button variant="outlined" color={isDay_global ? 'white': 'black'} size="small" sx={{ width: '100%' ,color: isDay_global ? "white" :'black'}} onClick={handleOpenModal}>
           Ver Detalles
         </Button>
       </Stack>

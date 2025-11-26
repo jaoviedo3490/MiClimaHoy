@@ -9,9 +9,9 @@ const IndicatorDetails = (props) => {
     const theme = useTheme();
 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : (props.type === 'Quality-Air') ? 6 : (props.type === 'Precipitacion') ? 90 : (props.type==='Velocidad-Viento') ? 90 : 0;
-    const ValuePercentaje = (props.valor < 0) ? (Math.round((props.valor * -1) * 100 / 40)) : (Math.round(props.valor * 100 / value));
-    const ValuePercentajeOptional = (props.valorOpcional < 0) ? (Math.round((props.valorOpcional * -1) * 100 / 40)) : (Math.round(props.valorOpcional * 100 / value));
+    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : (props.type === 'Quality-Air') ? 6 : (props.type === 'Precipitacion') ? 120 : (props.type==='Velocidad-Viento') ? 100 : 0;
+    const ValuePercentaje = (props.valor < 0) ? (Math.round((props.valor * -1) * 100 / 50)) : (Math.round(props.valor * 100 / value));
+    const ValuePercentajeOptional = (props.valorOpcional < 0) ? (Math.round((props.valorOpcional * -1) * 100 / 50)) : (Math.round(props.valorOpcional * 100 / value));
     const graphType = (props.GraphType !== undefined ? 1 : 0);
     const dataColor =
         props.type === 'Visibilidad'

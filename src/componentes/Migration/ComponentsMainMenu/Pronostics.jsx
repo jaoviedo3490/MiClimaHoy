@@ -36,13 +36,13 @@ const Pronostics = () => {
     const [levelQualityAir, setLevelQualityAir] = useState("");
     const [precipitacion, setPrecipitacion] = useState("");
     const [velocidadViento, setVelocidadViento] = useState("");
-    const { setIsDay_global, dataDioAzufre, Alerts_Module_second, Warnings_Module_second, setDarkLetters, dataNubosidad, dataHumedad, dataVisibilidad, dataQualityAir, dataMonoCarbono, dataDioNitrogeno } = useContext(DataContext);
+    const { OptionTab, setOptionTab, setIsDay_global, dataDioAzufre, Alerts_Module_second, Warnings_Module_second, setDarkLetters, dataNubosidad, dataHumedad, dataVisibilidad, dataQualityAir, dataMonoCarbono, dataDioNitrogeno } = useContext(DataContext);
 
 
-    const { openModal, setOpenModal, climateAlert, setBackground } = useContext(DataContext);
+    const { openModal, isDay_global, setOpenModal, climateAlert, setBackground } = useContext(DataContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+    setOptionTab(false);
 
     useEffect(() => {
 
@@ -91,7 +91,7 @@ const Pronostics = () => {
         setAirQualityImage(JsonIcon['icon']['Air-Quality'][level_contamination]);
 
         //setJsonPronosticImage(JsonIcon['icon'][isDay][`${isDay}-${Pronostic}`]);
-    }, [climateAlert])
+    },[PronosticInitial])
 
     const handleCloseModal = () => {
         if (typeof setOpenModal === "function") setOpenModal(false);
@@ -108,12 +108,12 @@ const Pronostics = () => {
                 }}>
                     <CardContent sx={{ p: 2 }}>
                         <Stack direction={isMobile ? "column" : "row"} justifyContent="space-between" spacing={1}>
-                            <Typography variant='body1' sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>Pronostico Hoy</Typography>
-                            <Typography variant="subtitle2" sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>{location}</Typography>
+                            <Typography variant='body1' sx={{ color: isDay_global ? 'white' : 'black' }}>Pronostico Hoy</Typography>
+                            <Typography variant="subtitle2" sx={{ color: isDay_global ? 'white' : 'black' }}>{location}</Typography>
                         </Stack>
                         <Stack direction={isMobile ? "column" : "row"}>
                             <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                <Typography variant="h6" sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>{`${isDay} ${PronosticInitial}`}</Typography>
+                                <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>{`${isDay} ${PronosticInitial}`}</Typography>
                                 <Stack direction={isMobile ? "column" : 'row'} spacing={1}>
                                     <Card sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                                         <CardContent sx={{ p: 2 }}>
@@ -162,7 +162,7 @@ const Pronostics = () => {
                                             </Stack>
                                             <Divider component="div" role="presentation" />
                                             <br></br>
-                                            <Button variant="outlined" size="small" sx={{ width: '100%', color: (isDay === 'nigth') ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
+                                            <Button variant="outlined" size="small" sx={{ width: '100%', color: isDay_global ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
                                                 Ver Detalles
                                             </Button>
                                         </CardContent>
@@ -185,7 +185,7 @@ const Pronostics = () => {
 
                             </Stack>
                             <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                <Typography variant="h6" sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>Calidad del Aire</Typography>
+                                <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>Calidad del Aire</Typography>
                                 <Stack direction='row' spacing={2}>
                                     <Card sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                                         <CardContent sx={{ p: 2 }}>
@@ -277,37 +277,37 @@ const Pronostics = () => {
                                     />
                                     <Engine
                                         min={0}
-                                        max={60}
+                                        max={40}
                                         type="Precipitacion"
-                                        indicator="mm"
+                                        indicator="Dm"
                                         split={5}
-                                        data={precipitacion}
-                                        //optionalData={dataTempAprox}
-                                        recomendedLimit={10}
+                                        data={precipitacion/100}
+                                        optionalData={12}
+                                        recomendedLimit={12}
                                     />
                                     <Engine
                                         min={0}
-                                        max={80}
+                                        max={100}
                                         type="Velocidad-Viento"
                                         indicator="kph"
                                         split={5}
                                         data={velocidadViento}
-                                        //optionalData={dataTempAprox}
-                                        recomendedLimit={45}
+                                        optionalData={65}
+                                        recomendedLimit={65}
                                     />
                                 </Stack>
                                 <Divider
                                     component="div"
                                     role="presentation"
-                                    // Usamos 'borderColor' para el color de la línea del Divider
+
                                     sx={{
                                         '&::before, &::after': {
-                                            borderColor: (isDay === 'nigth') ? 'white' : 'black',
+                                            borderColor: isDay_global ? 'white' : 'black',
                                         }
                                     }}
                                 >
-                                    {/* El color del texto sí usa la propiedad 'color' */}
-                                    <Typography sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>
+
+                                    <Typography sx={{ color: isDay_global ? 'white' : 'black' }}>
                                         Panel de Alertas
                                     </Typography>
                                 </Divider>
@@ -356,7 +356,7 @@ const Pronostics = () => {
                                     ) : (
 
                                         <Box sx={{ marginTop: isMobile ? '40%' : '20%', marginLeft: isMobile ? '35%' : '43%' }}>
-                                            <Typography variant='body' sx={{ color: (isDay === 'nigth') ? 'white' : 'black' }}>Sin novedades</Typography>
+                                            <Typography variant='body' sx={{ color: isDay_global ? 'white' : 'black' }}>Sin novedades</Typography>
                                         </Box>
                                     )}
                                 </Box>

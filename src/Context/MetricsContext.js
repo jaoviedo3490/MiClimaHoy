@@ -30,6 +30,8 @@ const UserProvide = ({ children }) => {
     const [dataMonoCarbono,setMonoCarbono] = useState([]);
     const [dataDioNitrogeno,setDataDioNitrogeno] = useState([]);
     const [dataDioAzufre,setDataDioAzufre] = useState([]);
+    const [optionTab,setOptionTab] = useState(1);
+    const [isDay,setIsDay] = useState([]);
 
 
 
@@ -66,7 +68,7 @@ const UserProvide = ({ children }) => {
     //apiSearch();
     return (
         <div>
-            <DataContext.Provider value={{Warnings_Module_second,setWarnings_Module_Second,Alerts_Module_second,setAlert_Module_Second,dataDioAzufre,setDataDioAzufre,dataDioNitrogeno,setDataDioNitrogeno,dataMonoCarbono, setMonoCarbono,dataQualityAir, isDay_global, setDataQualityAir, setIsDay_global, dataVisibilidad, setDataVisibilidad, dataHumedad, setDataHumedad, dataNubosidad, setDataNubosidad, background_image, setBackground, dark_theme_letters, setDarkLetters, Warnings, setWarnings, Alerts, setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
+            <DataContext.Provider value={{optionTab,setOptionTab,Warnings_Module_second,setWarnings_Module_Second,Alerts_Module_second,setAlert_Module_Second,dataDioAzufre,setDataDioAzufre,dataDioNitrogeno,setDataDioNitrogeno,dataMonoCarbono, setMonoCarbono,dataQualityAir, isDay_global, setDataQualityAir, setIsDay_global, dataVisibilidad, setDataVisibilidad, dataHumedad, setDataHumedad, dataNubosidad, setDataNubosidad, background_image, setBackground, dark_theme_letters, setDarkLetters, Warnings, setWarnings, Alerts, setAlerts, migrateVersion, setMigrateVersion, dataOptional, setdataOptional, dataType, SetdataType, dataRecomendations, setRecomendations, dataModal, setDataModal, closeModal, setCloseModal, climateAlert, openModal, setOpenModal, setClimateAlert, langSearch, setSearch, apiSearch, cities, setCities }}>
                 {children}
             </DataContext.Provider>
         </div>
