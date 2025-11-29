@@ -10,9 +10,11 @@ import {
     Alert,
     AlertTitle
 } from "@mui/material";
+import IndicatorDetails from "../Graphics/indicatorDetails.jsx";
 import Divider from '@mui/material/Divider';
 import { useState, useContext, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
+import { Ui_Context } from "../../../Context/Ui-Context.js";
 import Engine from "../Engine.jsx";
 import GenericModal from "../Modal/GenericModal.jsx";
 import Snackbar from '@mui/material/Snackbar';
@@ -23,7 +25,6 @@ const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
 
 
 const MainMenu = () => {
-
     const [mapComponent, setMapComponent] = useState(null);
     const [Temperatura, setTemperature] = useState("");
     const [dataTempAprox, setdataTempAprox] = useState("");
@@ -34,10 +35,16 @@ const MainMenu = () => {
     const [isLocalizeExec, setExec] = useState(false);
     const [mapUrlState, setMapUrlState] = useState(null);
     const MapComponent = mapComponent;
-    const { openModal, OptionTab, setOpenModal, Alerts, Warnings, setIsDay_global, isDay_global, climateAlert, setClimateAlert, dark_theme_letters, setDarkLetters, setBackground, background } = useContext(DataContext);
+    const {isDay_global, setIsDay_global,background_image,setBackground,setDarkLetters, Warnings,Alerts,setClimateAlert,
+
+} = useContext(DataContext);
+
+const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataOptional,typeModal} = useContext(Ui_Context);
+
+
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+    console.log("renderizado forzado")
     const handleCloseModal = () => {
         if (typeof setOpenModal === "function") setOpenModal(false);
     };
@@ -106,7 +113,7 @@ const MainMenu = () => {
     useEffect(() => {
         localize();
         setExec(prev => !prev);
-    }, [OptionTab]);
+    }, []);
 
     useEffect(() => {
         if (Temperatura <= -5) {
@@ -163,7 +170,9 @@ const MainMenu = () => {
             setIsDay_global(false);
         }
 
-    }, [isLocalizeExec, Temperatura])
+    }, [isLocalizeExec, Temperatura]);
+
+    console.log("RENDER MainMenu", { background_image, Alerts, Warnings, openModal });
     return (
         <>
             <Box sx={{ mt: '10px', width: '100%', left: '100px' }}>
@@ -287,7 +296,33 @@ const MainMenu = () => {
 
 
 
-                <GenericModal open={openModal} onClose={handleCloseModal} />
+                <GenericModal open={openModal} element={
+                    (typeModal === 'GAUGE') ? (<>
+                        <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                        <Stack spacing={2}>
+                            <Box>
+                                <Alert variant='outlined' severity="info">
+                                    <AlertTitle>¡IMPORTANTE!</AlertTitle>
+                                    <Typography variant="caption">{dataRecomendations}</Typography>
+                                </Alert>
+                            </Box>
+                            <Stack>
+                                <Stack direction='row' spacing={1}>
+                                    <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
+                                    <Typography variant='caption'>Valor Actual ({dataModal})</Typography>
+                                </Stack >
+                                <Stack direction='row' spacing={1}>
+                                    <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
+                                    <Typography variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite Recomendable'} ({dataOptional})</Typography>
+                                </Stack>
+                                {dataType === 'Temperatura' ? (<Stack direction='row' spacing={1}>
+                                    <Box sx={{ backgroundColor: 'rgba(238, 225, 51, 1)', height: '15px', width: '15px', borderRadius: '10%' }}></Box>
+                                    <Typography variant='caption'>Limite Recomendado {(dataModal < 0) ? '(0 C° : -20 C°)' : '(0 C° : 37 C°)'}</Typography>
+                                </Stack>) : ('')}
+                            </Stack>
+                        </Stack>
+                    </>) : "Desde otro modal"
+                } onClose={handleCloseModal} />
             </Box>
         </>
     );

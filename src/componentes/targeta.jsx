@@ -154,7 +154,7 @@ const Target = (props) => {
       const alertaVisibilidad = getAlert(climateAlert.current.vis_km, "visibilidad");
       let iconjson = icon['icon'][is_day][`${is_day}-${climate}`];
 
-      console.log(`${is_day}-${climate}`);
+     // console.log(`${is_day}-${climate}`);
 
 
       return (

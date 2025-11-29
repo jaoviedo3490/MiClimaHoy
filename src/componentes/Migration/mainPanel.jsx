@@ -8,6 +8,7 @@ import {
 import { useState, useEffect, useContext } from "react";
 import AppBarContent from "./appBar";
 import { DataContext } from "../../Context/MetricsContext";
+import { Ui_Context } from "../../Context/Ui-Context";
 import DeviceThermostatIcon from '@mui/icons-material/DeviceThermostat';
 
 import TabList from '@mui/lab/TabList';
@@ -23,8 +24,7 @@ const MainPanel = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const [valueTab, setValueTab] = useState('1');
-    const { isDay_global, setIsDay_global, setOptionTab, dark_theme_letters, setDarkLetters, background_image, setBackground, climateAlert } = useContext(DataContext);
-
+    const { setOptionTab, isDay_global, background_image, setBackground, dark_theme_letters, setDarkLetters } = useContext(DataContext);
 
     const onChangeTab = (event, newValue) => {
         setValueTab(newValue);
@@ -65,8 +65,8 @@ const MainPanel = () => {
                         textColor='inherit'
                         sx={{ color: isDay_global ? 'white' : 'black' }}
                     >
-                        <Tab icon={<DeviceThermostatIcon/>} iconPosition="start" label={isMobile ? 'Temperatura...' : 'Temperatura y Radiacion UV'} value='1' />
-                        <Tab icon={<AirIcon/>} iconPosition="start" label={isMobile ? 'Pronostico...' : 'Pronostico y Calidad de Aire'} value='2' />
+                        <Tab icon={<DeviceThermostatIcon />} iconPosition="start" label={isMobile ? 'Temperatura...' : 'Temperatura y Radiacion UV'} value='1' />
+                        <Tab icon={<AirIcon />} iconPosition="start" label={isMobile ? 'Pronostico...' : 'Pronostico y Calidad de Aire'} value='2' />
                     </TabList>
                 </Box>
                 <Box>

@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { UserProvide } from './Context/MetricsContext';
+import { UIProvide } from './Context/Ui-Context';
 
 const fontHref = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap";
 const link = document.createElement("link");
@@ -19,7 +20,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
   <UserProvide>
-    <App />
+    <UIProvide>
+      <App />
+    </UIProvide>
   </UserProvide>
 
 );

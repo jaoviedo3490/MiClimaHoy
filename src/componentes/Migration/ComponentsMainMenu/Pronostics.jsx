@@ -11,6 +11,7 @@ import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
 import { useState, useContext, useEffect } from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
+import { Ui_Context } from "../../../Context/Ui-Context.js";
 import GenericModal from "../Modal/GenericModal.jsx";
 import JsonIcon from '../../dataJson/icon.json';
 import { Image } from 'mui-image';
@@ -19,7 +20,11 @@ import ClimateDefinition from '../../dataJson/climate-definition.json';
 import JsonImage from '../../dataJson/wallpaper.json';
 import Engine from "../Engine.jsx";
 import PopoverComponent from '../GenericComponentes/Popover.jsx';
-const Pronostics = () => {
+import TreeGraph from "../Graphics/TreeGraphic.jsx";
+import TreeGraphicEchart from "../Graphics/TreeGraphicEcharts.jsx";
+const Pronostics = (props) => {
+    const [GaugeModal, setGaugeModal] = useState(false);
+
     const [mapComponent, setMapComponent] = useState(null);
     const [Nubosidad, setNubosidad] = useState("");
     const [Visibilidad, setVisibilidad] = useState("");
@@ -36,14 +41,32 @@ const Pronostics = () => {
     const [levelQualityAir, setLevelQualityAir] = useState("");
     const [precipitacion, setPrecipitacion] = useState("");
     const [velocidadViento, setVelocidadViento] = useState("");
-    const { OptionTab, setOptionTab, setIsDay_global, dataDioAzufre, Alerts_Module_second, Warnings_Module_second, setDarkLetters, dataNubosidad, dataHumedad, dataVisibilidad, dataQualityAir, dataMonoCarbono, dataDioNitrogeno } = useContext(DataContext);
+    const [QualityAirDetails, setQualityAirDetails] = useState([]);
+    const [PronosticDetails, setPronosticDetails] = useState([]);
+    const {
+        setOptionTab, Warnings_Module_second, Alerts_Module_second, dataDioAzufre, dataDioNitrogeno, dataMonoCarbono,
+        isDay_global, setIsDay_global, dataVisibilidad, dataHumedad, dataNubosidad, setBackground, setDarkLetters, climateAlert
+    } = useContext(DataContext);
+
+    const {
+        openModal, setOpenModal, setCloseModal, dataModal, setDataModal, dataRecomendations, setRecomendations,
+        dataType, setDataType, dataOptional, setDataOptional, typeModal, setTypeModal,
+    } = useContext(Ui_Context);
 
 
-    const { openModal, isDay_global, setOpenModal, climateAlert, setBackground } = useContext(DataContext);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     setOptionTab(false);
 
+    const handleOpenModal = (param) => {
+        setTypeModal((param === 2) ? 'Quality-Air' : 'Pronostico');
+        setOpenModal(true);
+        setCloseModal(true);
+        setDataModal(props.data);
+        setRecomendations(props.recomendaciones);
+        setDataType(props.type);
+        setDataOptional(props.optionalData);
+    };
     useEffect(() => {
 
         const pronostic = climateAlert.current.condition.text;
@@ -56,10 +79,28 @@ const Pronostics = () => {
         const mono_carbono = climateAlert.current.air_quality.co;
         const dio_nitrogeno = climateAlert.current.air_quality.no2;
         const dio_azufre = climateAlert.current.air_quality.so2;
+        const PM2_5 = climateAlert.current.air_quality.pm2_5;
+        const Ozono = climateAlert.current.air_quality.o3;
         const level_contamination = climateAlert.current.air_quality['us-epa-index'];
         const precipitation_local = climateAlert.current.precip_mm;
         const velocidad_viento = climateAlert.current.wind_kph;
+        const PM10 = climateAlert.current.air_quality.pm10;
 
+        const qualityAirJson = {
+            "CO": mono_carbono,
+            "NO2": dio_nitrogeno,
+            "O3": Ozono,
+            "PM2_5": PM2_5,
+            "PM10": PM10,
+            "SO2": dio_azufre
+        }
+        const PronosticJson = {
+            "Nubosidad": nubosidad,
+            "Humedad": humidity,
+            "Visibilidad": visibilidad
+        }
+        setPronosticDetails(PronosticJson)
+        setQualityAirDetails(qualityAirJson);
         setPronosticInitial(pronostic);
         setPronostic(pronosticFormat);
         setLocation(location_last);
@@ -91,7 +132,8 @@ const Pronostics = () => {
         setAirQualityImage(JsonIcon['icon']['Air-Quality'][level_contamination]);
 
         //setJsonPronosticImage(JsonIcon['icon'][isDay][`${isDay}-${Pronostic}`]);
-    },[PronosticInitial])
+
+    }, [PronosticInitial])
 
     const handleCloseModal = () => {
         if (typeof setOpenModal === "function") setOpenModal(false);
@@ -162,7 +204,7 @@ const Pronostics = () => {
                                             </Stack>
                                             <Divider component="div" role="presentation" />
                                             <br></br>
-                                            <Button variant="outlined" size="small" sx={{ width: '100%', color: isDay_global ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
+                                            <Button variant="outlined" onClick={() => handleOpenModal(3)} size="small" sx={{ width: '100%', color: isDay_global ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
                                                 Ver Detalles
                                             </Button>
                                         </CardContent>
@@ -248,7 +290,7 @@ const Pronostics = () => {
                                             </Stack>
                                             <Divider component="div" role="presentation" />
                                             <br></br>
-                                            <Button variant="outlined" size="small" sx={{ width: '100%', color: (isDay === 'nigth') ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
+                                            <Button variant="outlined" onClick={() => handleOpenModal(2)} size="small" sx={{ width: '100%', color: (isDay === 'nigth') ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
                                                 Ver Detalles
                                             </Button>
                                         </CardContent>
@@ -281,7 +323,7 @@ const Pronostics = () => {
                                         type="Precipitacion"
                                         indicator="Dm"
                                         split={5}
-                                        data={precipitacion/100}
+                                        data={precipitacion / 100}
                                         optionalData={12}
                                         recomendedLimit={12}
                                     />
@@ -367,17 +409,62 @@ const Pronostics = () => {
                     </CardContent>
                 </Card>
 
-
                 <br />
+                <GenericModal element={
+                    (typeModal === 'GAUGE') ? (<>
+                        <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                        <Stack spacing={1}>
+                            <Box>
+                                <Alert variant='outlined' severity="info">
+                                    <AlertTitle>¡IMPORTANTE!</AlertTitle>
+                                    <Typography variant="caption">{dataRecomendations}</Typography>
+                                </Alert>
 
+                            </Box>
+                            <Stack>
+                                <Stack direction='row' spacing={1}>
+                                    <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
+                                    <Typography variant='caption'>Valor Actual ({dataModal})</Typography>
+                                </Stack >
+                                <Stack direction='row' spacing={1}>
+                                    <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
+                                    <Typography variant='caption'>{'Limite Recomendable'} ({dataOptional})</Typography>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    </>) : (typeModal === 'Pronostico') ? (
+                        <>
 
+                            {<Stack direction='column'>
+                                <Typography>En Desarrollo</Typography>
+                                <TreeGraph data={PronosticDetails} type='Pronostico' />
+                                {/*<Alert variant='outlined' severity="success">
+                                    <AlertTitle>IMPORTANTE</AlertTitle>
+                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial]}</Typography>
+                                </Alert>*/}
+                            </Stack>}
+                            {/*<Typography>En desarrollo</Typography>*/}
 
-                <GenericModal html={
-                    <Box>
-                        <Typography>Desde Modal</Typography>
-                    </Box>
+                        </>
+                    ) : (typeModal === 'Quality-Air') ? (
+                        <>
+
+                            {/*<TreeGraphicEchart data={QualityAirDetails} />*/}
+                            {/*<TreeGraph data={QualityAirDetails} type='QualityAir' />*/}
+                            {/*<Typography>En desarrollo</Typography>*/}
+                            {<Stack direction='column'>
+                                <Typography>En Desarrollo</Typography>
+                                <TreeGraph data={QualityAirDetails} type='QualityAir' />
+                                {/*<Alert variant='outlined' severity="success">
+                                    <AlertTitle>IMPORTANTE</AlertTitle>
+                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial]}</Typography>
+                                </Alert>*/}
+                            </Stack>}
+
+                        </>
+                    ) : (<Typography>Elemento no Categorizado</Typography>)
                 } open={openModal} onClose={handleCloseModal} />
-            </Box>
+            </Box >
         </>
     );
 };

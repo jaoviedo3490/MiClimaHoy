@@ -1,16 +1,12 @@
-import { Typography, Modal, Box, Button, Stack, Alert, AlertTitle } from "@mui/material";
-import IndicatorDetails from "../Graphics/indicatorDetails";
-import { useContext } from "react";
-import { DataContext } from "../../../Context/MetricsContext";
+import {  Modal, Box, Button, Stack } from "@mui/material";
+
 import { useMediaQuery, useTheme } from "@mui/material";
 
 const GenericModal = (props) => {
-    const { dataModal } = useContext(DataContext);
-    const { dataRecomendations } = useContext(DataContext);
-    const { dataOptional } = useContext(DataContext);
-    const { dataType } = useContext(DataContext);
+  
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    //console.log("aqui")
     return (
         <Modal sx={{
             position: 'fixed',
@@ -33,35 +29,13 @@ const GenericModal = (props) => {
                 boxShadow: '24',
                 p: '2%',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 0.44)',
+                backgroundColor: 'rgba(255, 255, 255, 1)',
                 backdropFilter: 'blur(7px)'
                 
                     
             }}>
                 <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
-                    <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType==='Quality-Air' ? 'Calidad del Aire' : dataType==='Precipitacion' ? 'Precipitacion' : dataType==='Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
-                    <Stack spacing={2}>
-                        <Box>
-                            <Alert variant='outlined' severity="info">
-                                <AlertTitle>¡IMPORTANTE!</AlertTitle>
-                                <Typography variant="caption">{dataRecomendations}</Typography>
-                            </Alert>
-                        </Box>
-                        <Stack>
-                            <Stack direction='row' spacing={1}>
-                                <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                <Typography variant='caption'>Valor Actual ({dataModal})</Typography>
-                            </Stack >
-                            <Stack direction='row' spacing={1}>
-                                <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                <Typography variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite Recomendable'} ({dataOptional})</Typography>
-                            </Stack>
-                            {dataType === 'Temperatura' ? (<Stack direction='row' spacing={1}>
-                                <Box sx={{ backgroundColor: 'rgba(238, 225, 51, 1)', height: '15px', width: '15px', borderRadius: '10%' }}></Box>
-                                <Typography variant='caption'>Limite Recomendado {(dataModal < 0) ? '(0 C° : -20 C°)' : '(0 C° : 37 C°)'}</Typography>
-                            </Stack>) : ('')}
-                        </Stack>
-                    </Stack>
+                    {props.element}
                 </Stack>
 
                 <Button onClick={props.onClose} variant='contained' color='error' sx={{ width: '100%' }}>Cerrar</Button>

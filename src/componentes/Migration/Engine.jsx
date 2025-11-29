@@ -1076,7 +1076,7 @@ const Engine = (props) => {
                                 : (props.data > 65 && props.data <= 100)
                                     ? `Viento muy fuerte con riesgo de daños materiales. Evita salir si no es estrictamente necesario, especialmente en moto o bici. Ten cuidado con árboles, postes y estructuras inestables, y mantente atento a comunicados oficiales sobre eventos extremos.`
                                     : `Definición no encontrada`;
-                alertas["Velocidad-Viento"][nivelAlertaVelocidadViento].Message = messageVelocidadViento;
+                alertas["Velocidad-Viento"][nivelAlertaVelocidadViento].Message = messageVelocidadViento || 'UNDEFINED';
                 setComponent(
                     /*
                     *Este componente es aislado de la logica de creacion de alertas ,
@@ -1121,8 +1121,8 @@ const Engine = (props) => {
 
                 const no2 = ((climateAlert.current.air_quality.no2 * 24.45) / 46.0055) / 1000;
                 const nivelAlertaDioNitrogeno = getAlert(no2, typeAlert);
-                console.log(typeAlert)
-                console.log(no2)
+                //console.log(typeAlert)
+                //console.log(no2)
                 const messageNO2 =
                     (no2 >= 0 && no2 <= 0.053) ?
                         `Dióxido de nitrógeno: Nivel bueno (0 - 0.053 ppm). Calidad de aire óptima. No se esperan efectos adversos para la población general.` :

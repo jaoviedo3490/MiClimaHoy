@@ -10,7 +10,7 @@ const client = new InferenceClient(process.env.REACT_APP_HF_TOKEN);
 
 const SandBox = () => {
     const [response, setResponse] = useState(null);
-    const [langSearch,setSearch] = useState('');
+    const [langSearch, setSearch] = useState('');
     const [model, setModel] = useState(null);
     const [Countries, setCountries] = useState([]);
     const [button_disable, setDissable] = useState(true);
@@ -20,7 +20,7 @@ const SandBox = () => {
     const [loading, setLoading] = useState(false);
     const [showDataSandbox, setShowD] = useState(false);
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
-    const [cities_state,setCityS] = useState([]);
+    const [cities_state, setCityS] = useState([]);
     const [country, setCountry] = useState('');
 
     const models = [
@@ -36,7 +36,7 @@ const SandBox = () => {
                 try {
                     const out = await client.chatCompletion({
                         model: model_Temp,
-                        messages: [{ role: "user", content: `Dame el top 5 ciudades mas frias y calidas de ${country} en formato json , pero solo dame los nombres y solo el json , no me digas "aqui te dejo" y estas claves: Frias, Calidas`}],
+                        messages: [{ role: "user", content: `Dame el top 5 ciudades mas frias y calidas de ${country} en formato json , pero solo dame los nombres y solo el json , no me digas "aqui te dejo" y estas claves: Frias, Calidas` }],
                         max_tokens: 256,
                     });
 
@@ -52,9 +52,9 @@ const SandBox = () => {
     }, [country]);
 
     useEffect(() => {
-        console.log(`Respuesta del modelo: ${response}`);
-       
-      
+        //console.log(`Respuesta del modelo: ${response}`);
+
+
     }, [response]);
 
     const button = (event) => {
@@ -69,7 +69,7 @@ const SandBox = () => {
                 return response.json();
             })
             .then(data => {
-                console.log(data);
+                //console.log(data);
                 setLoading(false);
                 setShowD(true);
                 setClimateAlert(data);
@@ -82,7 +82,7 @@ const SandBox = () => {
     }
     const onChangeCity = (opcion) => {
         setSelectC(opcion);
-        console.log(`Ciudad seleccionada: ${opcion.value}`);
+        //console.log(`Ciudad seleccionada: ${opcion.value}`);
         //chatEvent();
         //console.log(`Respuesta del modelo: ${response}`);
         setDissable(false);
@@ -109,111 +109,111 @@ const SandBox = () => {
 
 
     useEffect(() => {
-        console.log(cities);
+        //console.log(cities);
 
     }, [cities])
 
     const handleEvent = (opcion) => {
         setCountry(opcion.value);
         setSelectC(null);
+        const cities_select = Countries_Cities.find((city_element) => city_element.name === opcion.value)
+        //console.log(`JSON: ${cities_select} , pais: ${cities_select.name} : opcion: ${opcion.value}`);
+        //console.log(cities_select.cities);
+
+        let json = cities_select.cities.map((name) => ({ value: name.name, label: name.name }));
+        setCities(json);
+
+        /* fetch('https://countriesnow.space/api/v0.1/countries/cities', {
+             method: "POST",
+             headers: { "Content-Type": 'application/json' },
+             body: JSON.stringify({ country: opcion.value })
+         })
+             .then(response => {
+                 if (!response.ok) {
+                     throw new Error(`Ocurrió un error en la solicitud: ${response.status}`);
+                 }
+                 return response.json();
+             })
+             .then(dataT => {
+                 setDissable(true);
+                
+ 
+                 //console.log(dataT);
+ 
+             })
+             .catch(error => {
+                 console.error("Error al obtener ciudades:", error);
+             });*/
+     };
 
 
-        fetch('https://countriesnow.space/api/v0.1/countries/cities', {
-            method: "POST",
-            headers: { "Content-Type": 'application/json' },
-            body: JSON.stringify({ country: opcion.value })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Ocurrió un error en la solicitud: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(dataT => {
-                setDissable(true);
-                const cities_select = Countries_Cities.find((city_element) => city_element.name === opcion.value)
-                console.log(`JSON: ${cities_select} , pais: ${cities_select.name} : opcion: ${opcion.value}`);
-                console.log(cities_select.cities);
-
-                let json = cities_select.cities.map((name) => ({ value: name.name, label: name.name }));
-                setCities(json);
-
-                //console.log(dataT);
-
-            })
-            .catch(error => {
-                console.error("Error al obtener ciudades:", error);
-            });
-    };
-
-
-    return (
-        <div>
-            {loading && (
-                <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
-                    <div className="text-center text-light">
-                        <div className="spinner-grow text-light" role="status"></div>
-                        <div className="mt-2">
-                            <span className="visually-hidden">Cargando...</span>
+        return (
+            <div>
+                {loading && (
+                    <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-75 loading-overlay">
+                        <div className="text-center text-light">
+                            <div className="spinner-grow text-light" role="status"></div>
+                            <div className="mt-2">
+                                <span className="visually-hidden">Cargando...</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            <section className="container">
-                <div className="row">
-                    <div className="col-12 mx-auto">
-                        <form>
-                            <div className="mb-3">
-                                <Select
-                                    placeholder="Selecciona un País"
-                                    onChange={handleEvent}
-                                    options={Countries}
-                                    className="w-100"
-                                    classNamePrefix="select"
-                                />
-                            </div>
-
-                            {cities.length > 0 && (
+                <section className="container">
+                    <div className="row">
+                        <div className="col-12 mx-auto">
+                            <form>
                                 <div className="mb-3">
                                     <Select
-                                        placeholder="Selecciona una Ciudad"
-                                        value={SeleccionadoC}
-                                        onChange={onChangeCity}
-                                        options={cities}
+                                        placeholder="Selecciona un País"
+                                        onChange={handleEvent}
+                                        options={Countries}
                                         className="w-100"
                                         classNamePrefix="select"
                                     />
                                 </div>
-                            )}
 
-                            <button
-                                disabled={button_disable}
-                                type="button"
-                                onClick={button}
-                                className="btn btn-secondary w-100"
-                            >
-                                Informe de Clima
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </section>
+                                {cities.length > 0 && (
+                                    <div className="mb-3">
+                                        <Select
+                                            placeholder="Selecciona una Ciudad"
+                                            value={SeleccionadoC}
+                                            onChange={onChangeCity}
+                                            options={cities}
+                                            className="w-100"
+                                            classNamePrefix="select"
+                                        />
+                                    </div>
+                                )}
 
-            {showDataSandbox && (
-                <section className="container mt-4">
-                    <div className="text-end">
-                        <UpdateDate />
+                                <button
+                                    disabled={button_disable}
+                                    type="button"
+                                    onClick={button}
+                                    className="btn btn-secondary w-100"
+                                >
+                                    Informe de Clima
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <ViewData />
                 </section>
-            )}
-        </div>
+
+                {showDataSandbox && (
+                    <section className="container mt-4">
+                        <div className="text-end">
+                            <UpdateDate />
+                        </div>
+                        <ViewData />
+                    </section>
+                )}
+            </div>
 
 
 
 
-    );
-};
+        );
+    };
 
-export default SandBox;
+    export default SandBox;

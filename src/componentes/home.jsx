@@ -56,7 +56,7 @@ const Home = () => {
                         return response.json();
                     })
                     .then(data => {
-                        console.log(data);
+                        //console.log(data);
                         if (JSON.stringify(data).indexOf('error') != -1) {
                             alert(`La solicitud devolvio el siguente mensaje: ${data.error}`);
                         } else {

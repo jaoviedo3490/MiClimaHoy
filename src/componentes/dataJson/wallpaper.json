@@ -30,7 +30,7 @@
     ],
     "low_temp": [
       "/wall30_dark.png",
-      "/wall31_light.webp",
+      "wall31_light.png",
       "/wall35.png"
     ],
     "normal_temp": [
@@ -52,7 +52,7 @@
     "nigth-Light-snow":"nigth-Light-snow_dark.webp",
     "nigth-Partly-Cloudy":"nigth_Partly_cloudy_dark.webp",
     "nigth-Light-rain-shower":"nigth_Light_rain_shower_dark.webp",
-    "nigth-Light-rain":"nigth_Light_rain_dark.webp",
+    "nigth-Light-rain":"nigth_Light_rain_dark.png",
     "day-Partly-cloudy":"day-Partly-cloudy_light.webp",
     "nigth-Overcast":"nigth-Overcast_dark.webp",
     "nigth-Clear":"nigth-Clear_dark.webp",
@@ -70,9 +70,12 @@
     "nigth-Moderate-snow":"nigth-Moderate-snow_dark.png",
     "nigth-Partly-cloudy":"nigth_Partly_cloudy_dark.webp",
     "nigth-Moderate-or-heavy-rain-with-thunder":"nigth-Moderate-or-heavy-rain-with-thunder_dark.png",
+    "day-Light-rain":"day-Light-rain_light.png",
     "day-Patchy-rain-nearby":"day-Patchy-rain-nearby_light.png",
     "nigth-Fog":"nigth-Fog_dark.png",
     "day-Sunny":"day-Sunny_light.png",
+    "nigth-Moderate-rain":"nigth-Moderate-rain_dark.png",
+    "nigth-Heavy-rain":"nigth-Heavy-rain_dark.png",
     "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
   }
 }

@@ -2,31 +2,29 @@
 
 import { Box, Stack, Button } from "@mui/material";
 import { DataContext } from "../../../Context/MetricsContext";
+import { Ui_Context } from "../../../Context/Ui-Context";
 import { useContext } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import Plotly from "react-plotly.js";
 
 const IndicatorGraph = (props) => {
-  const {
-    setOpenModal,
-    setCloseModal,
-    setDataModal,
-    setRecomendations,
-    SetdataType,
-    setdataOptional,
-    isDay_global
-  } = useContext(DataContext);
+const { isDay_global} = useContext(DataContext);
+const {setOpenModal,setCloseModal,setDataModal,setRecomendations, setDataType,setDataOptional, setTypeModal} = useContext(Ui_Context);
+
+
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (param) => {
+    setTypeModal(param ? 'GAUGE' : 'GENERAL');
     setOpenModal(true);
     setCloseModal(true);
     setDataModal(props.data);
     setRecomendations(props.recomendaciones);
-    SetdataType(props.type);
-    setdataOptional(props.optionalData);
+    setDataType(props.type);
+    setDataOptional(props.optionalData);
   };
 
 
@@ -94,7 +92,7 @@ const IndicatorGraph = (props) => {
           type="radialBar"
           height={220}
         />*/}
-        <Button variant="outlined" color={isDay_global ? 'white': 'black'} size="small" sx={{ width: '100%' ,color: isDay_global ? "white" :'black'}} onClick={handleOpenModal}>
+        <Button variant="outlined" endIcon={<RemoveRedEyeIcon />} color={isDay_global ? 'white': 'black'} size="small" sx={{ width: '100%' ,color: isDay_global ? "white" :'black'}} onClick={()=>handleOpenModal(true)}>
           Ver Detalles
         </Button>
       </Stack>
