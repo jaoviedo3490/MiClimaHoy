@@ -73,7 +73,7 @@ const TreeGraph = (props) => {
   const layout = {
     autosize: true,
     margin: { t: 10, r: 10, l: 10, b: 10 },
-    font: { color: "black", family: "Inter, sans-serif" },
+    font: { color: "white", family: "Inter, sans-serif" },
     paper_bgcolor: "rgba(255, 255, 255, 0)",
     plot_bgcolor: "rgba(255, 255, 255, 0)",
   };

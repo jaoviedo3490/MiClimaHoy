@@ -301,23 +301,23 @@ const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataO
                         <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
                         <Stack spacing={2}>
                             <Box>
-                                <Alert variant='outlined' severity="info">
+                                <Alert variant='filled' severity="info" sx={{backgroundColor: '#4fd6ff7a'}}>
                                     <AlertTitle>¡IMPORTANTE!</AlertTitle>
-                                    <Typography variant="caption">{dataRecomendations}</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant="caption">{dataRecomendations}</Typography>
                                 </Alert>
                             </Box>
                             <Stack>
                                 <Stack direction='row' spacing={1}>
                                     <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography variant='caption'>Valor Actual ({dataModal})</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>Valor Actual ({dataModal})</Typography>
                                 </Stack >
                                 <Stack direction='row' spacing={1}>
                                     <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite Recomendable'} ({dataOptional})</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>{dataType === 'Temperatura' ? 'Valor Actual' : 'Limite Recomendable'} ({dataOptional})</Typography>
                                 </Stack>
                                 {dataType === 'Temperatura' ? (<Stack direction='row' spacing={1}>
                                     <Box sx={{ backgroundColor: 'rgba(238, 225, 51, 1)', height: '15px', width: '15px', borderRadius: '10%' }}></Box>
-                                    <Typography variant='caption'>Limite Recomendado {(dataModal < 0) ? '(0 C° : -20 C°)' : '(0 C° : 37 C°)'}</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>Limite Recomendado {(dataModal < 0) ? '(0 C° : -20 C°)' : '(0 C° : 37 C°)'}</Typography>
                                 </Stack>) : ('')}
                             </Stack>
                         </Stack>

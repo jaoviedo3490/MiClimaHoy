@@ -29,7 +29,7 @@ const GenericModal = (props) => {
                 boxShadow: '24',
                 p: '2%',
                 borderRadius: '10px',
-                backgroundColor: 'rgba(255, 255, 255, 1)',
+                backgroundColor: 'rgba(255, 255, 255, 0.32)',
                 backdropFilter: 'blur(7px)'
                 
                     

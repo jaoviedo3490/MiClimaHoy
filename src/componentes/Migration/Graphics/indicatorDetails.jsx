@@ -35,76 +35,79 @@ const IndicatorDetails = (props) => {
     const dataT = [{
         value: ValuePercentaje,
         name: props.title1,
-        title: { offsetCenter: ['0%', '-60%'] },
-        detail: { valueAnimation: true, offsetCenter: ['0%', '-40%'] }
+        title: { offsetCenter: ['0%', '-60%']  ,color: 'rgba(255, 255, 255, 0.77)'},
+        detail: { valueAnimation: true, offsetCenter: ['0%', '-40%'] },
+        color: 'rgba(255, 255, 255, 0.77)',
     },
     {
         value: ValuePercentajeOptional,
         name: props.title2,
-        title: { offsetCenter: ['0%', '-10%'] },
+        title: { offsetCenter: ['0%', '-10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '10%'] }
+        
     }, {
         value: (props.valor < 0) ? (Math.round(20 * 100 / 40)) : (Math.round(37 * 100 / value)),
         name: 'Rango Saludable',
-        title: { offsetCenter: ['0%', '35%'] },
-        detail: { valueAnimation: true, offsetCenter: ['0%', '55%'] }
+        title: { offsetCenter: ['0%', '35%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        detail: { valueAnimation: true, offsetCenter: ['0%', '55%'] },
+        color: 'rgba(255, 255, 255, 0.77)',
     }];
 
     const dataR = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] },
+        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] },
+        title: { offsetCenter: ['0%', '10%']  ,color: 'rgba(255, 255, 255, 0.77)'},
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataQualityAir = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] },
+        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] },
+        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataPrecipitacion = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] },
+        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] },
+        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
     const dataVelocidadViento = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] },
+        title: { offsetCenter: ['0%', '-30%']  ,color: 'rgba(255, 255, 255, 0.77)'},
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] },
+        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataGeneric = [{
         value: (props.type === 'Visibilidad') ? (Math.round(props.valor * 100 / 15)) : props.valor,
         name: "aqiu?",
-        title: { offsetCenter: ['0%', '0%'] },
+        title: { offsetCenter: ['0%', '0%'] ,color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['10%', '0%'] },
         itemStyle: { color: dataColor }
     }];
@@ -152,7 +155,7 @@ const IndicatorDetails = (props) => {
                     width: 30,
                     height: 10,
                     fontSize: 12,
-                    color: 'inherit',
+                    color: 'rgba(255, 255, 255, 0.77)',
                     borderColor: 'inherit',
                     borderRadius: 20,
                     borderWidth: graphType === 1 ? 0 : 1,

@@ -415,7 +415,7 @@ const Pronostics = (props) => {
                         <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
                         <Stack spacing={1}>
                             <Box>
-                                <Alert variant='outlined' severity="info">
+                                <Alert variant='filled' severity="info" sx={{backgroundColor: '#4fd6ff7a'}}>
                                     <AlertTitle>¡IMPORTANTE!</AlertTitle>
                                     <Typography variant="caption">{dataRecomendations}</Typography>
                                 </Alert>
@@ -424,11 +424,11 @@ const Pronostics = (props) => {
                             <Stack>
                                 <Stack direction='row' spacing={1}>
                                     <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography variant='caption'>Valor Actual ({dataModal})</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>Valor Actual ({dataModal})</Typography>
                                 </Stack >
                                 <Stack direction='row' spacing={1}>
                                     <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography variant='caption'>{'Limite Recomendable'} ({dataOptional})</Typography>
+                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>{'Limite Recomendable'} ({dataOptional})</Typography>
                                 </Stack>
                             </Stack>
                         </Stack>
@@ -436,7 +436,7 @@ const Pronostics = (props) => {
                         <>
 
                             {<Stack direction='column'>
-                                <Typography>En Desarrollo</Typography>
+                                <Typography color="white">En Desarrollo</Typography>
                                 <TreeGraph data={PronosticDetails} type='Pronostico' />
                                 {/*<Alert variant='outlined' severity="success">
                                     <AlertTitle>IMPORTANTE</AlertTitle>
@@ -453,7 +453,7 @@ const Pronostics = (props) => {
                             {/*<TreeGraph data={QualityAirDetails} type='QualityAir' />*/}
                             {/*<Typography>En desarrollo</Typography>*/}
                             {<Stack direction='column'>
-                                <Typography>En Desarrollo</Typography>
+                                <Typography color="white">En Desarrollo</Typography>
                                 <TreeGraph data={QualityAirDetails} type='QualityAir' />
                                 {/*<Alert variant='outlined' severity="success">
                                     <AlertTitle>IMPORTANTE</AlertTitle>
