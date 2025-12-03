@@ -8,7 +8,7 @@ import {
     Stack,
     Typography,
     Alert,
-    AlertTitle
+    AlertTitle, Button
 } from "@mui/material";
 import IndicatorDetails from "../Graphics/indicatorDetails.jsx";
 import Divider from '@mui/material/Divider';
@@ -21,6 +21,9 @@ import Snackbar from '@mui/material/Snackbar';
 import JsonImage from '../../dataJson/wallpaper.json';
 import { Vibrant } from "node-vibrant/browser";
 import Skeleton from '@mui/material/Skeleton';
+import CachedIcon from '@mui/icons-material/Cached';
+import IconButton from '@mui/material/IconButton';
+import { test_context } from "../../../Context/test-context.js";
 const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
 
 
@@ -35,19 +38,22 @@ const MainMenu = () => {
     const [isLocalizeExec, setExec] = useState(false);
     const [mapUrlState, setMapUrlState] = useState(null);
     const MapComponent = mapComponent;
-    const {isDay_global, setIsDay_global,background_image,setBackground,setDarkLetters, Warnings,Alerts,setClimateAlert,
+    const { isDay_global,optionTab,setOptionTab, setIsDay_global,climateAlert, background_image, setBackground, setDarkLetters, Warnings, Alerts, setClimateAlert,
 
-} = useContext(DataContext);
+    } = useContext(DataContext);
 
-const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataOptional,typeModal} = useContext(Ui_Context);
+    const { openModal, setOpenModal, dataModal, dataRecomendations, dataType, dataOptional, typeModal } = useContext(Ui_Context);
 
-
+    const {Trigger,setTrigger} = useContext(test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    console.log("renderizado forzado")
     const handleCloseModal = () => {
         if (typeof setOpenModal === "function") setOpenModal(false);
     };
+
+    const handleReloadData = () =>{
+     
+    }
     const localize = () => {
 
         navigator.geolocation.getCurrentPosition(
@@ -78,11 +84,12 @@ const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataO
 
 
                         setMapComponent(() => LazyIframe);
+                       
                     })
                     .catch((error) => {
                         setIsSnackBarActive(true);
                         setMessageSnackBar(String(error));
-
+                       
                     });
             },
             (error) => {
@@ -112,8 +119,7 @@ const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataO
 
     useEffect(() => {
         localize();
-        setExec(prev => !prev);
-    }, []);
+    }, [Trigger]);
 
     useEffect(() => {
         if (Temperatura <= -5) {
@@ -172,10 +178,11 @@ const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataO
 
     }, [isLocalizeExec, Temperatura]);
 
-    console.log("RENDER MainMenu", { background_image, Alerts, Warnings, openModal });
+    //console.log("RENDER MainMenu", { background_image, Alerts, Warnings, openModal });
     return (
         <>
             <Box sx={{ mt: '10px', width: '100%', left: '100px' }}>
+                {/*<Button variant="outlined" sx={{ color: 'black', borderColor: 'black' }} startIcon={<CachedIcon />} onClick={handleReloadData}> Reload </Button>*/}
                 <Card sx={{
                     boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
                     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -301,7 +308,7 @@ const { openModal, setOpenModal,  dataModal, dataRecomendations, dataType, dataO
                         <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
                         <Stack spacing={2}>
                             <Box>
-                                <Alert variant='filled' severity="info" sx={{backgroundColor: '#4fd6ff7a'}}>
+                                <Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
                                     <AlertTitle>¡IMPORTANTE!</AlertTitle>
                                     <Typography color='rgba(255, 255, 255, 0.77)' variant="caption">{dataRecomendations}</Typography>
                                 </Alert>

@@ -1,11 +1,7 @@
 import ReactECharts from "echarts-for-react";
 import { Box, Stack } from "@mui/material";
-import { Button } from "@mui/material";
-import { DataContext } from "../../../Context/MetricsContext";
-import { useContext } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
 const IndicatorDetails = (props) => {
-    const { dark_theme_letters, setDarkLetters } = useContext(DataContext);
     const theme = useTheme();
 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));

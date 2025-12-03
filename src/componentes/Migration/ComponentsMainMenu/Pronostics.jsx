@@ -76,11 +76,12 @@ const Pronostics = (props) => {
         const nubosidad = climateAlert.current.cloud;
         const humidity = climateAlert.current.humidity;
         const visibilidad = climateAlert.current.vis_km;
-        const mono_carbono = climateAlert.current.air_quality.co;
-        const dio_nitrogeno = climateAlert.current.air_quality.no2;
-        const dio_azufre = climateAlert.current.air_quality.so2;
+        const mono_carbono = isMobile ? (((climateAlert.current.air_quality.co * 24.45) / 28.01) / 1000).toFixed(2) : (((climateAlert.current.air_quality.co * 24.45) / 28.01) / 1000).toFixed(5);
+        const dio_nitrogeno = isMobile ? (((climateAlert.current.air_quality.no2 * 24.45) / 46.0055) / 1000).toFixed(2) : (((climateAlert.current.air_quality.no2 * 24.45) / 46.0055) / 1000).toFixed(5);
+        const dio_azufre = isMobile ? (((climateAlert.current.air_quality.so2) * 24.45 / 64.07) / 1000).toFixed(2) : (((climateAlert.current.air_quality.so2) * 24.45 / 64.07) / 1000).toFixed(5);
         const PM2_5 = climateAlert.current.air_quality.pm2_5;
-        const Ozono = climateAlert.current.air_quality.o3;
+        const Ozono = isMobile ? (((climateAlert.current.air_quality.o3 * 24.45) / 47.998) / 1000).toFixed(2) : (((climateAlert.current.air_quality.o3 * 24.45) / 47.998) / 1000).toFixed(5);
+        //const Ozono = climateAlert.current.air_quality.o3;
         const level_contamination = climateAlert.current.air_quality['us-epa-index'];
         const precipitation_local = climateAlert.current.precip_mm;
         const velocidad_viento = climateAlert.current.wind_kph;
@@ -245,7 +246,7 @@ const Pronostics = (props) => {
                                                 />
                                                 <Chip
                                                     size="small"
-                                                    label={`${(((MonoCarbono * 24.45) / 28.01) / 1000).toFixed(2)} ppm`}
+                                                    label={`${MonoCarbono} ppm`}
                                                     sx={{ width: isMobile ? '100%' : 'auto' }}
                                                     color={dataMonoCarbono.alert}
                                                 />
@@ -263,7 +264,7 @@ const Pronostics = (props) => {
                                                 />
                                                 <Chip
                                                     size="small"
-                                                    label={`${(((DioNitrogeno * 24.45) / 46.0055) / 1000).toFixed(2)} ppm`}
+                                                    label={`${DioNitrogeno} ppm`}
                                                     sx={{ width: '100%' }}
                                                     color={dataDioNitrogeno.alert}
                                                 />
@@ -282,7 +283,7 @@ const Pronostics = (props) => {
                                                 />
                                                 <Chip
                                                     size="small"
-                                                    label={`${(((climateAlert.current.air_quality.so2) * 24.45 / 64.07) / 1000).toFixed(2)} ppm`}
+                                                    label={`${DioAzufre} ppm`}
                                                     sx={{ width: '100%' }}
                                                     color={dataDioAzufre.alert}
                                                 />
@@ -415,7 +416,7 @@ const Pronostics = (props) => {
                         <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
                         <Stack spacing={1}>
                             <Box>
-                                <Alert variant='filled' severity="info" sx={{backgroundColor: '#4fd6ff7a'}}>
+                                <Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
                                     <AlertTitle>¡IMPORTANTE!</AlertTitle>
                                     <Typography variant="caption">{dataRecomendations}</Typography>
                                 </Alert>
@@ -436,12 +437,13 @@ const Pronostics = (props) => {
                         <>
 
                             {<Stack direction='column'>
-                                <Typography color="white">En Desarrollo</Typography>
-                                <TreeGraph data={PronosticDetails} type='Pronostico' />
-                                {/*<Alert variant='outlined' severity="success">
-                                    <AlertTitle>IMPORTANTE</AlertTitle>
+                                <Typography color="white">Mas Detalles</Typography>
+                                {<Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
+                                    <AlertTitle>¡IMPORTANTE!</AlertTitle>
                                     <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial]}</Typography>
-                                </Alert>*/}
+                                </Alert>}
+                                <TreeGraph data={PronosticDetails} type='Pronostico' />
+
                             </Stack>}
                             {/*<Typography>En desarrollo</Typography>*/}
 
@@ -452,9 +454,13 @@ const Pronostics = (props) => {
                             {/*<TreeGraphicEchart data={QualityAirDetails} />*/}
                             {/*<TreeGraph data={QualityAirDetails} type='QualityAir' />*/}
                             {/*<Typography>En desarrollo</Typography>*/}
-                            {<Stack direction='column'>
-                                <Typography color="white">En Desarrollo</Typography>
-                                <TreeGraph data={QualityAirDetails} type='QualityAir' />
+                            {<Stack direction='column' spacing={1}>
+
+                                <Stack direction='row' spacing={1}>
+                                    <TreeGraph data={QualityAirDetails} type='QualityAir' />
+                                   
+                                </Stack>
+
                                 {/*<Alert variant='outlined' severity="success">
                                     <AlertTitle>IMPORTANTE</AlertTitle>
                                     <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial]}</Typography>

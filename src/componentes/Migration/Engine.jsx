@@ -22,7 +22,7 @@ const Engine = (props) => {
         "DioNitrogeno": [{ "success": [0, 0.053], "info": [0.054, 0.1], "warning": [0.101, 0.2], "danger": [0.2, 500] }],
         "DioAzufre": [{ "success": [0, 0.017], "info": [0.01701, 0.075], "warning": [0.076, 0.5], "danger": [0.5, 5] }],
         "Precipitacion": [{ "success": [0, 2], "info": [2.1, 10], "warning": [10.1, 30], "danger": [30, 70] }],
-        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 30.9], "warning": [40, 65], "danger": [66.1, 100] }],
+        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 39.9], "warning": [40, 65], "danger": [66.1, 100] }],
     };
 
     //Estas son las alertas que se generaran para cada metrica teniendo en cuenta los rangos anteriores
@@ -1076,7 +1076,7 @@ const Engine = (props) => {
                                 : (props.data > 65 && props.data <= 100)
                                     ? `Viento muy fuerte con riesgo de daños materiales. Evita salir si no es estrictamente necesario, especialmente en moto o bici. Ten cuidado con árboles, postes y estructuras inestables, y mantente atento a comunicados oficiales sobre eventos extremos.`
                                     : `Definición no encontrada`;
-                alertas["Velocidad-Viento"][nivelAlertaVelocidadViento].Message = messageVelocidadViento || 'UNDEFINED';
+                alertas["Velocidad-Viento"][nivelAlertaVelocidadViento].Message = messageVelocidadViento || 0;
                 setComponent(
                     /*
                     *Este componente es aislado de la logica de creacion de alertas ,
