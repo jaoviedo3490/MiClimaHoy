@@ -77,6 +77,7 @@
     "nigth-Moderate-rain":"nigth-Moderate-rain_dark.png",
     "nigth-Heavy-rain":"nigth-Heavy-rain_dark.png",
     "nigth-Cloudy":"nigth-Cloudy_dark.png",
+    "day-Partly-Cloudy":"day-Partly-cloudy_light.webp",
     "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
   }
 }
