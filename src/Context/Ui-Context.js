@@ -11,7 +11,8 @@ const UIProvide = ({ children }) => {
   const [dataOptional, setDataOptional] = useState([]);
   const [typeModal, setTypeModal] = useState(null);
   const [optionTab, setOptionTab] = useState("1"); // si quieres controlar tab desde aquí
-   const [mapUrlState, setMapUrlState] = useState(null);
+  const [mapUrlState, setMapUrlState] = useState(null);
+  const [customLocation, setCustomLocation] = useState(false);
 
   return (
     <Ui_Context.Provider
@@ -21,6 +22,7 @@ const UIProvide = ({ children }) => {
         setOpenModal,
         closeModal,
         setCloseModal,
+        customLocation, setCustomLocation,
 
         // Datos que muestra el modal
         dataModal,
@@ -33,7 +35,7 @@ const UIProvide = ({ children }) => {
         setDataOptional,
         typeModal,
         setTypeModal,
-mapUrlState, setMapUrlState,
+        mapUrlState, setMapUrlState,
         // Tab actual (opcional)
         optionTab,
         setOptionTab,

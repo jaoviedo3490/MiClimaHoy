@@ -50,7 +50,7 @@ const Pronostics = (props) => {
 
     const {
         openModal, setOpenModal, setCloseModal, dataModal, setDataModal, dataRecomendations, setRecomendations,
-        dataType, setDataType, dataOptional, setDataOptional, typeModal, setTypeModal,
+        dataType, setDataType, dataOptional, setDataOptional, typeModal, setTypeModal,customLocation, setCustomLocation
     } = useContext(Ui_Context);
 
 

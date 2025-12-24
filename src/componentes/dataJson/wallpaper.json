@@ -78,6 +78,11 @@
     "nigth-Heavy-rain":"nigth-Heavy-rain_dark.png",
     "nigth-Cloudy":"nigth-Cloudy_dark.png",
     "day-Partly-Cloudy":"day-Partly-cloudy_light.webp",
+    "day-Moderate-or-heavy-snow-showers":"day-Moderate-or-heavy-snow-showers-light.png",
+    "day-Clear":"day-Clear-light.png",
+    "nigth-Freezing-drizzle":"nigth-Freezing-drizzle_dark.png",
+    "nigth-Patchy-rain":"nigth-Patchy-rain-dark.png",
+    "nigth-Patchy-light-snow":"nigth-Patchy-light-snow_dark.png",
     "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
   }
 }

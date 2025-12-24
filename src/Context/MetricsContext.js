@@ -23,7 +23,7 @@ const UserProvide = ({ children }) => {
     const [dataDioAzufre, setDataDioAzufre] = useState([]);
     const [optionTab, setOptionTab] = useState(1);
     const [isDay, setIsDay] = useState([]);
-    const [customLocation,setCustomLocation] = useState(false);
+    
     const [customCoords,setCustomCoords] = useState([]);
 
     const apiSearch = async (value, query, setCities) => {
@@ -61,7 +61,7 @@ const UserProvide = ({ children }) => {
         <DataContext.Provider
             value={{
                 customCoords,setCustomCoords,
-                customLocation,setCustomLocation,
+              
                 optionTab,
                 setOptionTab,
                 Warnings_Module_second,

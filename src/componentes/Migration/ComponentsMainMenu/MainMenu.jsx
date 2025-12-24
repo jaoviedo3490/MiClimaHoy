@@ -48,18 +48,18 @@ const MainMenu = () => {
     const [isLocalizeExec] = useState(false);
     const [custom_latitude, SetCustomLatitude] = useState('');
     const [custom_longitude, SetCustomLongitude] = useState('');
-    const [SeleccionadoC, setSelectC] = useState(localStorage.getItem('selecionado'));
+    const [SeleccionadoC, setSelectC] = useState(localStorage.getItem('seleccionado'));
     const [cities, setCities] = useState([]);
     const [auxState, setAuxState] = useState(false);
 
 
-    const { customCoords, setCustomCoords, customLocation, setCustomLocation, isDay_global, setIsDay_global, climateAlert, setBackground, setDarkLetters, Warnings, Alerts, setClimateAlert,
+    const { isDay_global, setIsDay_global, climateAlert, setBackground, setDarkLetters, Warnings, Alerts, setClimateAlert,
 
     } = useContext(DataContext);
 
     const {
         openModal, setOpenModal, setCloseModal, dataModal, dataRecomendations,
-        dataType, dataOptional, typeModal, setTypeModal, mapUrlState, setMapUrlState
+        dataType, dataOptional, typeModal, setTypeModal, mapUrlState, setMapUrlState, customLocation, setCustomLocation
     } = useContext(Ui_Context);
 
     const { Trigger } = useContext(test_context);
@@ -67,13 +67,11 @@ const MainMenu = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
 
-    useEffect(() => {
-        setCustomLocation(false);
-    }, [localStorage.getItem('seleccionado')])
 
 
     const handleCloseModal = () => {
-        if (typeof setOpenModal === "function") setOpenModal(false);
+        if (typeof setOpenModal === "function")
+            setOpenModal(false);
         setCities([]);
     };
 
@@ -85,10 +83,10 @@ const MainMenu = () => {
     };
     const onChangeCity = (event) => {
         setSelectC(event.target.value);
-        localStorage.setItem('selecionado', SeleccionadoC);
-        //localize(true, event.target.value)
+        localStorage.setItem('seleccionado', event.target.value);
         setDissable(false);
     }
+
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -97,9 +95,10 @@ const MainMenu = () => {
 
         setIsSnackBarActive(false);
     };
-    /*useEffect(() => {
-        alert(SeleccionadoC);
-    }, [SeleccionadoC])*/
+
+    useEffect(() => {
+        if (!customLocation) localStorage.clear()
+    }, [])
 
     useEffect(() => {
         if (typeModal === 'CustomLocation') {
@@ -113,7 +112,7 @@ const MainMenu = () => {
 
         const cities_select = Countries_Cities.find((city_element) => city_element.id === event.target.value)
         let json = cities_select.cities.map((name) => ({ value: name.name, latitude: name.latitude, longitude: name.longitude }));
-        console.log(`Este es el json resultante: ${json}`)
+
         if (json.length < 1) {
             setIsSnackBarActive(true);
             setMessageSnackBar(`Ciudades no listadas , por favor escoger otro Pais`);
@@ -135,17 +134,18 @@ const MainMenu = () => {
                 )
                     .then((res) => res.json())
                     .then((data) => {
-                        //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${(param) ? coordenadas : ciudad}&aqi=yes`)
+
                         const ciudad = data?.address?.city || data?.address?.town || data?.address?.village || `${latitude},${longitude}`;
-                        //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${(param) ? JSON.stringify(SeleccionadoC) : ciudad}&aqi=yes`)
+                        //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${  localStorage.getItem('seleccionado') }&aqi=yes`);
+                        //alert(`https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${latitude},${longitude}`);
                         return fetch(
-                            `https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${(customLocation) ? localStorage.getItem('selecionado') : ciudad}&aqi=yes`
+                            `https://api.weatherapi.com/v1/current.json?key=a21411e5a88c4a5291a173440243010&q=${(customLocation) ? localStorage.getItem('seleccionado') : `${latitude},${longitude}`}&aqi=yes`
                         );
                     })
                     .then((res) => res.json())
                     .then((data) => {
                         setAuxState(false);
-                        console.log("Datos clima:", data);
+                        console.log(data)
 
                         setClimateAlert(data);
                         setTemperature(data.current.temp_c);
@@ -251,7 +251,7 @@ const MainMenu = () => {
     const locate = (param) => {
         if (param) {
             setCustomLocation(false);
-            localStorage.clear();
+            localStorage.removeItem('seleccionado');
         } else {
             handleOpenModal(2)
         }
@@ -431,59 +431,62 @@ const MainMenu = () => {
                         </>) : (typeModal === 'CustomLocation') ? (
                             <>
 
-                                <Stack direction='column' spacing={1}>
+                                <Stack direction='column' spacing={1} sx={{ width: '100%' }}>
                                     <Typography>Localización Personalizada</Typography>
                                     <Stack direction='column' spacing={1}>
 
-                                        <InputLabel sx={{ width: '100%' }}>Seleccione el Pais</InputLabel>
-                                        <Select label="Location" onChange={handleEvent}>
-                                            {Countries_Cities.map((temp => {
+                                        <FormControl fullWidth>
+                                            <InputLabel sx={{ display: 'block', width: '100%' }} >Seleccione el Pais</InputLabel>
+                                            <Select sx={{ width: '100%' }} label="Location" onChange={handleEvent}>
+                                                {Countries_Cities.map((temp => {
 
-                                                return (
-                                                    <MenuItem key={temp.id} value={temp.id}>{temp.name}</MenuItem>
-                                                )
-                                            }))}
-                                        </Select>
-
-
-
-                                        {cities.length > 0 && (
+                                                    return (
+                                                        <MenuItem key={temp.id} value={temp.id}>{temp.name}</MenuItem>
+                                                    )
+                                                }))}
+                                            </Select>
+                                                <br></br>
 
 
-                                            <>
-                                                <InputLabel>Seleccione la ciudad</InputLabel>
-                                                <Select label="City" onChange={onChangeCity}
-                                                    value={SeleccionadoC}>
-
-                                                    {cities.map((temp => {
-
-                                                        return (
-                                                            <MenuItem key={{ latitude: temp.latitude, longitude: temp.longitude }} value={temp.value}>{temp.value}</MenuItem>
-                                                        )
-                                                    }))}
+                                            {cities.length > 0 && (
 
 
-                                                </Select>
-                                                {/* <Select
+                                                <>
+                                                    <InputLabel>Seleccione la ciudad</InputLabel>
+                                                    <Select label="City" onChange={onChangeCity}
+                                                        value={SeleccionadoC}>
+
+                                                        {cities.map((temp => {
+
+                                                            return (
+                                                                <MenuItem key={{ latitude: temp.latitude, longitude: temp.longitude }} value={temp.value}>{temp.value}</MenuItem>
+                                                            )
+                                                        }))}
+
+
+                                                    </Select>
+                                                    {/* <Select
                                                 placeholder="Selecciona una Ciudad"
                                                 value={SeleccionadoC}
                                                 onChange={onChangeCity}
                                                 options={cities}
                                             />*/}
 
-                                            </>
+                                                </>
 
 
-                                        )}
+                                            )}
+                                            <br></br>
 
-                                        <Button
-                                            disabled={button_disable}
-                                            onClick={() => { handleCloseModal(); setCustomLocation(true); }}
-                                            variant='contained'
-                                            color='success'
-                                            sx={{ width: '100%' }}
-                                        >Informe de Clima
-                                        </Button>
+                                            <Button
+                                                disabled={button_disable}
+                                                onClick={() => { handleCloseModal(); setCustomLocation(true); }}
+                                                variant='contained'
+                                                color='success'
+                                                sx={{ width: '100%' }}
+                                            >Informe de Clima
+                                            </Button>
+                                        </FormControl>
                                     </Stack>
 
                                 </Stack>
