@@ -483,9 +483,10 @@ const MainMenu = () => {
                                                 onClick={() => { handleCloseModal(); setCustomLocation(true); }}
                                                 variant='contained'
                                                 color='success'
-                                                sx={{ width: '100%' }}
+                                                sx={{ width: '100%'}}
                                             >Informe de Clima
                                             </Button>
+                                            <br></br>
                                         </FormControl>
                                     </Stack>
 

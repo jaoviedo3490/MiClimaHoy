@@ -4,7 +4,8 @@ import { DataContext } from "../../Context/MetricsContext";
 const Engine = (props) => {
     const [typeAlert] = useState(props.type); //Recibe el tipo de alerta del componente padre
     //debugger;
-    const { setDataDioAzufre, setAlerts, setAlert_Module_Second, setWarnings_Module_Second, setDataQualityAir, setWarnings, setDataNubosidad, setDataDioNitrogeno, setMonoCarbono, setDataHumedad, setDataVisibilidad, climateAlert } = useContext(DataContext); //Arreglo que guardara las alertas de las distintas metricas
+    const { setDataDioAzufre, setDataOzono, setDataPM2_5,
+        setDataPM10, setAlerts, setAlert_Module_Second, setWarnings_Module_Second, setDataQualityAir, setWarnings, setDataNubosidad, setDataDioNitrogeno, setMonoCarbono, setDataHumedad, setDataVisibilidad, climateAlert } = useContext(DataContext); //Arreglo que guardara las alertas de las distintas metricas
     //Arreglo que guardara las advertencias de las distintas metricas
     const [nivelAlertaTemp, setNivelAlertaTemp] = useState([]); //variable que guarda el nivel de alerta , el cual determina que arreglo toma de las las alertas para la temperatura
     const [nivelAlertaUV, setNivelAlertaUV] = useState([]);//variable que guarda el nivel de alerta , el cual determina que arreglo toma de las las alertas para la radiacion
@@ -21,8 +22,12 @@ const Engine = (props) => {
         "MonoCarbono": [{ "success": [0, 9], "info": [10, 50], "warning": [51, 100], "danger": [101, 200], "primary": [201, 500] }],
         "DioNitrogeno": [{ "success": [0, 0.053], "info": [0.054, 0.1], "warning": [0.101, 0.2], "danger": [0.2, 500] }],
         "DioAzufre": [{ "success": [0, 0.017], "info": [0.01701, 0.075], "warning": [0.076, 0.5], "danger": [0.5, 5] }],
+        "Ozono": [{ "success": [0, 0.03], "info": [0.04, 0.06], "warning": [0.07, 0.10], "danger": [0.10, 0.030] }],
         "Precipitacion": [{ "success": [0, 2], "info": [2.1, 10], "warning": [10.1, 30], "danger": [30, 70] }],
-        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 39.9], "warning": [40, 65], "danger": [66.1, 100] }],
+        "PM10": [{ "success": [0, 54], "info": [55, 154], "warning": [155, 254], "danger": [255, 354], "xtreme": [355, 999] }],
+
+        "PM2_5": [{ "success": [0, 12], "info": [12.1, 35.4], "warning": [35.5, 55.4], "danger": [55.5, 200] }],
+        "Velocidad-Viento": [{ "success": [0, 19], "info": [19.1, 39.9], "warning": [40, 65], "danger": [55, 300] }],
     };
 
     //Estas son las alertas que se generaran para cada metrica teniendo en cuenta los rangos anteriores
@@ -92,6 +97,28 @@ const Engine = (props) => {
             "danger": { "color": "#dd0000ff", "titulo": "Peligro", "Message": undefined, "alert": 'error' },
             "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": undefined, "alert": 'xtreme' }
         },
+        "Ozono": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": undefined, "alert": 'success' },
+            "info": { "color": "#00acf0ff", "titulo": "Importante", "Message": undefined, "alert": 'info' },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": undefined, "alert": 'warning' },
+            "danger": { "color": "#dd0000ff", "titulo": "Peligro", "Message": undefined, "alert": 'error' },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": undefined, "alert": 'xtreme' }
+        },
+        "PM10": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": undefined, "alert": 'success' },
+            "info": { "color": "#00acf0ff", "titulo": "Importante", "Message": undefined, "alert": 'info' },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": undefined, "alert": 'warning' },
+            "danger": { "color": "#dd0000ff", "titulo": "Peligro", "Message": undefined, "alert": 'error' },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": undefined, "alert": 'xtreme' }
+        },
+        "PM2_5": {
+            "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": undefined, "alert": 'success' },
+            "info": { "color": "#00acf0ff", "titulo": "Importante", "Message": undefined, "alert": 'info' },
+            "warning": { "color": "#F18B00", "titulo": "Advertencia", "Message": undefined, "alert": 'warning' },
+            "danger": { "color": "#dd0000ff", "titulo": "Peligro", "Message": undefined, "alert": 'error' },
+            "xtreme": { "color": "#B567A4", "titulo": "Peligro", "Message": undefined, "alert": 'xtreme' }
+        }
+        ,
         "Precipitacion": {
             "success": { "color": "#3fc555ff", "titulo": "Importante", "Message": undefined, "alert": 'success' },
             "info": { "color": "#00acf0ff", "titulo": "Importante", "Message": undefined, "alert": 'info' },
@@ -1113,7 +1140,7 @@ const Engine = (props) => {
                 alertas['MonoCarbono'][nivelAlertaMonoCarbono].Message = messageCo;
                 setMonoCarbono(alertas['MonoCarbono'][nivelAlertaMonoCarbono]);
 
-                const o3 = ((climateAlert.current.air_quality.o3 * 24.45) / 48) / 1000;
+                //const o3 = ((climateAlert.current.air_quality.o3 * 24.45) / 48) / 1000;
 
                 break;
             case "DioNitrogeno":
@@ -1139,6 +1166,26 @@ const Engine = (props) => {
                 alertas['DioNitrogeno'][nivelAlertaDioNitrogeno].Message = messageNO2;
                 setDataDioNitrogeno(alertas['DioNitrogeno'][nivelAlertaDioNitrogeno]);
                 break;
+            case "Ozono":
+
+                const o3 = ((climateAlert.current.air_quality.o3) * 24.45 / 64.07) / 1000;
+
+                const messageO3 =
+                    (o3 >= 0 && o3 <= 0.03) ?
+                        `Nivel bueno (0 - 0.03 ppm). el nivel es bajo y tolerable, permitiendo realizar actividades normales al aire libre y ventilar espacios sin restricciones.` :
+                        (o3 > 0.03 && o3 <= 0.06) ?
+                            `Nivel moderado (0.03 - 0.06 ppm). el ozono puede causar irritación leve, por lo que se recomienda reducir el ejercicio intenso, especialmente en personas sensibles o con afecciones respiratorias.` :
+                            (o3 > 0.06 && o3 <= 0.07) ?
+                                `Nivel malo (0.06 - 0.7 ppm). el ozono ya resulta dañino, se aconseja evitar actividades al aire libre, permanecer en interiores y mantener ventanas cerradas.` :
+                                (o3 > 0.07 && o3 <= 0.10) ?
+                                    `Nivel muy malo (0.07 - 0.10 ppm). el nivel de ozono es peligroso y se recomienda suspender completamente las actividades exteriores, permanecer bajo techo y estar atento a síntomas respiratorios.` :
+                                    (o3 > 0.10) ?
+                                        `Nivel extremadamente peligroso (>0.10 ppm). el ozono es muy peligroso, por lo que se debe evacuar el área, no permanecer en el lugar y eliminar cualquier fuente generadora de ozono.` :
+                                        `Definición no encontrada`;
+                const nivelAlertaDioOzono = getAlert(o3, typeAlert);
+                alertas['Ozono'][nivelAlertaDioOzono].Message = messageO3;
+                setDataOzono(alertas['Ozono'][nivelAlertaDioOzono]);
+                break;
             case "DioAzufre":
 
                 const so2 = ((climateAlert.current.air_quality.so2) * 24.45 / 64.07) / 1000;
@@ -1158,6 +1205,49 @@ const Engine = (props) => {
                 const nivelAlertaDioAzufre = getAlert(so2, typeAlert);
                 alertas['DioAzufre'][nivelAlertaDioAzufre].Message = messageSO2;
                 setDataDioAzufre(alertas['DioAzufre'][nivelAlertaDioAzufre]);
+                break;
+            case "PM2_5":
+
+                //const pm2_5 = ((climateAlert.current.air_quality.pm2_5) * 24.45 / 64.07) / 1000;
+                const pm2_5 = ((climateAlert.current.air_quality.pm2_5));
+
+                const messagepm2_5 =
+                    (pm2_5 >= 0 && pm2_5 <= 12) ?
+                        `(0 - 12 µg/m³). El nivel de Materia Particulada es baja , la calidad del aire es buena y no representa riesgo, permitiendo actividades normales al aire libre y ventilación habitual.` :
+                        (pm2_5 > 12 && pm2_5 <= 35.4) ?
+                            `(12.1 - 35.4 µg/m³). El nivel de Materia Particulada es Moderado, las personas sensibles pueden experimentar molestias leves, por lo que se recomienda reducir el ejercicio intenso en exteriores.` :
+                            (pm2_5 > 35.4 && pm2_5 <= 55.4) ?
+                                `(35.5 -55.4 µg/m³). El nivel de Materia Particulada es Alto, la calidad del aire es dañina para grupos sensibles, se aconseja limitar actividades al aire libre, especialmente en niños, adultos mayores y personas con enfermedades respiratorias.` :
+                                (pm2_5 > 55.5 && pm2_5 <= 150.4) ?
+                                    `(55.4 - 150.4 µg/m³). El nivel de Materia Particulada es muy alto, la calidad del aire es dañina  para la población general, se recomienda permanecer en interiores, evitar ejercicio al aire libre y mantener ventanas cerradas` :
+                                    (pm2_5 > 150.4) ?
+                                        `(>150.4 µg/m³).El nivel de Materia Particulada es Extremo, la calidad del aire es muy dañina, por lo que se debe evitar salir, usar purificadores de aire si están disponibles y prestar atención a síntomas respiratorios.` :
+                                        `Definición no encontrada`;
+                const nivelAlertaPM2_5 = getAlert(pm2_5, typeAlert);
+                alertas['PM2_5'][nivelAlertaPM2_5].Message = messagepm2_5;
+                setDataPM2_5(alertas['PM2_5'][nivelAlertaPM2_5]);
+                break;
+            case "PM10":
+
+                //const pm2_5 = ((climateAlert.current.air_quality.pm2_5) * 24.45 / 64.07) / 1000;
+                const pm10 = ((climateAlert.current.air_quality.pm10));
+
+                const messagepm10 =
+                    (pm10 >= 0 && pm10 <= 54) ?
+                        `(0 - 54 µg/m³). El nivel de partículas inhalables (PM10) es bajo. La calidad del aire es buena y no representa un riesgo para la salud, permitiendo actividades normales al aire libre y ventilación habitual.` :
+                        (pm10 > 54 && pm10 <= 154) ?
+                            `(55 - 154 µg/m³). El nivel de partículas inhalables (PM10) es moderado. Personas sensibles pueden experimentar irritación leve en ojos, nariz o garganta, por lo que se recomienda reducir el ejercicio intenso en exteriores.` :
+                            (pm10 > 154 && pm10 <= 254) ?
+                                `(155 - 254 µg/m³). El nivel de partículas inhalables (PM10) es alto. La calidad del aire es dañina para grupos sensibles; se aconseja limitar actividades al aire libre, especialmente en niños, adultos mayores y personas con enfermedades respiratorias.` :
+                                (pm10 > 254 && pm10 <= 354) ?
+                                    `(255 - 354 µg/m³). El nivel de partículas inhalables (PM10) es muy alto. La calidad del aire es dañina para la población general; se recomienda permanecer en interiores, evitar ejercicio al aire libre y mantener ventanas cerradas.` :
+                                    (pm10 >= 355) ?
+                                        `(≥ 355 µg/m³). El nivel de partículas inhalables (PM10) es extremo. La calidad del aire es muy dañina; se debe evitar salir, usar purificadores de aire si están disponibles y prestar atención a síntomas respiratorios.` :
+                                        `Definición no encontrada`;
+
+                const nivelAlertaPM10 = getAlert(pm10, typeAlert);
+                alertas['PM10'][nivelAlertaPM10].Message = messagepm10;
+                setDataPM10(alertas['PM10'][nivelAlertaPM10]);
                 break;
         }
     }, [props.data, typeAlert]);

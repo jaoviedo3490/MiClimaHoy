@@ -23,6 +23,9 @@ const UserProvide = ({ children }) => {
     const [dataDioAzufre, setDataDioAzufre] = useState([]);
     const [optionTab, setOptionTab] = useState(1);
     const [isDay, setIsDay] = useState([]);
+    const [dataOzono,setDataOzono] = useState([]);
+    const [dataPM2_5,setDataPM2_5] = useState([]);
+    const [dataPM10,setDataPM10] = useState([]);
     
     const [customCoords,setCustomCoords] = useState([]);
 
@@ -60,8 +63,10 @@ const UserProvide = ({ children }) => {
     return (
         <DataContext.Provider
             value={{
+                dataPM2_5,setDataPM2_5,
+                dataPM10,setDataPM10,
                 customCoords,setCustomCoords,
-              
+              dataOzono,setDataOzono,
                 optionTab,
                 setOptionTab,
                 Warnings_Module_second,
