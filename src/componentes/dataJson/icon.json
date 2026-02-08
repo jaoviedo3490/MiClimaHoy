@@ -1,0 +1,60 @@
+{
+  "icon": {
+    "day": {
+      "day-Sunny": "/day-Sunny.png",
+      "day-Light-rain-shower": "/day-light-rain.png",
+      "day-Freezing-fog": "/Freezing-fog.png",
+      "day-Overcast": "/day-Overcast.png",
+      "day-Heavy-snow": "/day-Heavy-snow.png",
+      "day-Partly-Cloudy": "/day-Partly-Cloudy.png",
+      "day-Patchy-rain-nearby": "/day-Patchy-rain-nearby.png",
+      "day-Patchy-light-drizzle": "/day-Patchy-light-drizzle.png",
+      "day-Patchy-light-rain-in-area-with-thunder": "/day-Patchy-light-rain-in-area-with-thunder.png",
+      "day-Light-snow":"/light-snow.png",
+      "day-Fog":"/Fog.png",
+      "day-Moderate-snow":"/Moderate-snow.png",
+      "day-Moderate-or-heavy-snow-showers":"/Moderate-or-heavy-snow-showers.png",
+      "day-Light-rain":"/ligth-rain.png",
+      "day-Thundery-outbreaks-in-nearby":"/Thundery-outbreaks-in-nearby.png",
+      "day-Cloudy":"/day-Cloudy.png",
+      "day-Light-freezing-rain":"/Light-freezing-rain.png",
+      "day-Mist":"/Mist.png",
+      "day-Partly-cloudy": "/day-Partly-Cloudy.png",
+      "day-Blizzard":"/ventisca.png",
+      "day-Moderate-rain":"/day-Moderate-rain.png",
+      "day-Clear":"/day-Sunny.png"
+    },
+    "nigth": {
+      "nigth-Clear": "/nigth-clear.png",
+      "nigth-Patchy-rain-nearby": "/nigth-Patchy-rain-nearby.png",
+      "nigth-Light-rain-shower": "/Light-rain-shower.png",
+      "nigth-Partly-Cloudy": "/nigth-Partly-Cloudy.png",
+      "nigth-Overcast": "/nigth-Overcast.png",
+      "nigth-Mist": "/nigth-Mist.png",
+      "nigth-Freezing-fog": "/Freezing-fog.png",
+      "nigth-Patchy-light-drizzle": "/nigth-Patchy-light-drizzle.png",
+      "nigth-Light-snow":"/light-snow.png",
+      "nigth-Light-drizzle":"/night-Light-drizzle.png",
+      "nigth-Fog":"/Fog.png",
+      "nigth-Moderate-snow":"/Moderate-snow.png",
+      "nigth-Moderate-or-heavy-snow-showers":"/Moderate-or-heavy-snow-showers.png",
+      "nigth-Light-rain":"/Light-rain.png",
+      "nigth-Light-freezing-rain":"/Light-freezing-rain.png",
+      "nigth-Partly-cloudy": "/nigth-Partly-Cloudy.png",
+      "nigth-Blizzard":"/ventisca.png",
+      "nigth-Cloudy":"/Cloudy.png"
+    },
+    "Air-Quality":{
+      "1":"baja-emision.png",
+      "2":"moderada.png",
+      "3":"insalubre-2.png",
+      "4":"insalubre.png",
+      "5":"insalubre-4.png",
+      "6":"insalubre-3.png"
+    }
+
+  }
+}
+
+
+

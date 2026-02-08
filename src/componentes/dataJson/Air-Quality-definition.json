@@ -1,0 +1,10 @@
+{
+    "Definition":{
+        "1":"La calidad del aire es óptima y no representa riesgo para la salud , No se requieren precauciones.",
+        "2":"La calidad del aire es aceptable, pero algunas personas sensibles pueden experimentar molestias leves , Si eres sensible (asma o enfermedades respiratorias), limita el esfuerzo físico al aire.",
+        "3":"La calidad del aire es baja , personas con enfermedades respiratorias, niños y adultos mayores pueden verse afectados , se recomienda evitar actividades al aire libre si perteneces a un grupo de riesgo. Usa mascarilla si es necesario.",
+        "4":"La calidad del aire no es saludable , Toda la población puede experimentar efectos adversos, especialmente personas con problemas respiratorios , Reduce la actividad al aire libre, usa purificadores de aire en casa y evita zonas con alta contaminación.",
+        "5":"La calidad del aire es peligrosa , Aumentan los riesgos de salud para toda la población. Se recomienda evitar la exposición prolongada , Permanece en interiores, usa mascarilla si debes salir y mantén cerradas puertas y ventanas.",
+        "6":"La calidad del aire es altamente peligrosa,  La contaminación es extrema y puede afectar gravemente a toda la población, evita salir, usa purificadores y sigue indicaciones de las autoridades locales para reducir la exposición."
+    }
+}
