@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { UserProvide } from './Context/MetricsContext';
 import { UIProvide } from './Context/Ui-Context';
+import { Test_context_Provider } from './Context/Test-context';
 
 const fontHref = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap";
 const link = document.createElement("link");
@@ -21,7 +22,8 @@ root.render(
 
   <UserProvide>
     <UIProvide>
-      <App />
+      <Test_context_Provider> <App /></Test_context_Provider>
+
     </UIProvide>
   </UserProvide>
 

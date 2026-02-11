@@ -24,13 +24,12 @@ import PopoverComponent from '../GenericComponentes/Popover.jsx';
 import TreeGraph from "../Graphics/TreeGraphic.jsx";
 import TreeGraphicEchart from "../Graphics/TreeGraphicEcharts.jsx";
 const Pronostics = (props) => {
-    const { dataOzono, dataPM2_5, setPM2_5,
-        dataPM10, setDataPM10,
-        setOptionTab, Warnings_Module_second, Alerts_Module_second, dataDioAzufre, dataDioNitrogeno, dataMonoCarbono,
-        isDay_global, setIsDay_global, dataVisibilidad, dataHumedad, dataNubosidad, setBackground, setDarkLetters, climateAlert
+    const {
+        setOptionTab,
+        isDay_global, setIsDay_global, setBackground, setDarkLetters, climateAlert
     } = useContext(DataContext);
 
-    const [arrDataDashBoardB, setArrDataDashBoardB] = useState(["Quality-Air", "Velocidad-Viento", "Precipitacion"])
+    const [arrDataDashBoardB] = useState(["Quality-Air", "Velocidad-Viento", "Precipitacion"])
     const [isAlertsOrWarningsB, setisAlertsOrWarningsB] = useState(false);
 
 
@@ -42,13 +41,13 @@ const Pronostics = (props) => {
             || Object.keys(climateAlert.response.Precipitacion.Precipitacion.Alerts[0]).length > 0
             || Object.keys(climateAlert.response.Precipitacion.Precipitacion.Warnings[0]).length > 0
 
-             setisAlertsOrWarningsB(isNewsB);
+        setisAlertsOrWarningsB(isNewsB);
 
-    },[climateAlert])
+    }, [climateAlert])
 
 
-   
-    const [GaugeModal, setGaugeModal] = useState(false);
+
+
 
     const [mapComponent, setMapComponent] = useState(null);
     const [Nubosidad, setNubosidad] = useState("");
@@ -93,14 +92,14 @@ const Pronostics = (props) => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     setOptionTab(false);
 
-    const nubosidad = 0//climateAlert.current.cloud;
-    const humidity = 0//climateAlert.current.humidity;
-    const visibilidad = 0//climateAlert.current.vis_km;
+    const nubosidad = climateAlert.response.PronosticsMetrics.Nubosidad.data;
+    const humidity = climateAlert.response.PronosticsMetrics.Humedad.data;
+    const visibilidad = climateAlert.response.PronosticsMetrics.Visibilidad.data;
     const mono_carbono = isMobile ? (((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(5);
     const dio_nitrogeno = isMobile ? (((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(5);
     const dio_azufre = isMobile ? (((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(5);
-    const PM2_5 = climateAlert.response.QualityMetrics.PM2_5.data;
-    const PM10 = climateAlert.response.QualityMetrics.PM10.data;
+    const pm2_5 = climateAlert.response.QualityMetrics.PM2_5.data;
+    const pm10 = climateAlert.response.QualityMetrics.PM10.data;
 
 
     const handleOpenModal = (param) => {
@@ -133,21 +132,21 @@ const Pronostics = (props) => {
 
 
         const data_2 = [
-            (mono_carbono >= 0.0 && mono_carbono <= 4.4)
-                ? AQI_func(mono_carbono, 0.0, 4.4, 0, 50)
-                : (mono_carbono > 4.4 && mono_carbono <= 9.4)
-                    ? AQI_func(mono_carbono, 4.5, 9.4, 51, 100)
-                    : (mono_carbono > 9.4 && mono_carbono <= 12.4)
-                        ? AQI_func(mono_carbono, 9.5, 12.4, 101, 150)
-                        : (mono_carbono > 12.4 && mono_carbono <= 15.4)
-                            ? AQI_func(mono_carbono, 12.5, 15.4, 151, 200)
-                            : (mono_carbono > 15.4 && mono_carbono <= 30.4)
-                                ? AQI_func(mono_carbono, 15.5, 30.4, 201, 300)
-                                : (mono_carbono > 30.4 && mono_carbono <= 40.4)
-                                    ? AQI_func(mono_carbono, 30.5, 40.4, 301, 400)
-                                    : (mono_carbono > 40.4 && mono_carbono <= 50.4)
-                                        ? AQI_func(mono_carbono, 40.5, 50.4, 401, 500)
-                                        : mono_carbono,
+            (MonoCarbono >= 0.0 && MonoCarbono <= 4.4)
+                ? AQI_func(MonoCarbono, 0.0, 4.4, 0, 50)
+                : (MonoCarbono > 4.4 && MonoCarbono <= 9.4)
+                    ? AQI_func(MonoCarbono, 4.5, 9.4, 51, 100)
+                    : (MonoCarbono > 9.4 && MonoCarbono <= 12.4)
+                        ? AQI_func(MonoCarbono, 9.5, 12.4, 101, 150)
+                        : (MonoCarbono > 12.4 && MonoCarbono <= 15.4)
+                            ? AQI_func(MonoCarbono, 12.5, 15.4, 151, 200)
+                            : (MonoCarbono > 15.4 && MonoCarbono <= 30.4)
+                                ? AQI_func(MonoCarbono, 15.5, 30.4, 201, 300)
+                                : (MonoCarbono > 30.4 && MonoCarbono <= 40.4)
+                                    ? AQI_func(MonoCarbono, 30.5, 40.4, 301, 400)
+                                    : (MonoCarbono > 40.4 && MonoCarbono <= 50.4)
+                                        ? AQI_func(MonoCarbono, 40.5, 50.4, 401, 500)
+                                        : MonoCarbono,
 
 
             (dio_azufre >= 0.000 && dio_azufre <= 0.035)
@@ -184,21 +183,21 @@ const Pronostics = (props) => {
                                         : dio_nitrogeno,
 
 
-            (PM2_5 >= 0.0 && PM2_5 <= 12.0)
-                ? AQI_func(PM2_5, 0.0, 12.0, 0, 50)
-                : (PM2_5 > 12.0 && PM2_5 <= 35.4)
-                    ? AQI_func(PM2_5, 12.1, 35.4, 51, 100)
-                    : (PM2_5 > 35.4 && PM2_5 <= 55.4)
-                        ? AQI_func(PM2_5, 35.5, 55.4, 101, 150)
-                        : (PM2_5 > 55.4 && PM2_5 <= 150.4)
-                            ? AQI_func(PM2_5, 55.5, 150.4, 151, 200)
-                            : (PM2_5 > 150.4 && PM2_5 <= 250.4)
-                                ? AQI_func(PM2_5, 150.5, 250.4, 201, 300)
-                                : (PM2_5 > 250.4 && PM2_5 <= 350.4)
-                                    ? AQI_func(PM2_5, 250.5, 350.4, 301, 400)
-                                    : (PM2_5 > 350.4 && PM2_5 <= 500.4)
-                                        ? AQI_func(PM2_5, 350.5, 500.4, 401, 500)
-                                        : PM2_5,
+            (pm2_5 >= 0.0 && pm2_5 <= 12.0)
+                ? AQI_func(pm2_5, 0.0, 12.0, 0, 50)
+                : (pm2_5 > 12.0 && pm2_5 <= 35.4)
+                    ? AQI_func(pm2_5, 12.1, 35.4, 51, 100)
+                    : (pm2_5 > 35.4 && pm2_5 <= 55.4)
+                        ? AQI_func(pm2_5, 35.5, 55.4, 101, 150)
+                        : (pm2_5 > 55.4 && pm2_5 <= 150.4)
+                            ? AQI_func(pm2_5, 55.5, 150.4, 151, 200)
+                            : (pm2_5 > 150.4 && pm2_5 <= 250.4)
+                                ? AQI_func(pm2_5, 150.5, 250.4, 201, 300)
+                                : (pm2_5 > 250.4 && pm2_5 <= 350.4)
+                                    ? AQI_func(pm2_5, 250.5, 350.4, 301, 400)
+                                    : (pm2_5 > 350.4 && pm2_5 <= 500.4)
+                                        ? AQI_func(pm2_5, 350.5, 500.4, 401, 500)
+                                        : pm2_5,
 
 
             (Ozono >= 0.000 && Ozono <= 0.054)
@@ -216,21 +215,21 @@ const Pronostics = (props) => {
                                     : Ozono,
 
 
-            (Pm10 >= 0 && Pm10 <= 54)
-                ? AQI_func(Pm10, 0, 54, 0, 50)
-                : (Pm10 > 54 && Pm10 <= 154)
-                    ? AQI_func(Pm10, 55, 154, 51, 100)
-                    : (Pm10 > 154 && Pm10 <= 254)
-                        ? AQI_func(Pm10, 155, 254, 101, 150)
-                        : (Pm10 > 254 && Pm10 <= 354)
-                            ? AQI_func(Pm10, 255, 354, 151, 200)
-                            : (Pm10 > 354 && Pm10 <= 424)
-                                ? AQI_func(Pm10, 355, 424, 201, 300)
-                                : (Pm10 > 424 && Pm10 <= 504)
-                                    ? AQI_func(PM10, 425, 504, 301, 400)
-                                    : (PM10 > 504 && PM10 <= 604)
-                                        ? AQI_func(PM10, 505, 604, 401, 500)
-                                        : PM10
+            (pm10 >= 0 && pm10 <= 54)
+                ? AQI_func(pm10, 0, 54, 0, 50)
+                : (pm10 > 54 && pm10 <= 154)
+                    ? AQI_func(pm10, 55, 154, 51, 100)
+                    : (pm10 > 154 && pm10 <= 254)
+                        ? AQI_func(pm10, 155, 254, 101, 150)
+                        : (pm10 > 254 && pm10 <= 354)
+                            ? AQI_func(pm10, 255, 354, 151, 200)
+                            : (pm10 > 354 && pm10 <= 424)
+                                ? AQI_func(pm10, 355, 424, 201, 300)
+                                : (pm10 > 424 && pm10 <= 504)
+                                    ? AQI_func(pm10, 425, 504, 301, 400)
+                                    : (pm10 > 504 && pm10 <= 604)
+                                        ? AQI_func(pm10, 505, 604, 401, 500)
+                                        : pm10
         ];
         //alert(data_2)
 
@@ -240,8 +239,8 @@ const Pronostics = (props) => {
             { Name: "Dio-Azufre", value: data_2[1], Message: climateAlert.response.QualityMetrics.DioAzufre.MetricsData.Message, color: climateAlert.response.QualityMetrics.DioAzufre.MetricsData.color, titulo: climateAlert.response.QualityMetrics.DioAzufre.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.DioAzufre.MetricsData.alert, medidor: 'ppm' },
             { Name: "Dio-Nitrogeno", value: data_2[2], Message: climateAlert.response.QualityMetrics.DioNitrogeno.MetricsData.Message, color: climateAlert.response.QualityMetrics.DioNitrogeno.MetricsData.color, titulo: climateAlert.response.QualityMetrics.DioNitrogeno.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.DioNitrogeno.MetricsData.alert, medidor: 'ppm' },
             { Name: "Ozono", value: data_2[4], Message: climateAlert.response.QualityMetrics.Ozono.MetricsData.Message, titulo: climateAlert.response.QualityMetrics.Ozono.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.Ozono.MetricsData.alert, medidor: 'ppm' },
-            { Name: "PM2_5", value: PM2_5, Message: climateAlert.response.QualityMetrics.PM2_5.MetricsData.Message, color: climateAlert.response.QualityMetrics.PM2_5.MetricsData.color, titulo: climateAlert.response.QualityMetrics.PM2_5.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.PM2_5.MetricsData.alert, medidor: 'µg/m³' },
-            { Name: "PM10", value: PM10, Message: climateAlert.response.QualityMetrics.PM10.MetricsData.Message, color: climateAlert.response.QualityMetrics.PM10.MetricsData.color, titulo: climateAlert.response.QualityMetrics.PM10.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.PM10.MetricsData.alert, medidor: 'µg/m³' }
+            { Name: "PM2_5", value: data_2[3], Message: climateAlert.response.QualityMetrics.PM2_5.MetricsData.Message, color: climateAlert.response.QualityMetrics.PM2_5.MetricsData.color, titulo: climateAlert.response.QualityMetrics.PM2_5.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.PM2_5.MetricsData.alert, medidor: 'µg/m³' },
+            { Name: "PM10", value: data_2[5], Message: climateAlert.response.QualityMetrics.PM10.MetricsData.Message, color: climateAlert.response.QualityMetrics.PM10.MetricsData.color, titulo: climateAlert.response.QualityMetrics.PM10.MetricsData.titulo, alert: climateAlert.response.QualityMetrics.PM10.MetricsData.alert, medidor: 'µg/m³' }
         ];
 
 
@@ -265,8 +264,8 @@ const Pronostics = (props) => {
             "CO": mono_carbono,
             "NO2": dio_nitrogeno,
             "O3": Ozono,
-            "PM2_5": PM2_5,
-            "PM10": PM10,
+            "PM2_5": pm2_5,
+            "PM10": pm10,
             "SO2": dio_azufre
         }
         const PronosticJson = {
@@ -282,7 +281,7 @@ const Pronostics = (props) => {
         setIsDay(is_day);
 
         setNubosidad(nubosidad);
-        setHumedad(humidity);
+        //setHumedad(humidity);
         setVisibilidad(visibilidad);
         setMonoCarbono(mono_carbono);
         setDioNitrogeno(dio_nitrogeno);
@@ -290,14 +289,12 @@ const Pronostics = (props) => {
         setPrecipitacion(precipitation_local);
         setVelocidadViento(velocidad_viento)
         setOzono(Ozono);
-        setPm2_5(PM2_5);
-        setPm10(PM10);
+        setPm2_5(pm2_5);
+        setPm10(pm10);
 
         setLevelQualityAir(level_contamination);
-
-        //alert(`${is_day}-${pronosticFormat}`)
         const images = JsonImage.wallPapersCategory[`${is_day}-${pronostic}`];
-        //alert([`${is_day}-${pronostic}`])
+
 
 
         setBackground(images);
@@ -403,7 +400,7 @@ const Pronostics = (props) => {
                             <Stack direction="column" justifyContent="space-between" spacing={1}>
                                 <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>Calidad del Aire</Typography>
                                 <Stack direction='row' spacing={2}>
-                                    <Card sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                                    <Card key={Date.now()} sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                                         <CardContent sx={{ p: 2 }}>
                                             <Image src={AirQualityImage} width={250} height={300} />
                                             <br></br>
@@ -648,7 +645,7 @@ const Pronostics = (props) => {
                                 <Typography color="white">Mas Detalles</Typography>
                                 {<Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
                                     <AlertTitle>¡IMPORTANTE!</AlertTitle>
-                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial.replaceAll('-'," ")]}</Typography>
+                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial.replaceAll('-', " ")]}</Typography>
                                 </Alert>}
                                 <TreeGraph data={PronosticDetails} type='Pronostico' />
 

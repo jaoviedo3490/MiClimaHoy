@@ -26,7 +26,7 @@ const UserProvide = ({ children }) => {
     const [dataOzono,setDataOzono] = useState([]);
     const [dataPM2_5,setDataPM2_5] = useState([]);
     const [dataPM10,setDataPM10] = useState([]);
-    const [OficialAlerts,setOficialAlerts] = useState([]);
+  
     
     const [customCoords,setCustomCoords] = useState([]);
 
@@ -109,8 +109,7 @@ const UserProvide = ({ children }) => {
                 setCities,
                 isDay,
                 setIsDay,
-                OficialAlerts,
-                setOficialAlerts
+              
             }}
         >
             {children}

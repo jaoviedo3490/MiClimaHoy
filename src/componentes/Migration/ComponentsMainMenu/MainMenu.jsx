@@ -27,13 +27,14 @@ import { Vibrant } from "node-vibrant/browser";
 import Skeleton from '@mui/material/Skeleton';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CircularProgress from '@mui/material/CircularProgress';
-import { test_context } from "../../../Context/test-context.js";
+import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+import { Test_context } from "../../../Context/Test-context.js";
 import Countries_Cities from '../../dataJson/countries_cities.json'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import ListItems from "../GenericComponentes/ListItems.jsx";
 
 const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
-
 
 
 const MainMenu = () => {
@@ -53,9 +54,10 @@ const MainMenu = () => {
     const [auxState, setAuxState] = useState(false);
     const [arrDataDashBoardA, setArrDataDashBoardA] = useState(["Temperatura", "Radiacion UV"])
     const [isAlertsOrWarnings, setisAlertsOrWarnings] = useState(false);
+    const d = new Date();
+    const currentDate = d.getFullYear() + '-' + (d.getMonth() + 1).toString().padStart(2, 0) + '-' + (d.getDate() - 1).toString().padStart(2, 0);
 
-
-    const { isDay_global, setIsDay_global, OficialAlerts, setOficialAlerts, climateAlert, setBackground, setDarkLetters, Warnings, Alerts, setClimateAlert,
+    const { isDay_global, setIsDay_global, climateAlert, setBackground, setDarkLetters, Warnings, Alerts, setClimateAlert,
 
     } = useContext(DataContext);
 
@@ -64,7 +66,7 @@ const MainMenu = () => {
         dataType, dataOptional, typeModal, setTypeModal, mapUrlState, setMapUrlState, customLocation, setCustomLocation
     } = useContext(Ui_Context);
 
-    const { Trigger } = useContext(test_context);
+    const { Trigger, OficialAlerts, setOficialAlerts } = useContext(Test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -131,9 +133,13 @@ const MainMenu = () => {
                 const longitude = position.coords.longitude;
                 const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? custom_latitude : latitude},${(customLocation) ? custom_longitude : longitude}&z=15&output=embed`;
                 setMapUrlState(mapUrl);
-                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${latitude}&lon=${longitude}`).then((res) => res.json()).then((data) => {
+                const anio = d.getFullYear();
+                const month = (d.getMonth() + 1).toString().padStart(2, 0)
+                const day = (d.getDate()).toString().padStart(2, 0);
+                
+                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${latitude}&lon=${longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
-                    setOficialAlerts(data.response.alerts)
+                    setOficialAlerts(data)
                     console.log(data)
 
                 })
@@ -165,7 +171,7 @@ const MainMenu = () => {
                                 || Object.keys(data.response["Radiacion UV"]["Radiacion UV"].Alerts[0]).length > 0
                         })
                         setisAlertsOrWarnings(isNews);
-                        
+
                     })
                     .catch((error) => {
                         setAuxState(false);
@@ -284,7 +290,19 @@ const MainMenu = () => {
                 }}
             />) : (
                 <Box sx={{ mt: '10px', width: '100%', left: '100px' }}>
-                    {<Button variant="outlined" sx={{ color: 'black', borderColor: 'black', marginBottom: 2 }} startIcon={<AddLocationAltIcon />} onClick={() => locate(customLocation ? true : false)}> {(customLocation) ? "Restaurar Ubicación" : "Localización Personalizada"} </Button>}
+                    {<Button variant="outlined" sx={{
+                        color: 'black', borderColor: 'black', marginBottom: 2, boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(5px)'
+                    }} startIcon={<AddLocationAltIcon />} onClick={() => locate(customLocation ? true : false)}> {(customLocation) ? "Restaurar Ubicación" : "Localización Personalizada"} </Button>}
+                    {<Button variant="outlined" sx={{
+                        color: 'black', borderColor: 'black', marginBottom: 2, boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        backdropFilter: 'blur(5px)'
+                    }} startIcon={<CrisisAlertIcon />} onClick={() => {
+                        setTypeModal("Cap:Alertas");
+                        setOpenModal(true)
+                    }}>Alertas Oficiales</Button>}
                     <Card sx={{
                         boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
                         backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -336,7 +354,7 @@ const MainMenu = () => {
                                                         <Typography>Panel de Alertas</Typography>
                                                     </Divider>
                                                     <Stack key={1} direction="column" spacing={2} sx={{ width: "100%", position: "relative", display: "flex", flexDirection: "column" }}>
-                                                        <Box
+                                                        <Box key={1}
                                                             sx={{
                                                                 width: '100%',
                                                                 height: isMobile ? '300px' : '215px',
@@ -540,6 +558,10 @@ const MainMenu = () => {
                                     </Stack>
 
                                 </Stack>
+                            </>
+                        ) : (typeModal === "Cap:Alertas") ? (
+                            <>
+                                <ListItems />
                             </>
                         ) : 'undefined'
                     } onClose={handleCloseModal} />

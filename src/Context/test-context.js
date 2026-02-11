@@ -1,20 +1,21 @@
 import { createContext, useState } from "react";
 
-const test_context = createContext({});
+const Test_context = createContext({});
 
 const Test_context_Provider = ({ children }) => {
   const [Trigger, setTrigger] = useState(false);
+  const [OficialAlerts, setOficialAlerts] = useState([]);
 
 
   return (
-    <test_context.Provider
+    <Test_context.Provider
       value={{
-       Trigger,setTrigger
+        Trigger, setTrigger, OficialAlerts, setOficialAlerts
       }}
     >
       {children}
-    </test_context.Provider>
+    </Test_context.Provider>
   );
 };
 
-export { test_context, Test_context_Provider };
+export { Test_context, Test_context_Provider };
