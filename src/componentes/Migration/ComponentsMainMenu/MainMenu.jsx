@@ -148,7 +148,7 @@ useEffect(()=>{
                 const month = (d.getMonth() + 1).toString().padStart(2, 0)
                 const day = (d.getDate()).toString().padStart(2, 0);
                 
-                fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
         : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
                     setOficialAlerts(data)
