@@ -87,11 +87,21 @@ const MainMenu = () => {
     };
     const onChangeCity = (event) => {
         setSelectC(event.target.value);
+        
         localStorage.setItem('seleccionado', event.target.value);
+        const cityData = cities.find(c => c.value === event.target.value);
+
+        SetCustomLatitude(cityData.latitude);
+        SetCustomLongitude(cityData.longitude);
+        localStorage.setItem('Latitud', cityData.latitude);
+        localStorage.setItem('Longitud', cityData.longitude);
+
         setDissable(false);
     }
 
+useEffect(()=>{
 
+},[custom_latitude,custom_longitude])
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -116,6 +126,7 @@ const MainMenu = () => {
 
         const cities_select = Countries_Cities.find((city_element) => city_element.id === event.target.value)
         let json = cities_select.cities.map((name) => ({ value: name.name, latitude: name.latitude, longitude: name.longitude }));
+        //alert(event.target.key)
 
         if (json.length < 1) {
             setIsSnackBarActive(true);
@@ -131,19 +142,20 @@ const MainMenu = () => {
             (position) => {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
-                const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? custom_latitude : latitude},${(customLocation) ? custom_longitude : longitude}&z=15&output=embed`;
+                const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? localStorage.getItem('Latitud') : latitude},${(customLocation) ? localStorage.getItem('Longitud') : longitude}&z=15&output=embed`;
                 setMapUrlState(mapUrl);
                 const anio = d.getFullYear();
                 const month = (d.getMonth() + 1).toString().padStart(2, 0)
                 const day = (d.getDate()).toString().padStart(2, 0);
                 
-                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${latitude}&lon=${longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
+                fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+        : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
                     setOficialAlerts(data)
                     console.log(data)
 
                 })
-                return fetch(`https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${latitude}&lon=${longitude}`)
+                return fetch(`https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${(customLocation) ? localStorage.getItem('Latitud') : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}`)
 
                     .then((res) => res.json())
                     .then((data) => {
@@ -165,10 +177,10 @@ const MainMenu = () => {
                         setdataTempAprox(data.response.Temperatura.Temperatura.IndicatorGraph.optionalData);
                         var isNews = false;
                         arrDataDashBoardA.forEach((element) => {
-                            isNews = Object.keys(data.response.Temperatura.Temperatura.Warnings[0]).length > 0
-                                || Object.keys(data.response.Temperatura.Temperatura.Alerts[0]).length > 0
-                                || Object.keys(data.response["Radiacion UV"]["Radiacion UV"].Warnings[0]).length > 0
-                                || Object.keys(data.response["Radiacion UV"]["Radiacion UV"].Alerts[0]).length > 0
+                            isNews = Object.keys(data?.response?.Temperatura?.Temperatura?.Warnings[0]).length > 0
+                                || Object.keys(data?.response?.Temperatura?.Temperatura?.Alerts[0]).length > 0
+                                || Object.keys(data?.response["Radiacion UV"]["Radiacion UV"]?.Warnings[0]).length > 0
+                                || Object.keys(data?.response["Radiacion UV"]["Radiacion UV"]?.Alerts[0]).length > 0
                         })
                         setisAlertsOrWarnings(isNews);
 
@@ -523,10 +535,10 @@ const MainMenu = () => {
                                                     <Select label="City" onChange={onChangeCity}
                                                         value={SeleccionadoC}>
 
-                                                        {cities.map((temp => {
-
+                                                        {cities.map(((temp,idx) => {
+                                                           
                                                             return (
-                                                                <MenuItem key={{ latitude: temp.latitude, longitude: temp.longitude }} value={temp.value}>{temp.value}</MenuItem>
+                                                                <MenuItem key={`${temp.latitude}-${temp.longitude}`} value={temp.value }>{temp.value}</MenuItem>
                                                             )
                                                         }))}
 

@@ -32,7 +32,7 @@ export default function ListItems() {
         >
             {items.map((element, idx) => (
                 <Box key={element.title || idx} sx={{ mb: 2 }}>
-                    <Alert key={element.title} sx={{ backgroundColor: '#4fc7ff67' }}
+                    <Alert key={element.title}
                         severity="info"
                         action={
                             <Button
@@ -46,9 +46,9 @@ export default function ListItems() {
                             </Button>
                         }
                     >
-                        <AlertTitle color='rgba(255, 255, 255, 0.77)'>{element.title}</AlertTitle>
+                        <AlertTitle >{element.title}</AlertTitle>
 
-                        <Typography color='rgba(255, 255, 255, 0.77)' variant="caption" display="block">
+                        <Typography variant="caption" display="block">
                             Fecha:{" "}
                             {new Date(element.pubDate).toLocaleString("es-CO")}
                         </Typography>
