@@ -32,7 +32,7 @@ export default function ListItems() {
         >
             {items.map((element, idx) => (
                 <Box key={element.title || idx} sx={{ mb: 2 }}>
-                    <Alert key={element.title} sx={{ backgroundColor: '#4fd6ff7a' }}
+                    <Alert key={element.title} sx={{ backgroundColor: '#4fc7ff67' }}
                         severity="info"
                         action={
                             <Button
