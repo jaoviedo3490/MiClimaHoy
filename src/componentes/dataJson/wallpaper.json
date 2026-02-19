@@ -51,7 +51,7 @@
     ],
     "nigth-Light-snow":"nigth-Light-snow_dark.webp",
     "nigth-Partly-Cloudy":"nigth_Partly_cloudy_dark.webp",
-    "nigth-Light-rain-shower":"nigth_Light_rain_shower_dark.webp",
+    "nigth-Light-rain-shower":"nigth_Light_rain_shower_dark.png",
     "nigth-Light-rain":"nigth_Light_rain_dark.png",
     "day-Partly-cloudy":"day-Partly-cloudy_light.webp",
     "nigth-Overcast":"nigth-Overcast_dark.webp",
@@ -86,6 +86,7 @@
     "nigth-Patchy-light-snow":"nigth-Patchy-light-snow_dark.png",
     "nigth-Heavy-snow":"nigth-Heavy-snow_dark.png",
     "nigth-Patchy-rain-nearby":"nigth-Patchy-rain-nearby_dark.png",
+    "nigth-Moderate-or-heavy-rain-shower":"nigth-Moderate-or-heavy-rain-shower_dark.png",
     "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
   }
 }

@@ -95,9 +95,9 @@ const Pronostics = (props) => {
     const nubosidad = climateAlert.response.PronosticsMetrics.Nubosidad.data;
     const humidity = climateAlert.response.PronosticsMetrics.Humedad.data;
     const visibilidad = climateAlert.response.PronosticsMetrics.Visibilidad.data;
-    const mono_carbono = isMobile ? (((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(5);
-    const dio_nitrogeno = isMobile ? (((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(5);
-    const dio_azufre = isMobile ? (((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(5);
+    const mono_carbono = isMobile ? Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2)) :Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2));
+    const dio_nitrogeno = isMobile ? Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(2)) : Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(5))
+    const dio_azufre = isMobile ? Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(2)) : Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(5))
     const pm2_5 = climateAlert.response.QualityMetrics.PM2_5.data;
     const pm10 = climateAlert.response.QualityMetrics.PM10.data;
 
@@ -132,21 +132,21 @@ const Pronostics = (props) => {
 
 
         const data_2 = [
-            (MonoCarbono >= 0.0 && MonoCarbono <= 4.4)
-                ? AQI_func(MonoCarbono, 0.0, 4.4, 0, 50)
-                : (MonoCarbono > 4.4 && MonoCarbono <= 9.4)
-                    ? AQI_func(MonoCarbono, 4.5, 9.4, 51, 100)
-                    : (MonoCarbono > 9.4 && MonoCarbono <= 12.4)
-                        ? AQI_func(MonoCarbono, 9.5, 12.4, 101, 150)
-                        : (MonoCarbono > 12.4 && MonoCarbono <= 15.4)
-                            ? AQI_func(MonoCarbono, 12.5, 15.4, 151, 200)
-                            : (MonoCarbono > 15.4 && MonoCarbono <= 30.4)
-                                ? AQI_func(MonoCarbono, 15.5, 30.4, 201, 300)
-                                : (MonoCarbono > 30.4 && MonoCarbono <= 40.4)
-                                    ? AQI_func(MonoCarbono, 30.5, 40.4, 301, 400)
-                                    : (MonoCarbono > 40.4 && MonoCarbono <= 50.4)
-                                        ? AQI_func(MonoCarbono, 40.5, 50.4, 401, 500)
-                                        : MonoCarbono,
+            (mono_carbono >= 0.0 && mono_carbono <= 4.4)
+                ? AQI_func(mono_carbono, 0.0, 4.4, 0, 50)
+                : (mono_carbono > 4.4 && mono_carbono <= 9.4)
+                    ? AQI_func(mono_carbono, 4.5, 9.4, 51, 100)
+                    : (mono_carbono > 9.4 && mono_carbono <= 12.4)
+                        ? AQI_func(mono_carbono, 9.5, 12.4, 101, 150)
+                        : (mono_carbono > 12.4 && mono_carbono <= 15.4)
+                            ? AQI_func(mono_carbono, 12.5, 15.4, 151, 200)
+                            : (mono_carbono > 15.4 && mono_carbono <= 30.4)
+                                ? AQI_func(mono_carbono, 15.5, 30.4, 201, 300)
+                                : (mono_carbono > 30.4 && mono_carbono <= 40.4)
+                                    ? AQI_func(mono_carbono, 30.5, 40.4, 301, 400)
+                                    : (mono_carbono > 40.4 && mono_carbono <= 50.4)
+                                        ? AQI_func(mono_carbono, 40.5, 50.4, 401, 500)
+                                        : mono_carbono,
 
 
             (dio_azufre >= 0.000 && dio_azufre <= 0.035)
@@ -248,7 +248,8 @@ const Pronostics = (props) => {
 
 
 
-        temp_arr = temp_arr.filter((obj, i, arr) => obj.value > 5).sort((a, b) => b.value - a.value).slice(0, 3);
+        temp_arr = temp_arr.filter((obj) => obj.value).sort((a, b) => b.value - a.value).slice(0, 3);
+        //alert(data_2)
         //alert(JSON.stringify(temp_arr))
         setQualityAir_elements(temp_arr);
 
@@ -261,12 +262,12 @@ const Pronostics = (props) => {
 
 
         const qualityAirJson = {
-            "CO": mono_carbono,
-            "NO2": dio_nitrogeno,
-            "O3": Ozono,
-            "PM2_5": pm2_5,
-            "PM10": pm10,
-            "SO2": dio_azufre
+            "CO": data_2[0],
+            "NO2": data_2[2],
+            "O3": data_2[4],
+            "PM2_5": data_2[3],
+            "PM10": data_2[5],
+            "SO2": data_2[4]
         }
         const PronosticJson = {
             "Nubosidad": nubosidad,
