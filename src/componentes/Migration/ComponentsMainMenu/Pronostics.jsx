@@ -95,9 +95,9 @@ const Pronostics = (props) => {
     const nubosidad = climateAlert.response.PronosticsMetrics.Nubosidad.data;
     const humidity = climateAlert.response.PronosticsMetrics.Humedad.data;
     const visibilidad = climateAlert.response.PronosticsMetrics.Visibilidad.data;
-    const mono_carbono = isMobile ? Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2)) :Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(2));
-    const dio_nitrogeno = isMobile ? Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(2)) : Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(5))
-    const dio_azufre = isMobile ? Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(2)) : Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(5))
+    const mono_carbono = isMobile ? Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4)) :Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4));
+    const dio_nitrogeno = isMobile ? Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(4)) : Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(4))
+    const dio_azufre = isMobile ? Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(4)) : Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(4))
     const pm2_5 = climateAlert.response.QualityMetrics.PM2_5.data;
     const pm10 = climateAlert.response.QualityMetrics.PM10.data;
 
@@ -400,7 +400,7 @@ const Pronostics = (props) => {
                             </Stack>
                             <Stack direction="column" justifyContent="space-between" spacing={1}>
                                 <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>Calidad del Aire</Typography>
-                                <Stack direction='row' spacing={2}>
+                                <Stack direction={isMobile ? "column" : 'row'} spacing={1}>
                                     <Card key={Date.now()} sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
                                         <CardContent sx={{ p: 2 }}>
                                             <Image src={AirQualityImage} width={250} height={300} />

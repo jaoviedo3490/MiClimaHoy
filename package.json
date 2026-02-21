@@ -70,5 +70,4 @@
     "cross-env": "^10.1.0",
     "javascript-obfuscator": "^4.1.1"
   }
-  
 }
