@@ -1,5 +1,4 @@
 import {
-    Toolbar,
     Box,
     useMediaQuery,
     useTheme,
@@ -33,6 +32,7 @@ import Countries_Cities from '../../dataJson/countries_cities.json'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ListItems from "../GenericComponentes/ListItems.jsx";
+
 
 const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
 
@@ -87,7 +87,7 @@ const MainMenu = () => {
     };
     const onChangeCity = (event) => {
         setSelectC(event.target.value);
-        
+
         localStorage.setItem('seleccionado', event.target.value);
         const cityData = cities.find(c => c.value === event.target.value);
 
@@ -99,9 +99,9 @@ const MainMenu = () => {
         setDissable(false);
     }
 
-useEffect(()=>{
+    useEffect(() => {
 
-},[custom_latitude,custom_longitude])
+    }, [custom_latitude, custom_longitude])
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -137,25 +137,31 @@ useEffect(()=>{
 
     };
     const localize = () => {
+        console.time('geolocation');
         setAuxState(true);
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+        fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_GOOGLEMAPS_API}`, {
+            method: 'POST',
+            body: JSON.stringify({ considerIp: true })
+        })
+            .then(r => r.json())
+            .then(dataG => {
+                console.timeEnd('geolocation');
+                const latitude = dataG.location.lat;
+                const longitude =  dataG.location.lng;
                 const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? localStorage.getItem('Latitud') : latitude},${(customLocation) ? localStorage.getItem('Longitud') : longitude}&z=15&output=embed`;
                 setMapUrlState(mapUrl);
                 const anio = d.getFullYear();
                 const month = (d.getMonth() + 1).toString().padStart(2, 0)
                 const day = (d.getDate()).toString().padStart(2, 0);
-                
-                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
-                //fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
-        : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
-                    setOficialAlerts(data)
-                    console.log(data)
+                //fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+                fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+                    : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
-                })
+                        setOficialAlerts(data)
+                        console.log(data)
+
+                    })
                 return fetch(`https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${(customLocation) ? localStorage.getItem('Latitud') : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}`)
 
                     .then((res) => res.json())
@@ -192,6 +198,13 @@ useEffect(()=>{
                         setMessageSnackBar(String(error));
 
                     });
+            })
+            .catch(e => console.error('❌ Error:', e));
+
+
+        navigator.geolocation.watchPosition(
+            (position) => {
+
             },
             (error) => {
                 setIsSnackBarActive(true);
@@ -536,10 +549,10 @@ useEffect(()=>{
                                                     <Select label="City" onChange={onChangeCity}
                                                         value={SeleccionadoC}>
 
-                                                        {cities.map(((temp,idx) => {
-                                                           
+                                                        {cities.map(((temp, idx) => {
+
                                                             return (
-                                                                <MenuItem key={`${temp.latitude}-${temp.longitude}`} value={temp.value }>{temp.value}</MenuItem>
+                                                                <MenuItem key={`${temp.latitude}-${temp.longitude}`} value={temp.value}>{temp.value}</MenuItem>
                                                             )
                                                         }))}
 
