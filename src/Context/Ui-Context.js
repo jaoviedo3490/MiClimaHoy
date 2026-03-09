@@ -17,14 +17,11 @@ const UIProvide = ({ children }) => {
   return (
     <Ui_Context.Provider
       value={{
-        // Modal
         openModal,
         setOpenModal,
         closeModal,
         setCloseModal,
         customLocation, setCustomLocation,
-
-        // Datos que muestra el modal
         dataModal,
         setDataModal,
         dataRecomendations,
@@ -36,7 +33,6 @@ const UIProvide = ({ children }) => {
         typeModal,
         setTypeModal,
         mapUrlState, setMapUrlState,
-        // Tab actual (opcional)
         optionTab,
         setOptionTab,
       }}

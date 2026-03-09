@@ -604,7 +604,7 @@ const Pronostics = (props) => {
                                             marginLeft: isMobile ? '35%' : '40%'
                                         }}
                                     >
-                                        <Typography variant="caption">Sin novedades</Typography>
+                                        <Typography sx={{ color: isDay_global ? 'white' : 'black' }} variant="caption">Sin novedades</Typography>
                                     </Box>)
 
                                     }

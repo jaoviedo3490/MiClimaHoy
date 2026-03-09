@@ -32,6 +32,7 @@ import Countries_Cities from '../../dataJson/countries_cities.json'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ListItems from "../GenericComponentes/ListItems.jsx";
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 
 
 const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
@@ -102,6 +103,8 @@ const MainMenu = () => {
     useEffect(() => {
 
     }, [custom_latitude, custom_longitude])
+
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -121,7 +124,7 @@ const MainMenu = () => {
     }, [])
 
     const handleEvent = (event) => {
-        console.log(event.target.value)
+        //console.log(event.target.value)
 
 
         const cities_select = Countries_Cities.find((city_element) => city_element.id === event.target.value)
@@ -145,7 +148,7 @@ const MainMenu = () => {
         })
             .then(r => r.json())
             .then(dataG => {
-                console.timeEnd('geolocation');
+               
                 const latitude = dataG.location.lat;
                 const longitude =  dataG.location.lng;
                 const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? localStorage.getItem('Latitud') : latitude},${(customLocation) ? localStorage.getItem('Longitud') : longitude}&z=15&output=embed`;
@@ -154,12 +157,12 @@ const MainMenu = () => {
                 const month = (d.getMonth() + 1).toString().padStart(2, 0)
                 const day = (d.getDate()).toString().padStart(2, 0);
 
-                //fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
-                fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
+                //fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
                     : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
 
                         setOficialAlerts(data)
-                        console.log(data)
+                        //console.log(data)
 
                     })
                 return fetch(`https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${(customLocation) ? localStorage.getItem('Latitud') : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}`)
@@ -175,7 +178,7 @@ const MainMenu = () => {
                         setAuxState(false);
 
 
-                        console.log(data)
+                        //console.log(data)
 
                         setClimateAlert(data);
                         setTemperature(data.response.Temperatura.Temperatura.IndicatorGraph.data);
@@ -244,7 +247,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            console.log(images)
+            //console.log(images)
 
 
             setIsDay_global(false);
@@ -254,7 +257,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            console.log(images)
+            //console.log(images)
 
             setDarkLetters(themeD);
         } else if (Temperatura >= 0 && Temperatura <= 20) {
@@ -264,7 +267,7 @@ const MainMenu = () => {
             const themeD = getColor(images);
 
 
-            console.log(images)
+            //console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 20 && Temperatura <= 30) {
 
@@ -272,7 +275,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            console.log(images)
+            //console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 30 && Temperatura <= 36) {
 
@@ -280,7 +283,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            console.log(images)
+            //console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 36) {
 
@@ -288,7 +291,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            console.log(images)
+            //console.log(images)
             setIsDay_global(false);
         }
 

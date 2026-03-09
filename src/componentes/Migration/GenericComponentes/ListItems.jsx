@@ -7,12 +7,19 @@ import {
     AlertTitle,
     Button
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { Test_context } from "../../../Context/Test-context";
 
+
 export default function ListItems() {
-    const { OficialAlerts } = useContext(Test_context);
+ 
+    const { OficialAlerts ,setSingleRSSMap} = useContext(Test_context);
     const Pais = OficialAlerts?.response?.Pais;
     const items = OficialAlerts?.response[Pais] || [];
+
+
+
+
     if (!items.length) {
         return (
             <Typography variant="body">
@@ -20,7 +27,6 @@ export default function ListItems() {
             </Typography>
         );
     }
-
 
     return (
         <Box
@@ -34,7 +40,20 @@ export default function ListItems() {
                 <Box key={element.title || idx} sx={{ mb: 2 }}>
                     <Alert key={element.title}
                         severity="info"
-                        action={
+                        action={OficialAlerts.response.prefijo === 'cap' ? (
+                            <Link to='/viewerDetails/'>
+                                <Button
+                                    color="inherit"
+                                    size="small"
+                                    
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={()=>setSingleRSSMap(element.link)}
+                                >
+                                    Revisar Area
+                                </Button>
+                            </Link>
+                        ) :
                             <Button
                                 color="inherit"
                                 size="small"

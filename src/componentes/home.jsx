@@ -3,7 +3,6 @@ import ViewData from "./viewData";
 import { DataContext } from "../Context/MetricsContext";
 import UpdateDate from "./updateDate";
 import SandBox from "./SandBox"
-import CallBckApi from "../callBack-API/callBackApi";
 import MainPanel from "./Migration/mainPanel";
 import Image from "../../src/clima.jpg";
 import {
