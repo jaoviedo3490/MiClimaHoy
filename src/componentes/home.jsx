@@ -6,14 +6,14 @@ import SandBox from "./SandBox"
 import MainPanel from "./Migration/mainPanel";
 import Image from "../../src/clima.jpg";
 import {
-    
+
     useMediaQuery,
     useTheme,
-   
+
 } from "@mui/material";
 
 const Home = () => {
-    document.body.style.backgroundImage = `url(${Image})`;
+    //document.body.style.backgroundImage = `url(${Image})`;
     document.body.style.backgroundSize = "cover";
     document.body.style.backgroundRepeat = "no-repeat";
 
@@ -161,6 +161,9 @@ const Home = () => {
             </main>
             {migrateVersion && (
                 <div style={{ marginLeft: isMobile ? 'auto' : -100, padding: 0, width: isMobile ? '100%' : "97vw" }}>
+                   
+
+
                     <MainPanel />
                 </div>
             )}

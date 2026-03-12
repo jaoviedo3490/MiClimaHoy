@@ -320,7 +320,7 @@ const Pronostics = (props) => {
     return (
         <>
             <Box sx={{
-                mt: '10px', width: '100%', left: '100px'
+                mt: '10px', width: '100%', left: '100px', maxWidth: isMobile ? 'md' : '1378px'
             }}>
                 <Card sx={{
                     boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)',

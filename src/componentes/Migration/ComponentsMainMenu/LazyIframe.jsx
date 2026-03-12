@@ -1,11 +1,11 @@
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useContext } from "react";
-import { Ui_Context } from "../../../Context/Ui-Context";
+import { Test_context } from "../../../Context/test-context";
 
 
 
 const LazyIframe = () => {
-    const { mapUrlState } = useContext(Ui_Context);
+    const { mapUrlState } = useContext(Test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     return (<iframe
@@ -16,7 +16,6 @@ const LazyIframe = () => {
         allowFullScreen
         loading="lazy"
         referrerPolicy="no-referrer-when-downgrade"
-        key={Date.now()}
     />)
 }
 export default LazyIframe;

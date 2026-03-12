@@ -18,6 +18,7 @@ import Divider from '@mui/material/Divider';
 import { useState, useMemo, useContext, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
 import { Ui_Context } from "../../../Context/Ui-Context.js";
+import { Test_context } from "../../../Context/test-context.js";
 import IndicatorGraph from "../Graphics/Indicator.jsx";
 import GenericModal from "../Modal/GenericModal.jsx";
 import Snackbar from '@mui/material/Snackbar';
@@ -27,7 +28,6 @@ import Skeleton from '@mui/material/Skeleton';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CircularProgress from '@mui/material/CircularProgress';
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
-import { Test_context } from "../../../Context/Test-context.js";
 import Countries_Cities from '../../dataJson/countries_cities.json'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -64,10 +64,10 @@ const MainMenu = () => {
 
     const {
         openModal, setOpenModal, setCloseModal, dataModal, dataRecomendations,
-        dataType, dataOptional, typeModal, setTypeModal, mapUrlState, setMapUrlState, customLocation, setCustomLocation
+        dataType, dataOptional, typeModal, setTypeModal, customLocation, setCustomLocation
     } = useContext(Ui_Context);
 
-    const { Trigger, OficialAlerts, setOficialAlerts } = useContext(Test_context);
+    const { Trigger, OficialAlerts, setOficialAlerts , mapUrlState, setMapUrlState} = useContext(Test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -140,7 +140,7 @@ const MainMenu = () => {
 
     };
     const localize = () => {
-        console.time('geolocation');
+       //cls console.time('geolocation');
         setAuxState(true);
         fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_GOOGLEMAPS_API}`, {
             method: 'POST',
@@ -247,7 +247,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            //console.log(images)
+            console.log(images)
 
 
             setIsDay_global(false);
@@ -257,7 +257,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            //console.log(images)
+            console.log(images)
 
             setDarkLetters(themeD);
         } else if (Temperatura >= 0 && Temperatura <= 20) {
@@ -267,7 +267,7 @@ const MainMenu = () => {
             const themeD = getColor(images);
 
 
-            //console.log(images)
+            console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 20 && Temperatura <= 30) {
 
@@ -275,7 +275,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            //console.log(images)
+            console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 30 && Temperatura <= 36) {
 
@@ -283,7 +283,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            //console.log(images)
+            console.log(images)
             setIsDay_global(false);
         } else if (Temperatura >= 36) {
 
@@ -291,7 +291,7 @@ const MainMenu = () => {
             setBackground(images);
             const themeD = getColor(images);
 
-            //console.log(images)
+            console.log(images)
             setIsDay_global(false);
         }
 
@@ -318,7 +318,7 @@ const MainMenu = () => {
                     marginLeft: '-12px',
                 }}
             />) : (
-                <Box sx={{ mt: '10px', width: '100%', left: '100px' }}>
+                <Box sx={{ mt: '10px', width: '100%', left: '100px' , maxWidth: isMobile ? 'md' : '1378px'}}>
                     {<Button variant="outlined" sx={{
                         color: 'black', borderColor: 'black', marginBottom: 2, boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
                         backgroundColor: 'rgba(255, 255, 255, 0.2)',

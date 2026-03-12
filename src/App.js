@@ -9,7 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ViewerDetails from './componentes/Migration/GenericComponentes/ViewerDetails';
 import { useContext } from 'react';
-import { Test_context } from './Context/Test-context';
+import { Test_context } from './Context/test-context';
 
 
 import MainPanel from './componentes/Migration/mainPanel';

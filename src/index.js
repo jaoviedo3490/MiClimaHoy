@@ -5,13 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { UserProvide } from './Context/MetricsContext';
 import { UIProvide } from './Context/Ui-Context';
-import { Test_context_Provider } from './Context/Test-context';
+import { Test_context_Provider } from './Context/test-context';
+import Image from "../src/clima.jpg";
 
 const fontHref = "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap";
 const link = document.createElement("link");
 link.href = fontHref;
 link.rel = "stylesheet";
 document.head.appendChild(link);
+document.body.style.backgroundImage = `url(${Image})`
 
 const style = document.createElement("style");
 style.innerHTML = `* {font-family: "Inter", sans-serif !important;}`;
@@ -22,8 +24,9 @@ root.render(
 
   <UserProvide>
     <UIProvide>
-      <Test_context_Provider> <App /></Test_context_Provider>
-
+      <Test_context_Provider> 
+        <App />
+      </Test_context_Provider>
     </UIProvide>
   </UserProvide>
 

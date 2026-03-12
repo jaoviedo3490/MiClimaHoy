@@ -6,13 +6,14 @@ const Test_context_Provider = ({ children }) => {
   const [Trigger, setTrigger] = useState(false);
   const [OficialAlerts, setOficialAlerts] = useState([]);
   const [SingleRSSMap,setSingleRSSMap] = useState([]);
+    const [mapUrlState, setMapUrlState] = useState(null);
   
 
 
   return (
     <Test_context.Provider
       value={{
-        Trigger, setTrigger, OficialAlerts, setOficialAlerts,SingleRSSMap,setSingleRSSMap
+        Trigger, setTrigger, OficialAlerts, setOficialAlerts,SingleRSSMap,setSingleRSSMap,  mapUrlState, setMapUrlState
       }}
     >
       {children}

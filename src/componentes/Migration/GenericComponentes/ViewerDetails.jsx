@@ -24,7 +24,7 @@ export default function ViewerDetails(props) {
     return (
         <Box>
             <Typography variant='h3'>Climate Alert</Typography>
-            <Typography variant='h3'>Identificador OID: {json.alert.identifier}</Typography>
+            <Typography variant='h3'>Identificador OID: {json.alert?.identifier}</Typography>
             
         </Box>
     );
