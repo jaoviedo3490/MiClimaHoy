@@ -5,7 +5,7 @@ import {
     useTheme,
     AppBar,
 } from "@mui/material";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext ,lazy} from "react";
 import AppBarContent from "./appBar";
 import { DataContext } from "../../Context/MetricsContext";
 import { Ui_Context } from "../../Context/Ui-Context";
@@ -15,11 +15,12 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Tab from '@mui/material/Tab';
 import TabContext from "@mui/lab/TabContext";
-import MainMenu from "./ComponentsMainMenu/MainMenu";
-import Pronostics from "./ComponentsMainMenu/Pronostics";
+
 import JsonImage from '../dataJson/wallpaper.json';
 import AirIcon from '@mui/icons-material/Air';
-
+import { Suspense } from "react";
+const MainMenu = lazy(()=>import("./ComponentsMainMenu/MainMenu"));
+const Pronostics = lazy(()=>import("./ComponentsMainMenu/Pronostics"));
 const MainPanel = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -70,8 +71,16 @@ const MainPanel = () => {
                     </TabList>
                 </Box>
                 <Box>
-                    <TabPanel value='1'><MainMenu /></TabPanel>
-                    <TabPanel value='2'><Pronostics /></TabPanel>
+                    <TabPanel value='1'>
+                        <Suspense fallback={<div>Cargando componente...</div>}>
+                            <MainMenu />
+                        </Suspense>
+                    </TabPanel>
+                    <TabPanel value='2'>
+                        <Suspense fallback={<div>Cargando Componente...</div>}>
+                            <Pronostics />
+                        </Suspense>
+                    </TabPanel>
                 </Box>
             </TabContext>
         </>

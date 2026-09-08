@@ -1,6 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
-import Plotly from "react-plotly.js";
+import { lazy,  Suspense } from "react";
+const Plotly = lazy(()=>import("react-plotly.js"));
 
 const TreeGraph = (props) => {
   const theme = useTheme();
@@ -184,6 +185,7 @@ console.log(data_2)
       }}
     >
       <Stack alignItems="center" spacing={1}>
+        <Suspense fallback={<div>Cargando Graficos...</div>}></Suspense>
         <Plotly
           data={data}
           layout={layout}

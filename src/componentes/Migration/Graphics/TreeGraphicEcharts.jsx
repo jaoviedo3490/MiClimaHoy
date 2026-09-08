@@ -1,14 +1,15 @@
 import React from "react";
-import ReactECharts from "echarts-for-react";
 import { Box, Stack } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { Suspense,lazy } from "react";
+const ReactECharts = lazy(() => import("echarts-for-react"));
 // import { DataContext } from "../../../Context/MetricsContext"; // si no lo usas, mejor comentarlo o borrarlo
 
 const TreeGraphicEchart = (props) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-    
+
 
     // TODO: reemplazar esto con tu data real
     const QualityAir = [
@@ -22,7 +23,7 @@ const TreeGraphicEchart = (props) => {
                 { name: "Materia Particulada", value: props.data.PM2_5 },
                 { name: "Ozono", value: props.data.O3 },
                 { name: "Particulas en susprencion", value: props.data.PM10 },
-                
+
 
             ],
         },
@@ -100,10 +101,13 @@ const TreeGraphicEchart = (props) => {
             }}
         >
             <Stack direction="column" spacing={0} sx={{ width: "100%", height: "100%" }}>
-                <ReactECharts
-                    option={option}
-                    style={{ width: "100%", height: "100%" }}
-                />
+                <Suspense fallback={<div>Cargando Grafica...</div>}>
+                    <ReactECharts
+                        option={option}
+                        style={{ width: "100%", height: "100%" }}
+                    />
+                </Suspense>
+
             </Stack>
         </Box>
     );

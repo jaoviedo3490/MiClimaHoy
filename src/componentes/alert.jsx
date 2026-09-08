@@ -13,19 +13,19 @@ const Alert = (props) => {
 
     const alertas = {
         "Temperatura": {
-            "danger-freeze": { "estilo": "danger", "titulo":"Peligro","Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, esta Temperatura es muy peligrosa,  por favor use la vestimenta adecuada ,  NO se exponga al frio exterior , evite movimientos innecesarios para evitar la perdida de calor y busque inmediatamente un lugar con calefacción.` },
-            'warning-freeze': { "estilo": "warning", "titulo":"Advertencia" ,"Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, se recomienda el uso de calefacción y ropa adecuada para evitar la perdida de calor.` },
-            'success-freeze': { "estilo": "info", "titulo":"Importante" ,"Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, esta Temperatura es segura para salir, sin embargo se recomienda el uso de ropa adecuada para evitar la perdida de calor.` },
-            'success': { "estilo": "success", "titulo":"Importante","Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, esta Temperatura es segura para salir.` },
-            'success-hot': { "estilo": "info","titulo":"Advertencia", "Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, esta Temperatura es segura para salir, sin embargo se recomienda usar ropa ligera y consumir líquidos para evitar la deshidratación.` },
-            'warning-hot': { "estilo": "warning","titulo":"Peligro", "Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, se recomienda el uso de ropa ligera y evitar los abiertos, el uso de aire acondicionado si es posible o acudir a un área de menor Temperatura, además del consumo continuo de líquidos para evitar la deshidratación.` },
-            'danger-hot': { "estilo": "danger","titulo":"Peligro", "Message": `La Temperatura actual es de ${climateAlert.current.temp_c} C°, esta Temperatura es altamente peligrosa, se recomienda acudir inmediatamente a un sitio de menor Temperatura, mantenerse hidratado y evitar realizar movimientos innecesarios.` }
+            "danger-freeze": { "estilo": "danger", "titulo":"Peligro","Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, esta Temperatura es muy peligrosa,  por favor use la vestimenta adecuada ,  NO se exponga al frio exterior , evite movimientos innecesarios para evitar la perdida de calor y busque inmediatamente un lugar con calefacción.` },
+            'warning-freeze': { "estilo": "warning", "titulo":"Advertencia" ,"Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, se recomienda el uso de calefacción y ropa adecuada para evitar la perdida de calor.` },
+            'success-freeze': { "estilo": "info", "titulo":"Importante" ,"Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, esta Temperatura es segura para salir, sin embargo se recomienda el uso de ropa adecuada para evitar la perdida de calor.` },
+            'success': { "estilo": "success", "titulo":"Importante","Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, esta Temperatura es segura para salir.` },
+            'success-hot': { "estilo": "info","titulo":"Advertencia", "Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, esta Temperatura es segura para salir, sin embargo se recomienda usar ropa ligera y consumir líquidos para evitar la deshidratación.` },
+            'warning-hot': { "estilo": "warning","titulo":"Peligro", "Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, se recomienda el uso de ropa ligera y evitar los abiertos, el uso de aire acondicionado si es posible o acudir a un área de menor Temperatura, además del consumo continuo de líquidos para evitar la deshidratación.` },
+            'danger-hot': { "estilo": "danger","titulo":"Peligro", "Message": `La Temperatura actual es de ${climateAlert?.current?.temp_c} C°, esta Temperatura es altamente peligrosa, se recomienda acudir inmediatamente a un sitio de menor Temperatura, mantenerse hidratado y evitar realizar movimientos innecesarios.` }
         },
         "Radiacion UV": {
-            "success": { "estilo": "success", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es bajo, es seguro la exposición la misma.` },
-            "info": { "estilo": "info", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es moderado, es seguro la exposición  la misma, sin embargo se recomienda por poco tiempo.` },
-            "warning": { "estilo": "warning","titulo":"Advertencia", "Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es alto, se recomienda el uso de protector solar para evitar quemaduras en la piel y por poco tiempo.` },
-            "danger": { "estilo": "danger","titulo":"Peligro", "Message": `El nivel actual de Radiación UV es ${climateAlert.current.uv}, este nivel de radiación es muy alto, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` }
+            "success": { "estilo": "success", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert?.current?.uv}, este nivel de radiación es bajo, es seguro la exposición la misma.` },
+            "info": { "estilo": "info", "titulo":"Importante","Message": `El nivel actual de Radiación UV es ${climateAlert?.current?.uv}, este nivel de radiación es moderado, es seguro la exposición  la misma, sin embargo se recomienda por poco tiempo.` },
+            "warning": { "estilo": "warning","titulo":"Advertencia", "Message": `El nivel actual de Radiación UV es ${climateAlert?.current?.uv}, este nivel de radiación es alto, se recomienda el uso de protector solar para evitar quemaduras en la piel y por poco tiempo.` },
+            "danger": { "estilo": "danger","titulo":"Peligro", "Message": `El nivel actual de Radiación UV es ${climateAlert?.current?.uv}, este nivel de radiación es muy alto, se recomienda evitar la exposición a los rayos del sol, aun con el uso de protector solar.` }
         }
     }
     
@@ -36,7 +36,7 @@ const Alert = (props) => {
             const valoresPropiedad = rangos[propiedad][0];
             for (const nivel in valoresPropiedad) {
                 const valoresNivel = valoresPropiedad[nivel];
-                const a = valoresNivel.find((element) => (parseInt(value) >= valoresNivel[0]) && (parseInt(value) <= valoresNivel[1]));
+                const a = valoresNivel?.find((element) => (parseInt(value) >= valoresNivel[0]) && (parseInt(value) <= valoresNivel[1]));
                 if (a !== undefined && propiedad === tipo) {
                     alertType = nivel; 
                     break;
@@ -48,23 +48,23 @@ const Alert = (props) => {
     
     switch (typeAlert) {
         case "Temperatura":
-            const nivelAlertaTemp = getAlert(climateAlert.current.temp_c, typeAlert);
+            const nivelAlertaTemp = getAlert(climateAlert?.current?.temp_c, typeAlert);
             return (
-                <div className={`alert alert-dismissible alert-${alertas["Temperatura"][nivelAlertaTemp].estilo}`}>
-                    <h4 className="alert-heading">¡{alertas["Temperatura"][nivelAlertaTemp].titulo}!</h4>
+                <div className={`alert alert-dismissible alert-${alertas?.["Temperatura"]?.[nivelAlertaTemp]?.estilo}`}>
+                    <h4 className="alert-heading">¡{alertas?.["Temperatura"]?.[nivelAlertaTemp]?.titulo}!</h4>
                     <p className="mb-0" style={{textAlign:'justify'}}>
-                       {alertas["Temperatura"][nivelAlertaTemp].Message}
+                       {alertas?.["Temperatura"]?.[nivelAlertaTemp]?.Message}
                     </p>
                 </div>
             );
         case "Radiacion UV":
-            const nivelAlertaUV = getAlert(climateAlert.current.uv, typeAlert);
+            const nivelAlertaUV = getAlert(climateAlert?.current?.uv, typeAlert);
             return (
-                <div className={`alert alert-dismissible alert-${alertas["Radiacion UV"][nivelAlertaUV].estilo}`}>
+                <div className={`alert alert-dismissible alert-${alertas?.["Radiacion UV"]?.[nivelAlertaUV]?.estilo}`}>
                     
-                    <h4 className="alert-heading">¡{alertas["Radiacion UV"][nivelAlertaUV].titulo}!</h4>
+                    <h4 className="alert-heading">¡{alertas?.["Radiacion UV"]?.[nivelAlertaUV]?.titulo}!</h4>
                     <p className="mb-0" style={{textAlign:'justify'}}>
-                       {alertas["Radiacion UV"][nivelAlertaUV].Message}
+                       {alertas?.["Radiacion UV"]?.[nivelAlertaUV]?.Message}
                     </p>
                 </div>
             );

@@ -1,11 +1,13 @@
-import ReactECharts from "echarts-for-react";
+
 import { Box, Stack } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { Suspense,lazy } from "react";
+const ReactECharts = lazy(() => import("echarts-for-react"));
 const IndicatorDetails = (props) => {
     const theme = useTheme();
 
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : (props.type === 'Quality-Air') ? 6 : (props.type === 'Precipitacion') ? 120 : (props.type==='Velocidad-Viento') ? 100 : 0;
+    const value = (props.type === 'Temperatura') ? 90 : (props.type === 'Radiacion UV') ? 16 : (props.type === 'Quality-Air') ? 6 : (props.type === 'Precipitacion') ? 120 : (props.type === 'Velocidad-Viento') ? 100 : 0;
     const ValuePercentaje = (props.valor < 0) ? (Math.round((props.valor * -1) * 100 / 50)) : (Math.round(props.valor * 100 / value));
     const ValuePercentajeOptional = (props.valorOpcional < 0) ? (Math.round((props.valorOpcional * -1) * 100 / 50)) : (Math.round(props.valorOpcional * 100 / value));
     const graphType = (props.GraphType !== undefined ? 1 : 0);
@@ -31,20 +33,20 @@ const IndicatorDetails = (props) => {
     const dataT = [{
         value: ValuePercentaje,
         name: props.title1,
-        title: { offsetCenter: ['0%', '-60%']  ,color: 'rgba(255, 255, 255, 0.77)'},
+        title: { offsetCenter: ['0%', '-60%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-40%'] },
         color: 'rgba(255, 255, 255, 0.77)',
     },
     {
         value: ValuePercentajeOptional,
         name: props.title2,
-        title: { offsetCenter: ['0%', '-10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '-10%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '10%'] }
-        
+
     }, {
         value: (props.valor < 0) ? (Math.round(20 * 100 / 40)) : (Math.round(37 * 100 / value)),
         name: 'Rango Saludable',
-        title: { offsetCenter: ['0%', '35%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '35%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '55%'] },
         color: 'rgba(255, 255, 255, 0.77)',
     }];
@@ -52,58 +54,58 @@ const IndicatorDetails = (props) => {
     const dataR = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '-30%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%']  ,color: 'rgba(255, 255, 255, 0.77)'},
+        title: { offsetCenter: ['0%', '10%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataQualityAir = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '-30%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '10%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataPrecipitacion = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '-30%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '10%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
     const dataVelocidadViento = [{
         value: (Math.round(props.valor * 100 / value)),
         name: props.title1,
-        title: { offsetCenter: ['0%', '-30%']  ,color: 'rgba(255, 255, 255, 0.77)'},
+        title: { offsetCenter: ['0%', '-30%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '-10%'] }
     },
     {
         value: (Math.round(props.valorOpcional * 100 / value)),
         name: props.title2,
-        title: { offsetCenter: ['0%', '10%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '10%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['0%', '30%'] }
     }];
 
     const dataGeneric = [{
         value: (props.type === 'Visibilidad') ? (Math.round(props.valor * 100 / 15)) : props.valor,
         name: "aqiu?",
-        title: { offsetCenter: ['0%', '0%'] ,color: 'rgba(255, 255, 255, 0.77)' },
+        title: { offsetCenter: ['0%', '0%'], color: 'rgba(255, 255, 255, 0.77)' },
         detail: { valueAnimation: true, offsetCenter: ['10%', '0%'] },
         itemStyle: { color: dataColor }
     }];
@@ -164,7 +166,9 @@ const IndicatorDetails = (props) => {
     return (
         <Box sx={{ width: graphType === 1 ? 200 : 300, height: graphType === 1 ? 200 : 300 }}>
             <Stack direction='column' spacing={0}>
-                <ReactECharts option={option} style={{ width: isMobile ? 350 : graphType === 1 ? 150 : 250, height: graphType === 1 ? 100 : 250 }} />
+                <Suspense fallback={<div>Cargando Grafica...</div>}>
+                    <ReactECharts option={option} style={{ width: isMobile ? 350 : graphType === 1 ? 150 : 250, height: graphType === 1 ? 100 : 250 }} />
+                </Suspense>
             </Stack>
         </Box>
     );

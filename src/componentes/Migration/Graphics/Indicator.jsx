@@ -1,12 +1,12 @@
 
-
+import { lazy } from "react";
 import { Box, Stack, Button } from "@mui/material";
 import { DataContext } from "../../../Context/MetricsContext";
 import { Ui_Context } from "../../../Context/Ui-Context";
-import { useContext } from "react";
+import { Suspense, useContext } from "react";
 import { useMediaQuery, useTheme } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import Plotly from "react-plotly.js";
+const Plot = lazy(() => import("react-plotly.js"));
 
 const IndicatorGraph = (props) => {
 const { isDay_global} = useContext(DataContext);
@@ -85,7 +85,9 @@ const {setOpenModal,setCloseModal,setDataModal,setRecomendations, setDataType,se
       }}
     >
       <Stack alignItems="center" spacing={1}>
-        <Plotly style={{ height: '150px', width: '220px'}} data={data} layout={layout} />
+        <Suspense fallback={<div>Cargando Grafica...</div>}>
+        <Plot style={{ height: '150px', width: '220px'}} data={data} layout={layout} />
+        </Suspense>
         {/*<ReactApexChart
           options={options}
           series={series}

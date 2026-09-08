@@ -9,20 +9,24 @@ import {
 } from "@mui/material";
 import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect ,lazy} from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
 import { Ui_Context } from "../../../Context/Ui-Context.js";
 import GenericModal from "../Modal/GenericModal.jsx";
 import JsonIcon from '../../dataJson/icon.json';
 import { Image } from 'mui-image';
-import IndicatorDetails from "../Graphics/indicatorDetails.jsx";
 import ClimateDefinition from '../../dataJson/climate-definition.json';
 import JsonImage from '../../dataJson/wallpaper.json';
-import IndicatorGraph from "../Graphics/Indicator.jsx";
+
 
 import PopoverComponent from '../GenericComponentes/Popover.jsx';
-import TreeGraph from "../Graphics/TreeGraphic.jsx";
 import TreeGraphicEchart from "../Graphics/TreeGraphicEcharts.jsx";
+
+
+import { Suspense } from "react";
+const IndicatorDetails = lazy(() => import("../Graphics/indicatorDetails.jsx"));
+const TreeGraph = lazy(() => import("../Graphics/TreeGraphic.jsx"));
+const IndicatorGraph = lazy(() => import("../Graphics/Indicator.jsx"));
 const Pronostics = (props) => {
     const {
         setOptionTab,
@@ -95,7 +99,7 @@ const Pronostics = (props) => {
     const nubosidad = climateAlert.response.PronosticsMetrics.Nubosidad.data;
     const humidity = climateAlert.response.PronosticsMetrics.Humedad.data;
     const visibilidad = climateAlert.response.PronosticsMetrics.Visibilidad.data;
-    const mono_carbono = isMobile ? Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4)) :Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4));
+    const mono_carbono = isMobile ? Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4)) : Number((((climateAlert.response.QualityMetrics.MonoCarbono.data * 24.45) / 28.01) / 1000).toFixed(4));
     const dio_nitrogeno = isMobile ? Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(4)) : Number((((climateAlert.response.QualityMetrics.DioNitrogeno.data * 24.45) / 46.0055) / 1000).toFixed(4))
     const dio_azufre = isMobile ? Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(4)) : Number((((climateAlert.response.QualityMetrics.DioAzufre.data) * 24.45 / 64.07) / 1000).toFixed(4))
     const pm2_5 = climateAlert.response.QualityMetrics.PM2_5.data;
@@ -480,37 +484,44 @@ const Pronostics = (props) => {
                             <Stack direction='column'>
                                 <Stack direction={isMobile ? 'column' : 'row'}>
 
-                                    <IndicatorGraph
-                                        min={0}
-                                        max={6}
-                                        type="Quality-Air"
-                                        indicator="ppm"
-                                        split={5}
-                                        color={climateAlert.response["Quality-Air"]["Quality-Air"].IndicatorGraph.MetricsData.color}
-                                        data={levelQualityAir}
-                                        optionalData={3}
-                                        recomendedLimit={3}
-                                    />
-                                    <IndicatorGraph
-                                        min={0}
-                                        max={40}
-                                        type="Precipitacion"
-                                        indicator="Dm"
-                                        split={5}
-                                        data={precipitacion / 100}
-                                        optionalData={12}
-                                        recomendedLimit={12}
-                                    />
-                                    <IndicatorGraph
-                                        min={0}
-                                        max={100}
-                                        type="Velocidad-Viento"
-                                        indicator="kph"
-                                        split={5}
-                                        data={velocidadViento}
-                                        optionalData={65}
-                                        recomendedLimit={65}
-                                    />
+                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
+                                        <IndicatorGraph
+                                            min={0}
+                                            max={6}
+                                            type="Quality-Air"
+                                            indicator="ppm"
+                                            split={5}
+                                            color={climateAlert.response["Quality-Air"]["Quality-Air"].IndicatorGraph.MetricsData.color}
+                                            data={levelQualityAir}
+                                            optionalData={3}
+                                            recomendedLimit={3}
+                                        />
+                                    </Suspense>
+                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
+
+                                        <IndicatorGraph
+                                            min={0}
+                                            max={40}
+                                            type="Precipitacion"
+                                            indicator="Dm"
+                                            split={5}
+                                            data={precipitacion / 100}
+                                            optionalData={12}
+                                            recomendedLimit={12}
+                                        />
+                                    </Suspense>
+                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
+                                        <IndicatorGraph
+                                            min={0}
+                                            max={100}
+                                            type="Velocidad-Viento"
+                                            indicator="kph"
+                                            split={5}
+                                            data={velocidadViento}
+                                            optionalData={65}
+                                            recomendedLimit={65}
+                                        />
+                                    </Suspense>
                                 </Stack>
                                 <Divider
                                     component="div"
@@ -619,7 +630,9 @@ const Pronostics = (props) => {
                 <br />
                 <GenericModal element={
                     (typeModal === 'GAUGE') ? (<>
-                        <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                        <Suspense fallback={<div>Cargando Grafico...</div>}>
+                            <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                        </Suspense>
                         <Stack spacing={1}>
                             <Box>
                                 <Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>

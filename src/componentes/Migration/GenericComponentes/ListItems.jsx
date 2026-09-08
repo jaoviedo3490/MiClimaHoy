@@ -41,18 +41,7 @@ export default function ListItems() {
                     <Alert key={element.title}
                         severity="info"
                         action={OficialAlerts.response.prefijo === 'cap' ? (
-                            <Link to='/viewerDetails/'>
-                                <Button
-                                    color="inherit"
-                                    size="small"
-                                    
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={()=>setSingleRSSMap(element.link)}
-                                >
-                                    Revisar Area
-                                </Button>
-                            </Link>
+                            <></>
                         ) :
                             <Button
                                 color="inherit"
@@ -77,3 +66,13 @@ export default function ListItems() {
         </Box>
     );
 }
+/*<Button
+                                    color="inherit"
+                                    size="small"
+                                    
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={()=>setSingleRSSMap(element.link)}
+                                >
+                                    Revisar Area
+                                </Button>*/

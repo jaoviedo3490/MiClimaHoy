@@ -1,9 +1,7 @@
-import { useContext, useEffect, useState } from "react";
-import ViewData from "./viewData";
+import { Suspense, useContext, useEffect, useState ,lazy} from "react";
 import { DataContext } from "../Context/MetricsContext";
-import UpdateDate from "./updateDate";
-import SandBox from "./SandBox"
-import MainPanel from "./Migration/mainPanel";
+
+
 import Image from "../../src/clima.jpg";
 import {
 
@@ -11,7 +9,10 @@ import {
     useTheme,
 
 } from "@mui/material";
-
+const MainPanel = lazy(() => import("./Migration/mainPanel.jsx"));
+const SandBox = lazy(()=> import("./SandBox.jsx"));
+const UpdateDate = lazy(()=>import("./updateDate"));
+const ViewData = lazy(()=>import("./viewData"));
 const Home = () => {
     //document.body.style.backgroundImage = `url(${Image})`;
     document.body.style.backgroundSize = "cover";
@@ -146,25 +147,32 @@ const Home = () => {
                 {!migrateVersion && (<section className="container">
                     <div className="row">
                         <div className="col mx-auto">
-                            {showData && (
+                            {(showData && showData!= null) ? (
                                 <>
                                     <div className="text-end">
-                                        <UpdateDate />
+                                        <Suspense fallback={<div>Cargando Componente...</div>}>
+                                          <UpdateDate />
+                                        </Suspense>
+                                      
                                     </div>
-                                    <ViewData />
+                                   <Suspense fallback={<div>Cargando Componente...</div>}>
+                                     <ViewData />
+                                   </Suspense>
                                 </>
-                            )}
-                            {showSandBox && <SandBox />}
+                            ) : (<div></div>)}
+                            {showSandBox && <Suspense fallback={<div>Cargando componente...</div>}><SandBox /></Suspense>}
                         </div>
                     </div>
                 </section>)}
             </main>
             {migrateVersion && (
                 <div style={{ marginLeft: isMobile ? 'auto' : -100, padding: 0, width: isMobile ? '100%' : "97vw" }}>
-                   
 
 
-                    <MainPanel />
+                    <Suspense fallback={<div>Cargando componente...</div>}>
+                        <MainPanel />
+                    </Suspense>
+
                 </div>
             )}
         </>

@@ -47,7 +47,9 @@
       "wall33_light.png"
     ],
     "hight_temp_fatal": [
-      "/wall1_dark.webp"
+      "/wall_fatal1_light.png",
+       "/wall_fatal2_light.png",
+        "/wall_fatal3_light.png"
     ],
     "nigth-Light-snow":"nigth-Light-snow_dark.webp",
     "nigth-Partly-Cloudy":"nigth_Partly_cloudy_dark.webp",

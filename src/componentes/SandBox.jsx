@@ -4,9 +4,9 @@ import Select from "react-select";
 import UpdateDate from "./updateDate";
 import ViewData from "./viewData";
 import Countries_Cities from './dataJson/countries_cities.json'
-import { InferenceClient } from "@huggingface/inference";
 
-const client = new InferenceClient(process.env.REACT_APP_HF_TOKEN);
+
+
 
 const SandBox = () => {
     const [response, setResponse] = useState(null);
@@ -23,39 +23,6 @@ const SandBox = () => {
     const [cities_state, setCityS] = useState([]);
     const [country, setCountry] = useState('');
 
-    const models = [
-        "unsloth/Meta-Llama-3.1-8B-Instruct",
-        "meta-llama/Llama-3.1-8B-Instruct",
-        "meta-llama/Llama-3.1-70B-Instruct",
-        "meta-llama/Llama-3.1-405B-Instruct"
-    ];
-    let model_Temp = models[Math.floor(Math.random() * 4)];
-    useEffect(() => {
-        if (country !== '') {
-            const chatEvent = async () => {
-                try {
-                    const out = await client.chatCompletion({
-                        model: model_Temp,
-                        messages: [{ role: "user", content: `Dame el top 5 ciudades mas frias y calidas de ${country} en formato json , pero solo dame los nombres y solo el json , no me digas "aqui te dejo" y estas claves: Frias, Calidas` }],
-                        max_tokens: 256,
-                    });
-
-                    setResponse(out.choices[0].message.content);
-                } catch (error) {
-                    console.error(error);
-                    setResponse("Error al llamar la API");
-                }
-            }
-            chatEvent();
-        }
-
-    }, [country]);
-
-    useEffect(() => {
-        //console.log(`Respuesta del modelo: ${response}`);
-
-
-    }, [response]);
 
     const button = (event) => {
         event.preventDefault();

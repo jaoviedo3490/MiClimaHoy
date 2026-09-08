@@ -13,7 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import IndicatorDetails from "../Graphics/indicatorDetails.jsx";
+
 import Divider from '@mui/material/Divider';
 import { useState, useMemo, useContext, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
@@ -35,6 +35,7 @@ import ListItems from "../GenericComponentes/ListItems.jsx";
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 
 
+const IndicatorDetails = lazy(() => import("../Graphics/indicatorDetails.jsx"))
 const LazyIframe = lazy(() => import("./LazyIframe.jsx"));
 
 
@@ -67,7 +68,7 @@ const MainMenu = () => {
         dataType, dataOptional, typeModal, setTypeModal, customLocation, setCustomLocation
     } = useContext(Ui_Context);
 
-    const { Trigger, OficialAlerts, setOficialAlerts , mapUrlState, setMapUrlState} = useContext(Test_context);
+    const { Trigger, OficialAlerts, setOficialAlerts, mapUrlState, setMapUrlState } = useContext(Test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -140,79 +141,99 @@ const MainMenu = () => {
 
     };
     const localize = () => {
-       //cls console.time('geolocation');
         setAuxState(true);
-        fetch(`https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.REACT_APP_GOOGLEMAPS_API}`, {
-            method: 'POST',
-            body: JSON.stringify({ considerIp: true })
-        })
-            .then(r => r.json())
-            .then(dataG => {
-               
-                const latitude = dataG.location.lat;
-                const longitude =  dataG.location.lng;
-                const mapUrl = `https://maps.google.com/maps?q=${(customLocation) ? localStorage.getItem('Latitud') : latitude},${(customLocation) ? localStorage.getItem('Longitud') : longitude}&z=15&output=embed`;
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                const lat = customLocation
+                    ? localStorage.getItem('Latitud')
+                    : latitude;
+
+                const lon = customLocation
+                    ? localStorage.getItem('Longitud')
+                    : longitude;
+
+                const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
                 setMapUrlState(mapUrl);
+
                 const anio = d.getFullYear();
-                const month = (d.getMonth() + 1).toString().padStart(2, 0)
-                const day = (d.getDate()).toString().padStart(2, 0);
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
 
-                fetch(`https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
-                //fetch(`http://localhost:4000/api/v1/wheater/alerts?lat=${(customLocation) ? localStorage.getItem('Latitud')
-                    : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}&anio=${anio}&month=${month}&day=${day}`).then((res) => res.json()).then((data) => {
-
-                        setOficialAlerts(data)
-                        //console.log(data)
-
-                    })
-                return fetch(`https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${(customLocation) ? localStorage.getItem('Latitud') : latitude}&lon=${(customLocation) ? localStorage.getItem('Longitud') : longitude}`)
-
+                // Dispara ambos fetches en paralelo (ya lo hacías bien, se mantiene)
+                fetch(
+                    `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+                )
                     .then((res) => res.json())
                     .then((data) => {
+                        setOficialAlerts(data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
 
-                        //console.log(`/api/v1/wheater/current?lat=${latitude}&lon=${longitude}`)
+                fetch(
+                    `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
                         if (data.error) {
                             setIsSnackBarActive(true);
                             setMessageSnackBar(data.error);
                         }
-                        setAuxState(false);
-
-
-                        //console.log(data)
 
                         setClimateAlert(data);
-                        setTemperature(data.response.Temperatura.Temperatura.IndicatorGraph.data);
-                        setRadiacionUV(data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data);
+                        setTemperature(
+                            data.response.Temperatura.Temperatura.IndicatorGraph.data
+                        );
+                        setRadiacionUV(
+                            data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                        );
                         setLocation(data.response["last_updated"]);
-                        setdataTempAprox(data.response.Temperatura.Temperatura.IndicatorGraph.optionalData);
-                        var isNews = false;
-                        arrDataDashBoardA.forEach((element) => {
-                            isNews = Object.keys(data?.response?.Temperatura?.Temperatura?.Warnings[0]).length > 0
-                                || Object.keys(data?.response?.Temperatura?.Temperatura?.Alerts[0]).length > 0
-                                || Object.keys(data?.response["Radiacion UV"]["Radiacion UV"]?.Warnings[0]).length > 0
-                                || Object.keys(data?.response["Radiacion UV"]["Radiacion UV"]?.Alerts[0]).length > 0
-                        })
-                        setisAlertsOrWarnings(isNews);
+                        setdataTempAprox(
+                            data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                        );
 
+                        var isNews = false;
+
+                        arrDataDashBoardA.forEach((element) => {
+                            isNews =
+                                Object.keys(
+                                    data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                                ).length > 0;
+                        });
+
+                        setisAlertsOrWarnings(isNews);
                     })
                     .catch((error) => {
-                        setAuxState(false);
                         setIsSnackBarActive(true);
                         setMessageSnackBar(String(error));
-
+                    })
+                    .finally(() => {
+                        setAuxState(false);
                     });
-            })
-            .catch(e => console.error('❌ Error:', e));
-
-
-        navigator.geolocation.watchPosition(
-            (position) => {
-
             },
             (error) => {
+                setAuxState(false);
                 setIsSnackBarActive(true);
                 setMessageSnackBar(`Error al obtener ubicación: ${String(error)}`);
-
+            },
+            {
+                enableHighAccuracy: false, // clave: evita esperar el fix de GPS
+                timeout: 5000,             // corta si tarda demasiado
+                maximumAge: 600000         // acepta una posición cacheada de hasta 10 min
             }
         );
     };
@@ -318,7 +339,7 @@ const MainMenu = () => {
                     marginLeft: '-12px',
                 }}
             />) : (
-                <Box sx={{ mt: '10px', width: '100%', left: '100px' , maxWidth: isMobile ? 'md' : '1378px'}}>
+                <Box sx={{ mt: '10px', width: '100%', left: '100px', maxWidth: isMobile ? 'md' : '1378px' }}>
                     {<Button variant="outlined" sx={{
                         color: 'black', borderColor: 'black', marginBottom: 2, boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px',
                         backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -359,9 +380,9 @@ const MainMenu = () => {
                                                         type="Temperatura"
                                                         indicator="C°"
                                                         split={5}
-                                                        data={Temperatura}
-                                                        optionalData={dataTempAprox}
-                                                        color={climateAlert.response.Temperatura.Temperatura.IndicatorGraph.MetricsData.color}
+                                                        data={Temperatura || 0}
+                                                        optionalData={dataTempAprox || 0}
+                                                        color={climateAlert?.response?.Temperatura?.Temperatura?.IndicatorGraph?.MetricsData?.color}
                                                         recomendedLimit={(Temperatura < 0) ? -10 : 37}
                                                     />
                                                     {<IndicatorGraph
@@ -370,7 +391,7 @@ const MainMenu = () => {
                                                         type="Radiacion UV"
                                                         indicator="UV"
                                                         split={5}
-                                                        color={climateAlert.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.MetricsData.color}
+                                                        color={climateAlert?.response?.["Radiacion UV"]?.["Radiacion UV"]?.IndicatorGraph?.MetricsData?.color}
                                                         data={radiacionUV}
                                                         optionalData={3}
                                                         recomendedLimit={6}
@@ -501,7 +522,9 @@ const MainMenu = () => {
 
                     <GenericModal open={openModal} element={
                         (typeModal === 'GAUGE') ? (<>
-                            <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                            <Suspense fallback={<div>Cargando Plotly...</div>}>
+                                <IndicatorDetails title2={dataType === 'Temperatura' ? 'Sensacion aparente' : 'Rango Recomendable'} title1={dataType === 'Radiacion UV' ? 'Porcentaje Actual' : dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Temperatura'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
+                            </Suspense>
                             <Stack spacing={2}>
                                 <Box>
                                     <Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
