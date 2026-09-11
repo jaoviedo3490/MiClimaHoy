@@ -126,8 +126,9 @@ export default function ListItems() {
 
                                 <AlertTitle>
                                     {element.title}
-                                </AlertTitle>
 
+                                </AlertTitle>
+                                {element.content &&(element.content)}
                                 <Typography variant="caption" display="block">
                                     Fecha:{" "}
                                     {new Date(element.pubDate).toLocaleString("es-CO")}
