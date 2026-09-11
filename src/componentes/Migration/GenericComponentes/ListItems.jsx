@@ -8,14 +8,14 @@ import {
     Button,
     TextField
 } from "@mui/material";
-import { Link } from "react-router-dom";
+
 import SearchIcon from "@mui/icons-material/Search";
 import { Test_context } from "../../../Context/test-context";
 
 
 export default function ListItems() {
 
-    const { OficialAlerts, setSingleRSSMap } = useContext(Test_context);
+    const { OficialAlerts } = useContext(Test_context);
     const Pais = OficialAlerts?.response?.Pais;
     const items = OficialAlerts?.response[Pais] || [];
     const [search, setSearch] = useState("");
@@ -125,13 +125,13 @@ export default function ListItems() {
                             >
 
                                 <AlertTitle>
-                                    {element.title}
+                                    {element?.title}
 
                                 </AlertTitle>
-                                {element.content &&(element.content)}
+                                {element?.content &&(element?.content)}
                                 <Typography variant="caption" display="block">
                                     Fecha:{" "}
-                                    {new Date(element.pubDate).toLocaleString("es-CO")}
+                                    {new Date(element?.pubDate).toLocaleString("es-CO")}
                                 </Typography>
 
                             </Alert>

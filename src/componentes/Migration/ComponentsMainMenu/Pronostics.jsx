@@ -5,12 +5,28 @@ import {
     Card,
     CardContent,
     Stack,
-    Typography, Button, Alert, AlertTitle
+    Typography,
+    Button,
+    Alert,
+    AlertTitle,
+    Tooltip,
+    IconButton,
+    LinearProgress
 } from "@mui/material";
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
-import { useState, useContext, useEffect ,lazy} from "react";
-import { DataContext } from "../../../Context/MetricsContext.js"
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
+import Chip from "@mui/material/Chip";
+import Divider from "@mui/material/Divider";
+
+import {
+    useState,
+    useContext,
+    useEffect,
+    lazy,
+    Suspense
+} from "react";
+
+import { DataContext } from "../../../Context/MetricsContext.js";
 import { Ui_Context } from "../../../Context/Ui-Context.js";
 import GenericModal from "../Modal/GenericModal.jsx";
 import JsonIcon from '../../dataJson/icon.json';
@@ -18,12 +34,16 @@ import { Image } from 'mui-image';
 import ClimateDefinition from '../../dataJson/climate-definition.json';
 import JsonImage from '../../dataJson/wallpaper.json';
 
-
 import PopoverComponent from '../GenericComponentes/Popover.jsx';
 import TreeGraphicEchart from "../Graphics/TreeGraphicEcharts.jsx";
 
-
-import { Suspense } from "react";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import WaterDropOutlinedIcon from "@mui/icons-material/WaterDropOutlined";
+import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
+import AirOutlinedIcon from "@mui/icons-material/AirOutlined";
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
+import React from "react";
 const IndicatorDetails = lazy(() => import("../Graphics/indicatorDetails.jsx"));
 const TreeGraph = lazy(() => import("../Graphics/TreeGraphic.jsx"));
 const IndicatorGraph = lazy(() => import("../Graphics/Indicator.jsx"));
@@ -323,182 +343,686 @@ const Pronostics = (props) => {
 
     return (
         <>
-            <Box sx={{
-                mt: '10px', width: '100%', left: '100px', maxWidth: isMobile ? 'md' : '1378px'
-            }}>
-                <Card sx={{
-                    boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    backdropFilter: 'blur(5px)'
-                }}>
+            <Box
+                sx={{
+                    mt: '10px',
+                    width: '100%',
+                    left: '100px',
+                    maxWidth: isMobile ? 'md' : '1378px'
+                }}
+            >
+                <Card
+                    sx={{
+                        borderRadius: '14px',
+                        border: isDay_global
+                            ? '1px solid rgba(255,255,255,0.12)'
+                            : '1px solid rgba(0,0,0,0.06)',
+                        backgroundColor: isDay_global
+                            ? 'rgba(255,255,255,0.04)'
+                            : 'rgba(255,255,255,0.20)',
+                        backdropFilter: 'blur(12px)',
+                        boxShadow: isDay_global
+                            ? '0 8px 30px rgba(0,0,0,0.05)'
+                            : '0 8px 30px rgba(0,0,0,0.035)',
+                        overflow: 'hidden'
+                    }}
+                >
                     <CardContent sx={{ p: 2 }}>
-                        <Stack direction={isMobile ? "column" : "row"} justifyContent="space-between" spacing={1}>
-                            <Typography variant='body1' sx={{ color: isDay_global ? 'white' : 'black' }}>Pronostico Hoy</Typography>
-                            <Typography variant="subtitle2" sx={{ color: isDay_global ? 'white' : 'black' }}>{location}</Typography>
+
+                        {/* ENCABEZADO */}
+                        <Stack
+                            direction={isMobile ? "column" : "row"}
+                            justifyContent="space-between"
+                            alignItems={isMobile ? "flex-start" : "center"}
+                            spacing={1}
+                            sx={{ mb: 1 }}
+                        >
+                            <Stack direction="row" alignItems="center" spacing={0.7}>
+                                <CloudOutlinedIcon
+                                    sx={{
+                                        fontSize: 20,
+                                        color: isDay_global ? 'white' : '#455a64'
+                                    }}
+                                />
+
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        color: isDay_global ? 'white' : 'black',
+                                        fontWeight: 600
+                                    }}
+                                >
+                                    Pronostico Hoy
+                                </Typography>
+                            </Stack>
+
+                            <Chip
+                                icon={
+                                    <LocationOnIcon
+                                        sx={{
+                                            fontSize: '18px !important',
+                                            color: isDay_global
+                                                ? 'rgba(255,255,255,0.85)'
+                                                : 'rgba(0,0,0,0.60)'
+                                        }}
+                                    />
+                                }
+                                label={location}
+                                variant="outlined"
+                                sx={{
+                                    height: '34px',
+                                    maxWidth: '100%',
+                                    borderRadius: '18px',
+
+                                    color: isDay_global
+                                        ? 'rgba(255,255,255,0.90)'
+                                        : 'rgba(0,0,0,0.70)',
+
+                                    borderColor: isDay_global
+                                        ? 'rgba(255,255,255,0.18)'
+                                        : 'rgba(0,0,0,0.10)',
+
+                                    backgroundColor: isDay_global
+                                        ? 'rgba(255,255,255,0.035)'
+                                        : 'rgba(255,255,255,0.20)',
+
+                                    backdropFilter: 'blur(6px)',
+
+                                    '& .MuiChip-label': {
+                                        px: 1.2,
+                                        fontSize: '0.82rem',
+                                        fontWeight: 500,
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    },
+
+                                    '&:hover': {
+                                        backgroundColor: isDay_global
+                                            ? 'rgba(255,255,255,0.07)'
+                                            : 'rgba(255,255,255,0.35)',
+
+                                        borderColor: isDay_global
+                                            ? 'rgba(255,255,255,0.28)'
+                                            : 'rgba(0,0,0,0.16)'
+                                    },
+
+                                    transition: 'all .2s ease'
+                                }}
+                            />
                         </Stack>
+
+                        <Divider
+                            sx={{
+                                mb: 1.5,
+                                opacity: 0.45
+                            }}
+                        />
+
                         <Stack direction={isMobile ? "column" : "row"}>
-                            <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>{`${isDay} ${PronosticInitial}`}</Typography>
-                                <Stack direction={isMobile ? "column" : 'row'} spacing={1}>
-                                    <Card sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
-                                        <CardContent sx={{ p: 2 }}>
-                                            <Image src={JsonPronosticImage} width={250} height={300} />
-                                            <br></br>
-                                            <Stack direction={"row"} justifyContent="space-between">
 
-                                                <PopoverComponent
-                                                    tipo={
-                                                        <Chip size="small" sx={{ width: isMobile ? 'auto' : 'auto' }} label={'Nubosidad:'} color={climateAlert.response.PronosticsMetrics.Nubosidad.MetricsData.alert} />
-                                                    }
+                            {/* PRONOSTICO */}
+                            <Stack
+                                direction="column"
+                                justifyContent="space-between"
+                                spacing={1}
+                            >
+                                <Stack direction="row" alignItems="center" spacing={0.7}>
+                                    <CloudOutlinedIcon
+                                        sx={{
+                                            fontSize: 19,
+                                            color: isDay_global ? 'white' : '#455a64'
+                                        }}
+                                    />
 
-                                                    text={climateAlert.response.PronosticsMetrics.Nubosidad.MetricsData.Message}
-                                                    titulo={climateAlert.response.PronosticsMetrics.Nubosidad.MetricsData.titulo}
-                                                    alert={climateAlert.response.PronosticsMetrics.Nubosidad.MetricsData.alert}
-                                                />
-                                                <Chip size="small" sx={{ width: isMobile ? 'auto' : 'auto' }} label={`${climateAlert.response.PronosticsMetrics.Nubosidad.data} %`} color={climateAlert.response.PronosticsMetrics.Nubosidad.MetricsData.alert} />
-                                            </Stack>
-                                            <Divider component="div" role="presentation" />
-                                            <Stack direction={"row"} justifyContent="space-between">
-                                                <PopoverComponent
-                                                    tipo={
-                                                        <Chip size="small" label="Humedad:" sx={{ width: isMobile ? 'auto' : 'auto' }} color={`${climateAlert.response.PronosticsMetrics.Humedad.MetricsData.alert}`} />
-                                                    }
-
-                                                    text={climateAlert.response.PronosticsMetrics.Humedad.MetricsData.Message}
-                                                    titulo={climateAlert.response.PronosticsMetrics.Humedad.MetricsData.titulo}
-                                                    alert={climateAlert.response.PronosticsMetrics.Humedad.MetricsData.alert}
-                                                />
-                                                <Chip size="small" sx={{ width: isMobile ? 'auto' : 'auto' }} label={`${climateAlert.response.PronosticsMetrics.Humedad.data} %`} color={climateAlert.response.PronosticsMetrics.Humedad.MetricsData.alert} />
-                                            </Stack>
-                                            <Divider component="div" role="presentation" />
-                                            <Stack direction='row' justifyContent="space-between">
-                                                <PopoverComponent
-                                                    tipo={
-                                                        <Chip size="small" sx={{ width: isMobile ? 'auto' : 'auto' }} label="Visibilidad:" color={climateAlert.response.PronosticsMetrics.Visibilidad.MetricsData.alert} />
-                                                    }
-                                                    text={climateAlert.response.PronosticsMetrics.Visibilidad.MetricsData.Message}
-                                                    titulo={climateAlert.response.PronosticsMetrics.Visibilidad.MetricsData.titulo}
-                                                    alert={climateAlert.response.PronosticsMetrics.Visibilidad.MetricsData.alert}
-                                                />
-
-                                                <Chip size="small" sx={{ width: isMobile ? 'auto' : 'auto' }} label={`${climateAlert.response.PronosticsMetrics.Visibilidad.data} Kilometros`} color={climateAlert.response.PronosticsMetrics.Visibilidad.MetricsData.alert} />
-                                            </Stack>
-                                            <Divider component="div" role="presentation" />
-                                            <br></br>
-                                            <Button variant="outlined" onClick={() => handleOpenModal(3)} size="small" sx={{ width: '100%', color: isDay_global ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
-                                                Ver Detalles
-                                            </Button>
-                                        </CardContent>
-                                    </Card>
-                                    <Box sx={{ width: '10%' }}>
-                                        <Stack spacing={2} direction='column' >
-                                            <Stack direction='row' spacing={1}>
-                                            </Stack>
-                                        </Stack>
-                                    </Box>
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            color: isDay_global ? 'white' : 'black',
+                                            fontSize: '1.05rem',
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        {`${isDay} ${PronosticInitial}`}
+                                    </Typography>
                                 </Stack>
 
-
-
-
-
-                            </Stack>
-                            <Stack direction="column" justifyContent="space-between" spacing={1}>
-                                <Typography variant="h6" sx={{ color: isDay_global ? 'white' : 'black' }}>Calidad del Aire</Typography>
-                                <Stack direction={isMobile ? "column" : 'row'} spacing={1}>
-                                    <Card key={Date.now()} sx={{ boxShadow: '0', border: '1px solid #dadadaff', borderRadius: '4px', backgroundColor: 'rgba(255, 255, 255, 0.2)' }}>
+                                <Stack
+                                    direction={isMobile ? "column" : 'row'}
+                                    spacing={1}
+                                >
+                                    <Card
+                                        sx={{
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            border: '1px solid rgba(218,218,218,0.8)',
+                                            borderRadius: '4px',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                            transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+                                            '&:hover': {
+                                                boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
+                                                borderColor: 'rgba(120,120,120,0.5)'
+                                            }
+                                        }}
+                                    >
                                         <CardContent sx={{ p: 2 }}>
-                                            <Image src={AirQualityImage} width={250} height={300} />
-                                            <br></br>
 
+                                            <Box
+                                                sx={{
+                                                    position: 'relative',
+                                                    width: '250px',
+                                                    height: '300px',
+                                                    overflow: 'hidden',
+                                                    borderRadius: '4px',
+                                                    mb: 1
+                                                }}
+                                            >
+                                                <Image
+                                                    src={JsonPronosticImage}
+                                                    width={250}
+                                                    height={300}
+                                                />
 
-                                            {Array.isArray(QualityAir_Elements) && (QualityAir_Elements.length > 0) ? (QualityAir_Elements.map((element, idx) => {
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 8,
+                                                        left: 8
+                                                    }}
+                                                >
+                                                    <Chip
+                                                        size="small"
+                                                        label={isDay}
+                                                        icon={
+                                                            <CloudOutlinedIcon
+                                                                sx={{ fontSize: 15 }}
+                                                            />
+                                                        }
+                                                        sx={{
+                                                            backgroundColor: 'rgba(0,0,0,0.55)',
+                                                            color: 'white',
+                                                            backdropFilter: 'blur(4px)',
+                                                            fontWeight: 600
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </Box>
 
-                                                return (<>
-                                                    <Stack direction='row' justifyContent="space-between">
-                                                        <PopoverComponent
-                                                            tipo={
-                                                                <Chip size="small" label={element.Name} sx={{
-                                                                    width: '100%', backgroundColor: element.alert === 'xtreme' ? element.color : element.alert,
-                                                                    color: element.alert === 'xtreme' ? 'white' : 'white'
-                                                                }} color={element.alert} />
-                                                            }
-                                                            color={(element.alert !== 'xtreme' ? element.alert : element.color)}
-                                                            text={element.Message}
-                                                            titulo={element.titulo}
-                                                            alert={element.alert}
-                                                        />
-
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-between"
+                                                alignItems="center"
+                                                sx={{ py: 0.5 }}
+                                            >
+                                                <PopoverComponent
+                                                    tipo={
                                                         <Chip
-                                                            key={idx}
                                                             size="small"
-                                                            label={
-                                                                element.medidor !== 'ppm'
-                                                                    ? `${element.value.toFixed(2)} ${element.medidor}`
-                                                                    : element.Name === 'Mono-Carbono'
-                                                                        ? `${((((element.value * 24.45) / 28.01) / 1000).toFixed(2))} ${element.medidor}`
-                                                                        : element.Name === 'Dio-Nitrogeno'
-                                                                            ? `${((((element.value * 24.45) / 46.0055) / 1000).toFixed(2))} ${element.medidor}`
-                                                                            : element.Name === 'Dio-Azufre'
-                                                                                ? `${((((element.value * 64.07) / 28.01) / 1000).toFixed(2))} ${element.medidor}`
-                                                                                : element.Name === 'Ozono'
-                                                                                    ? `${((((element.value * 24.45) / 47.998) / 1000).toFixed(2))} ${element.medidor}`
-                                                                                    : '404'
+                                                            sx={{
+                                                                width: 'auto',
+                                                                fontWeight: 500
+                                                            }}
+                                                            label="Nubosidad:"
+                                                            icon={
+                                                                <CloudOutlinedIcon
+                                                                    sx={{ fontSize: 15 }}
+                                                                />
+                                                            }
+                                                            color={
+                                                                climateAlert.response
+                                                                    .PronosticsMetrics
+                                                                    .Nubosidad
+                                                                    .MetricsData.alert
+                                                            }
+                                                        />
+                                                    }
+                                                    text={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Nubosidad
+                                                            .MetricsData.Message
+                                                    }
+                                                    titulo={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Nubosidad
+                                                            .MetricsData.titulo
+                                                    }
+                                                    alert={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Nubosidad
+                                                            .MetricsData.alert
+                                                    }
+                                                />
+
+                                                <Chip
+                                                    size="small"
+                                                    label={`${climateAlert.response.PronosticsMetrics.Nubosidad.data} %`}
+                                                    color={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Nubosidad
+                                                            .MetricsData.alert
+                                                    }
+                                                    sx={{ fontWeight: 600 }}
+                                                />
+                                            </Stack>
+
+                                            <Divider sx={{ opacity: 0.5 }} />
+
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-between"
+                                                alignItems="center"
+                                                sx={{ py: 0.5 }}
+                                            >
+                                                <PopoverComponent
+                                                    tipo={
+                                                        <Chip
+                                                            size="small"
+                                                            label="Humedad:"
+                                                            icon={
+                                                                <WaterDropOutlinedIcon
+                                                                    sx={{ fontSize: 15 }}
+                                                                />
                                                             }
                                                             sx={{
-                                                                width: '100%',
-                                                                backgroundColor: element.alert === 'xtreme' ? element.color : element.alert,
-                                                                color: element.alert === 'xtreme' ? 'white' : 'white'
+                                                                width: 'auto',
+                                                                fontWeight: 500
                                                             }}
-
-                                                            color={(element.alert !== 'xtreme' ? element.alert : element.alert)}
+                                                            color={
+                                                                climateAlert.response
+                                                                    .PronosticsMetrics
+                                                                    .Humedad
+                                                                    .MetricsData.alert
+                                                            }
                                                         />
-                                                    </Stack>
-                                                    <Divider key={idx} component="div" role="presentation" />
+                                                    }
+                                                    text={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Humedad
+                                                            .MetricsData.Message
+                                                    }
+                                                    titulo={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Humedad
+                                                            .MetricsData.titulo
+                                                    }
+                                                    alert={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Humedad
+                                                            .MetricsData.alert
+                                                    }
+                                                />
 
-                                                </>)
-                                            })) : (<><Typography>
-                                                <Alert severity="error" variant="filled">Informacion temporalmente no disponible</Alert>
-                                            </Typography></>)}
+                                                <Chip
+                                                    size="small"
+                                                    label={`${climateAlert.response.PronosticsMetrics.Humedad.data} %`}
+                                                    color={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Humedad
+                                                            .MetricsData.alert
+                                                    }
+                                                    sx={{ fontWeight: 600 }}
+                                                />
+                                            </Stack>
 
+                                            <Divider sx={{ opacity: 0.5 }} />
 
+                                            <Stack
+                                                direction="row"
+                                                justifyContent="space-between"
+                                                alignItems="center"
+                                                sx={{ py: 0.5 }}
+                                            >
+                                                <PopoverComponent
+                                                    tipo={
+                                                        <Chip
+                                                            size="small"
+                                                            label="Visibilidad:"
+                                                            icon={
+                                                                <VisibilityOutlinedIcon
+                                                                    sx={{ fontSize: 15 }}
+                                                                />
+                                                            }
+                                                            sx={{
+                                                                width: 'auto',
+                                                                fontWeight: 500
+                                                            }}
+                                                            color={
+                                                                climateAlert.response
+                                                                    .PronosticsMetrics
+                                                                    .Visibilidad
+                                                                    .MetricsData.alert
+                                                            }
+                                                        />
+                                                    }
+                                                    text={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Visibilidad
+                                                            .MetricsData.Message
+                                                    }
+                                                    titulo={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Visibilidad
+                                                            .MetricsData.titulo
+                                                    }
+                                                    alert={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Visibilidad
+                                                            .MetricsData.alert
+                                                    }
+                                                />
 
+                                                <Chip
+                                                    size="small"
+                                                    label={`${climateAlert.response.PronosticsMetrics.Visibilidad.data} Kilometros`}
+                                                    color={
+                                                        climateAlert.response
+                                                            .PronosticsMetrics
+                                                            .Visibilidad
+                                                            .MetricsData.alert
+                                                    }
+                                                    sx={{ fontWeight: 600 }}
+                                                />
+                                            </Stack>
 
+                                            <Divider sx={{ opacity: 0.5 }} />
 
-
-                                            <br></br>
-
-                                            <Button variant="outlined" onClick={() => handleOpenModal(2)} size="small" sx={{ width: '100%', color: (isDay === 'nigth') ? 'white' : 'black', borderColor: (isDay === 'nigth') ? 'white' : 'black' }}>
-                                                Ver Detalles
-                                            </Button>
+                                            <Box sx={{ mt: 1 }}>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={() => handleOpenModal(3)}
+                                                    size="small"
+                                                    startIcon={
+                                                        <InfoOutlinedIcon
+                                                            sx={{ fontSize: 17 }}
+                                                        />
+                                                    }
+                                                    sx={{
+                                                        width: '100%',
+                                                        color: isDay_global
+                                                            ? 'white'
+                                                            : 'black',
+                                                        borderColor:
+                                                            isDay === 'nigth'
+                                                                ? 'white'
+                                                                : 'black',
+                                                        textTransform: 'none',
+                                                        fontWeight: 600,
+                                                        borderRadius: '4px'
+                                                    }}
+                                                >
+                                                    Ver Detalles
+                                                </Button>
+                                            </Box>
                                         </CardContent>
                                     </Card>
 
                                     <Box sx={{ width: '10%' }}>
-                                        <Stack spacing={2} direction='column' >
-                                            <Stack direction='row' spacing={1}>
+                                        <Stack spacing={2} direction="column">
+                                            <Stack direction="row" spacing={1}>
                                             </Stack>
                                         </Stack>
                                     </Box>
                                 </Stack>
                             </Stack>
-                            <Stack direction='column'>
-                                <Stack direction={isMobile ? 'column' : 'row'}>
 
-                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
+                            {/* CALIDAD DEL AIRE */}
+                            <Stack
+                                direction="column"
+                                justifyContent="space-between"
+                                spacing={1}
+                            >
+                                <Stack direction="row" alignItems="center" spacing={0.7}>
+                                    <AirOutlinedIcon
+                                        sx={{
+                                            fontSize: 19,
+                                            color: isDay_global ? 'white' : '#455a64'
+                                        }}
+                                    />
+
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            color: isDay_global ? 'white' : 'black',
+                                            fontSize: '1.05rem',
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        Calidad del Aire
+                                    </Typography>
+                                </Stack>
+
+                                <Stack
+                                    direction={isMobile ? "column" : 'row'}
+                                    spacing={1}
+                                >
+                                    <Card
+                                        key={Date.now()}
+                                        sx={{
+                                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                                            border: '1px solid rgba(218,218,218,0.8)',
+                                            borderRadius: '4px',
+                                            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                            transition: 'box-shadow 0.2s ease, border-color 0.2s ease',
+                                            '&:hover': {
+                                                boxShadow: '0 4px 10px rgba(0,0,0,0.12)',
+                                                borderColor: 'rgba(120,120,120,0.5)'
+                                            }
+                                        }}
+                                    >
+                                        <CardContent sx={{ p: 2 }}>
+
+                                            <Box
+                                                sx={{
+                                                    position: 'relative',
+                                                    width: '250px',
+                                                    height: '300px',
+                                                    overflow: 'hidden',
+                                                    borderRadius: '4px',
+                                                    mb: 1
+                                                }}
+                                            >
+                                                <Image
+                                                    src={AirQualityImage}
+                                                    width={250}
+                                                    height={300}
+                                                />
+
+                                                <Box
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        top: 8,
+                                                        left: 8
+                                                    }}
+                                                >
+                                                    <Chip
+                                                        size="small"
+                                                        label="Calidad"
+                                                        icon={
+                                                            <AirOutlinedIcon
+                                                                sx={{ fontSize: 15 }}
+                                                            />
+                                                        }
+                                                        sx={{
+                                                            backgroundColor: 'rgba(0,0,0,0.55)',
+                                                            color: 'white',
+                                                            backdropFilter: 'blur(4px)',
+                                                            fontWeight: 600
+                                                        }}
+                                                    />
+                                                </Box>
+                                            </Box>
+
+                                            {Array.isArray(QualityAir_Elements) &&
+                                                QualityAir_Elements.length > 0 ? (
+                                                QualityAir_Elements.map((element, idx) => {
+
+                                                    const airColor =
+                                                        element.alert === 'xtreme'
+                                                            ? element.color
+                                                            : element.alert;
+
+                                                    return (
+                                                        <Stack key={idx}>
+                                                            <Stack
+                                                                direction="row"
+                                                                justifyContent="space-between"
+                                                                alignItems="center"
+                                                                sx={{ py: 0.5 }}
+                                                            >
+                                                                <PopoverComponent
+                                                                    tipo={
+                                                                        <Chip
+                                                                            size="small"
+                                                                            label={element.Name}
+                                                                            icon={
+                                                                                <AirOutlinedIcon
+                                                                                    sx={{ fontSize: 15 }}
+                                                                                />
+                                                                            }
+                                                                            sx={{
+                                                                                width: '100%',
+                                                                                backgroundColor: airColor,
+                                                                                color: 'white',
+                                                                                fontWeight: 500
+                                                                            }}
+                                                                            color={element.alert}
+                                                                        />
+                                                                    }
+                                                                    color={airColor}
+                                                                    text={element.Message}
+                                                                    titulo={element.titulo}
+                                                                    alert={element.alert}
+                                                                />
+
+                                                                <Chip
+                                                                    size="small"
+                                                                    label={
+                                                                        element.medidor !== 'ppm'
+                                                                            ? `${element.value.toFixed(2)} ${element.medidor}`
+                                                                            : element.Name === 'Mono-Carbono'
+                                                                                ? `${((((element.value * 24.45) / 28.01) / 1000).toFixed(2))} ${element.medidor}`
+                                                                                : element.Name === 'Dio-Nitrogeno'
+                                                                                    ? `${((((element.value * 24.45) / 46.0055) / 1000).toFixed(2))} ${element.medidor}`
+                                                                                    : element.Name === 'Dio-Azufre'
+                                                                                        ? `${((((element.value * 64.07) / 28.01) / 1000).toFixed(2))} ${element.medidor}`
+                                                                                        : element.Name === 'Ozono'
+                                                                                            ? `${((((element.value * 24.45) / 47.998) / 1000).toFixed(2))} ${element.medidor}`
+                                                                                            : '404'
+                                                                    }
+                                                                    sx={{
+                                                                        width: '100%',
+                                                                        backgroundColor: airColor,
+                                                                        color: 'white',
+                                                                        fontWeight: 600
+                                                                    }}
+                                                                    color={element.alert}
+                                                                />
+                                                            </Stack>
+
+                                                            <Divider sx={{ opacity: 0.5 }} />
+                                                        </Stack>
+                                                    );
+                                                })
+                                            ) : (
+                                                <Alert
+                                                    severity="error"
+                                                    variant="filled"
+                                                    sx={{
+                                                        borderRadius: '4px'
+                                                    }}
+                                                >
+                                                    Informacion temporalmente no disponible
+                                                </Alert>
+                                            )}
+
+                                            <Box sx={{ mt: 1 }}>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={() => handleOpenModal(2)}
+                                                    size="small"
+                                                    startIcon={
+                                                        <InfoOutlinedIcon
+                                                            sx={{ fontSize: 17 }}
+                                                        />
+                                                    }
+                                                    sx={{
+                                                        width: '100%',
+                                                        color:
+                                                            isDay === 'nigth'
+                                                                ? 'white'
+                                                                : 'black',
+                                                        borderColor:
+                                                            isDay === 'nigth'
+                                                                ? 'white'
+                                                                : 'black',
+                                                        textTransform: 'none',
+                                                        fontWeight: 600,
+                                                        borderRadius: '4px'
+                                                    }}
+                                                >
+                                                    Ver Detalles
+                                                </Button>
+                                            </Box>
+                                        </CardContent>
+                                    </Card>
+
+                                    <Box sx={{ width: '10%' }}>
+                                        <Stack spacing={2} direction="column">
+                                            <Stack direction="row" spacing={1}>
+                                            </Stack>
+                                        </Stack>
+                                    </Box>
+                                </Stack>
+                            </Stack>
+
+                            {/* GRAFICOS */}
+                            <Stack direction="column">
+                                <Stack
+                                    direction={isMobile ? 'column' : 'row'}
+                                >
+                                    <Suspense
+                                        fallback={
+                                            <Box sx={{ width: 100, px: 1 }}>
+                                                <LinearProgress />
+                                            </Box>
+                                        }
+                                    >
                                         <IndicatorGraph
                                             min={0}
                                             max={6}
                                             type="Quality-Air"
                                             indicator="ppm"
                                             split={5}
-                                            color={climateAlert.response["Quality-Air"]["Quality-Air"].IndicatorGraph.MetricsData.color}
+                                            color={
+                                                climateAlert.response[
+                                                    "Quality-Air"
+                                                ]["Quality-Air"]
+                                                    .IndicatorGraph
+                                                    .MetricsData.color
+                                            }
                                             data={levelQualityAir}
                                             optionalData={3}
                                             recomendedLimit={3}
                                         />
                                     </Suspense>
-                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
 
+                                    <Suspense
+                                        fallback={
+                                            <Box sx={{ width: 100, px: 1 }}>
+                                                <LinearProgress />
+                                            </Box>
+                                        }
+                                    >
                                         <IndicatorGraph
                                             min={0}
                                             max={40}
@@ -510,7 +1034,14 @@ const Pronostics = (props) => {
                                             recomendedLimit={12}
                                         />
                                     </Suspense>
-                                    <Suspense fallback={<div>Cargando Grafico...</div>}>
+
+                                    <Suspense
+                                        fallback={
+                                            <Box sx={{ width: 100, px: 1 }}>
+                                                <LinearProgress />
+                                            </Box>
+                                        }
+                                    >
                                         <IndicatorGraph
                                             min={0}
                                             max={100}
@@ -523,41 +1054,93 @@ const Pronostics = (props) => {
                                         />
                                     </Suspense>
                                 </Stack>
-                                <Divider
-                                    component="div"
-                                    role="presentation"
 
+                                <Stack
+                                    direction="row"
+                                    justifyContent="space-between"
+                                    alignItems="center"
                                     sx={{
-                                        '&::before, &::after': {
-                                            borderColor: isDay_global ? 'white' : 'black',
-                                        }
+                                        mb: 1
                                     }}
                                 >
 
-                                    <Typography sx={{ color: isDay_global ? 'white' : 'black' }}>
-                                        Panel de Alertas
+                                    <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        spacing={1}
+                                    >
+                                        <Box
+                                            sx={{
+                                                width: '8px',
+                                                height: '8px',
+                                                borderRadius: '50%',
+                                                backgroundColor: isAlertsOrWarningsB ? '#f44336' : '#3698f4',
+                                                boxShadow: isAlertsOrWarningsB ? '0 0 0 4px rgba(244,67,54,0.08)' : '0 0 0 4px rgba(54, 174, 244, 0.08)'
+                                            }}
+                                        />
+
+                                        <Typography
+                                            variant="subtitle2"
+                                            sx={{
+                                                color: isDay_global
+                                                    ? 'white'
+                                                    : '#333',
+                                                fontWeight: 600
+                                            }}
+                                        >
+                                            Panel de Alertas
+                                        </Typography>
+                                    </Stack>
+
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: isDay_global
+                                                ? 'rgba(255,255,255,0.50)'
+                                                : 'rgba(0,0,0,0.40)'
+                                        }}
+                                    >
+                                        Estado actual
                                     </Typography>
-                                </Divider>
+
+                                </Stack>
+
                                 <Box
                                     sx={{
                                         width: '100%',
-                                        height: isMobile ? '300px' : '300px',
+                                        height: isMobile
+                                            ? '300px'
+                                            : '300px',
                                         borderRadius: '10px',
-                                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                        backgroundColor: isDay_global
+                                            ? 'rgba(0,0,0,0.035)'
+                                            : 'rgba(255,255,255,0.12)',
+                                        border: isDay_global
+                                            ? '1px solid rgba(255,255,255,0.07)'
+                                            : '1px solid rgba(0,0,0,0.05)',
+                                        overflowY: 'auto',
+                                        overflowX: 'hidden',
+                                        p: 1
                                     }}
                                 >
-
                                     {isAlertsOrWarningsB ? (
                                         arrDataDashBoardB.map((element, idx) => {
-                                            const Alerts = climateAlert.response[element][element]?.Alerts;
-                                            const Warnings = climateAlert.response[element][element]?.Warnings;
+                                            const Alerts =
+                                                climateAlert.response[element][element]?.Alerts;
 
-                                            return (Object.keys(Alerts[0]).length > 0 || Object.keys(Warnings[0]).length > 0
+                                            const Warnings =
+                                                climateAlert.response[element][element]?.Warnings;
+
+                                            return (
+                                                Object.keys(Alerts[0]).length > 0 ||
+                                                Object.keys(Warnings[0]).length > 0
                                             ) ? (
-                                                <>
+                                                <React.Fragment key={`dashboard-${idx}`}>
                                                     {
-                                                        Object.keys(Alerts[0]).length === 0 ? (<div></div>)
-                                                            : (Alerts.map((object, inx) => (
+                                                        Object.keys(Alerts[0]).length === 0 ? (
+                                                            <div></div>
+                                                        ) : (
+                                                            Alerts.map((object, inx) => (
                                                                 <Alert
                                                                     key={`alert-${idx}-${inx}`}
                                                                     sx={{
@@ -565,7 +1148,9 @@ const Pronostics = (props) => {
                                                                         height: '38%',
                                                                         marginTop: '15px',
                                                                         marginLeft: '10px',
-                                                                        backgroundColor: 'rgba(255, 0, 0, 0.47)'
+                                                                        backgroundColor: 'rgba(255, 0, 0, 0.47)',
+                                                                        borderRadius: '6px',
+                                                                        boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
                                                                     }}
                                                                     variant="filled"
                                                                     severity="error"
@@ -573,123 +1158,241 @@ const Pronostics = (props) => {
                                                                     <AlertTitle>
                                                                         ¡{object?.alertBody?.titulo || "No Disponible"}!
                                                                     </AlertTitle>
+
                                                                     <Typography variant="caption">
                                                                         {object?.type || "No disponible"}
                                                                     </Typography>
                                                                 </Alert>
-                                                            )))
+                                                            ))
+                                                        )
                                                     }
 
                                                     {
                                                         Object.keys(Warnings[0]).length === 0 ? (
                                                             <div></div>
-                                                        ) : (Warnings.map((object, inx) => (
-                                                            <Alert
-                                                                key={`warning-${idx}-${inx}`}
-                                                                sx={{
-                                                                    width: '95%',
-                                                                    height: isMobile ? '38%' : '28%',
-                                                                    marginTop: '15px',
-                                                                    marginLeft: '10px',
-                                                                    backgroundColor: 'rgba(255, 136, 0, 0.47)'
-                                                                }}
-                                                                variant="filled"
-                                                                severity="warning"
-                                                            >
-                                                                <AlertTitle>
-                                                                    ¡{object?.alertBody?.titulo || idx}!
-                                                                </AlertTitle>
-                                                                <Typography variant="caption">
-                                                                    {object?.type || "No disponible"}
-                                                                </Typography>
-                                                            </Alert>
-                                                        )))
+                                                        ) : (
+                                                            Warnings.map((object, inx) => (
+                                                                <Alert
+                                                                    key={`warning-${idx}-${inx}`}
+                                                                    sx={{
+                                                                        width: '95%',
+                                                                        height: isMobile ? '38%' : '28%',
+                                                                        marginTop: '15px',
+                                                                        marginLeft: '10px',
+                                                                        backgroundColor: 'rgba(255, 136, 0, 0.47)',
+                                                                        borderRadius: '6px',
+                                                                        boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
+                                                                    }}
+                                                                    variant="filled"
+                                                                    severity="warning"
+                                                                >
+                                                                    <AlertTitle>
+                                                                        ¡{object?.alertBody?.titulo || idx}!
+                                                                    </AlertTitle>
+
+                                                                    <Typography variant="caption">
+                                                                        {object?.type || "No disponible"}
+                                                                    </Typography>
+                                                                </Alert>
+                                                            ))
+                                                        )
                                                     }
-                                                </>
-                                            ) : null
+                                                </React.Fragment>
+                                            ) : null;
                                         })
-                                    ) : (<Box
+                                    ) : (
+                                        <Box
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexDirection: 'column',
+                                                gap: 0.5
+                                            }}
+                                        >
 
-                                        sx={{
-                                            marginTop: isMobile ? '40%' : '20%',
-                                            marginLeft: isMobile ? '35%' : '40%'
-                                        }}
-                                    >
-                                        <Typography sx={{ color: isDay_global ? 'white' : 'black' }} variant="caption">Sin novedades</Typography>
-                                    </Box>)
+                                            <CrisisAlertIcon
+                                                sx={{
+                                                    fontSize: 30,
+                                                    opacity: 0.25,
+                                                    color: isDay_global
+                                                        ? 'white'
+                                                        : '#555'
+                                                }}
+                                            />
 
-                                    }
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    color: isDay_global
+                                                        ? 'rgba(255,255,255,0.50)'
+                                                        : 'rgba(0,0,0,0.45)',
+                                                    fontWeight: 500
+                                                }}
+                                            >
+                                                Sin novedades
+                                            </Typography>
+
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    color: isDay_global
+                                                        ? 'rgba(255,255,255,0.30)'
+                                                        : 'rgba(0,0,0,0.30)'
+                                                }}
+                                            >
+                                                No hay alertas meteorológicas activas
+                                            </Typography>
+
+                                        </Box>
+                                    )}
                                 </Box>
-
                             </Stack>
                         </Stack>
-
                     </CardContent>
                 </Card>
 
                 <br />
-                <GenericModal element={
-                    (typeModal === 'GAUGE') ? (<>
-                        <Suspense fallback={<div>Cargando Grafico...</div>}>
-                            <IndicatorDetails title2={'Rango Recomendable'} title1={dataType === 'Quality-Air' ? 'Calidad del Aire' : dataType === 'Precipitacion' ? 'Precipitacion' : dataType === 'Velocidad-Viento' ? 'Velocidad' : 'Valor no encontrado'} valor={dataModal} valorOpcional={dataOptional} type={dataType} />
-                        </Suspense>
-                        <Stack spacing={1}>
-                            <Box>
-                                <Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
-                                    <AlertTitle>¡IMPORTANTE!</AlertTitle>
-                                    <Typography variant="caption">{climateAlert.response[dataType][dataType].IndicatorGraph.MetricsData.Message}</Typography>
-                                </Alert>
 
-                            </Box>
-                            <Stack>
-                                <Stack direction='row' spacing={1}>
-                                    <Box sx={{ backgroundColor: 'rgba(10, 92, 175, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>Valor Actual ({dataModal})</Typography>
-                                </Stack >
-                                <Stack direction='row' spacing={1}>
-                                    <Box sx={{ backgroundColor: 'rgba(142, 228, 72, 0.92)', height: '15px', width: '15px', borderRadius: '5%' }}></Box>
-                                    <Typography color='rgba(255, 255, 255, 0.77)' variant='caption'>{'Limite Recomendable'} ({dataOptional})</Typography>
+                <GenericModal
+                    element={
+                        typeModal === 'GAUGE' ? (
+                            <>
+                                <Suspense fallback={<div>Cargando Grafico...</div>}>
+                                    <IndicatorDetails
+                                        title2={'Rango Recomendable'}
+                                        title1={
+                                            dataType === 'Quality-Air'
+                                                ? 'Calidad del Aire'
+                                                : dataType === 'Precipitacion'
+                                                    ? 'Precipitacion'
+                                                    : dataType === 'Velocidad-Viento'
+                                                        ? 'Velocidad'
+                                                        : 'Valor no encontrado'
+                                        }
+                                        valor={dataModal}
+                                        valorOpcional={dataOptional}
+                                        type={dataType}
+                                    />
+                                </Suspense>
+
+                                <Stack spacing={1}>
+                                    <Box>
+                                        <Alert
+                                            variant="filled"
+                                            severity="info"
+                                            sx={{
+                                                backgroundColor: '#4fd6ff7a',
+                                                borderRadius: '5px'
+                                            }}
+                                        >
+                                            <AlertTitle>
+                                                ¡IMPORTANTE!
+                                            </AlertTitle>
+
+                                            <Typography variant="caption">
+                                                {climateAlert.response[dataType][dataType]
+                                                    .IndicatorGraph.MetricsData.Message}
+                                            </Typography>
+                                        </Alert>
+                                    </Box>
+
+                                    <Stack>
+                                        <Stack direction="row" spacing={1}>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor: 'rgba(10, 92, 175, 0.92)',
+                                                    height: '15px',
+                                                    width: '15px',
+                                                    borderRadius: '5%'
+                                                }}
+                                            />
+
+                                            <Typography
+                                                color="rgba(255, 255, 255, 0.77)"
+                                                variant="caption"
+                                            >
+                                                Valor Actual ({dataModal})
+                                            </Typography>
+                                        </Stack>
+
+                                        <Stack direction="row" spacing={1}>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor: 'rgba(142, 228, 72, 0.92)',
+                                                    height: '15px',
+                                                    width: '15px',
+                                                    borderRadius: '5%'
+                                                }}
+                                            />
+
+                                            <Typography
+                                                color="rgba(255, 255, 255, 0.77)"
+                                                variant="caption"
+                                            >
+                                                {'Limite Recomendable'} ({dataOptional})
+                                            </Typography>
+                                        </Stack>
+                                    </Stack>
                                 </Stack>
-                            </Stack>
-                        </Stack>
-                    </>) : (typeModal === 'Pronostico') ? (
-                        <>
+                            </>
+                        ) : typeModal === 'Pronostico' ? (
+                            <>
+                                <Stack direction="column">
+                                    <Typography
+                                        color="white"
+                                        sx={{
+                                            fontWeight: 600,
+                                            mb: 1
+                                        }}
+                                    >
+                                        Mas Detalles
+                                    </Typography>
 
-                            {<Stack direction='column'>
-                                <Typography color="white">Mas Detalles</Typography>
-                                {<Alert variant='filled' severity="info" sx={{ backgroundColor: '#4fd6ff7a' }}>
-                                    <AlertTitle>¡IMPORTANTE!</AlertTitle>
-                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial.replaceAll('-', " ")]}</Typography>
-                                </Alert>}
-                                <TreeGraph data={PronosticDetails} type='Pronostico' />
+                                    <Alert
+                                        variant="filled"
+                                        severity="info"
+                                        sx={{
+                                            backgroundColor: '#4fd6ff7a',
+                                            borderRadius: '5px'
+                                        }}
+                                    >
+                                        <AlertTitle>
+                                            ¡IMPORTANTE!
+                                        </AlertTitle>
 
-                            </Stack>}
-                            {/*<Typography>En desarrollo</Typography>*/}
+                                        <Typography variant="caption">
+                                            {
+                                                ClimateDefinition.Definition[
+                                                PronosticInitial.replaceAll('-', " ")
+                                                ]
+                                            }
+                                        </Typography>
+                                    </Alert>
 
-                        </>
-                    ) : (typeModal === 'Quality-Air') ? (
-                        <>
-
-                            {/*<TreeGraphicEchart data={QualityAirDetails} />*/}
-                            {/*<TreeGraph data={QualityAirDetails} type='QualityAir' />*/}
-                            {/*<Typography>En desarrollo</Typography>*/}
-                            {<Stack direction='column' spacing={1}>
-
-                                <Stack direction='row' spacing={1}>
-                                    <TreeGraph data={QualityAirDetails} type='QualityAir' />
-
+                                    <TreeGraph data={PronosticDetails} type="Pronostico" />
                                 </Stack>
-
-                                {/*<Alert variant='outlined' severity="success">
-                                    <AlertTitle>IMPORTANTE</AlertTitle>
-                                    <Typography variant="caption">{ClimateDefinition.Definition[PronosticInitial]}</Typography>
-                                </Alert>*/}
-                            </Stack>}
-
-                        </>
-                    ) : (<Typography>Elemento no Categorizado</Typography>)
-                } open={openModal} onClose={handleCloseModal} />
-            </Box >
+                            </>
+                        ) : typeModal === 'Quality-Air' ? (
+                            <>
+                                <Stack direction="column" spacing={1}>
+                                    <Stack direction="row" spacing={1}>
+                                        <TreeGraph data={QualityAirDetails} type="QualityAir" />
+                                    </Stack>
+                                </Stack>
+                            </>
+                        ) : (
+                            <Typography>
+                                Elemento no Categorizado
+                            </Typography>
+                        )
+                    }
+                    open={openModal}
+                    onClose={handleCloseModal}
+                />
+            </Box>
         </>
     );
 };
