@@ -938,7 +938,17 @@ const Pronostics = (props) => {
                                                     severity="error"
                                                     variant="filled"
                                                     sx={{
-                                                        borderRadius: '4px'
+                                                        width: '100%',
+                                                        borderRadius: '8px',
+                                                        py: 0.75,
+                                                        backgroundColor:
+                                                            'rgba(211,47,47,0.72)',
+                                                        boxShadow:
+                                                            '0 3px 10px rgba(211,47,47,0.10)',
+                                                        '& .MuiAlert-message': {
+                                                            width: '100%',
+                                                            minWidth: 0
+                                                        }
                                                     }}
                                                 >
                                                     Informacion temporalmente no disponible
@@ -1175,13 +1185,17 @@ const Pronostics = (props) => {
                                                                 <Alert
                                                                     key={`warning-${idx}-${inx}`}
                                                                     sx={{
-                                                                        width: '95%',
-                                                                        height: isMobile ? '38%' : '28%',
-                                                                        marginTop: '15px',
-                                                                        marginLeft: '10px',
-                                                                        backgroundColor: 'rgba(255, 136, 0, 0.47)',
-                                                                        borderRadius: '6px',
-                                                                        boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
+                                                                        width: '100%',
+                                                                        borderRadius: '8px',
+                                                                        py: 0.75,
+                                                                        backgroundColor:
+                                                                            'rgba(237,108,2,0.72)',
+                                                                        boxShadow:
+                                                                            '0 3px 10px rgba(237,108,2,0.09)',
+                                                                        '& .MuiAlert-message': {
+                                                                            width: '100%',
+                                                                            minWidth: 0
+                                                                        }
                                                                     }}
                                                                     variant="filled"
                                                                     severity="warning"
