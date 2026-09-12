@@ -47,6 +47,7 @@ const MainMenu = () => {
     const [dataTempAprox, setdataTempAprox] = useState("");
     const [radiacionUV, setRadiacionUV] = useState("");
     const [location, setLocation] = useState("");
+    const [locationMap,setLocationMap] = useState("");
     const [messageSnackBar, setMessageSnackBar] = useState();
     const [isSnackBarActive, setIsSnackBarActive] = useState(false);
     const [isLocalizeExec] = useState(false);
@@ -142,102 +143,203 @@ const MainMenu = () => {
 
     };
     const localize = () => {
-        setAuxState(true);
+    setAuxState(true);
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
 
-                const lat = customLocation
-                    ? localStorage.getItem('Latitud')
-                    : latitude;
+            const lat = customLocation
+                ? localStorage.getItem('Latitud')
+                : latitude;
 
-                const lon = customLocation
-                    ? localStorage.getItem('Longitud')
-                    : longitude;
+            const lon = customLocation
+                ? localStorage.getItem('Longitud')
+                : longitude;
 
-                const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-                setMapUrlState(mapUrl);
+            const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+            setMapUrlState(mapUrl);
 
-                const anio = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
+            const anio = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
 
-                // Dispara ambos fetches en paralelo (ya lo hacías bien, se mantiene)
-                fetch(
-                    `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
-                )
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setOficialAlerts(data);
-                    })
-                    .catch((error) => {
-                        console.error(error);
+            fetch(
+                `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    setOficialAlerts(data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+
+            fetch(
+                `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+            )
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.error) {
+                        setIsSnackBarActive(true);
+                        setMessageSnackBar(data.error);
+                    }
+
+                    setClimateAlert(data);
+
+                    setTemperature(
+                        data.response.Temperatura.Temperatura.IndicatorGraph.data
+                    );
+
+                    setRadiacionUV(
+                        data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                    );
+
+                    setLocation(data.response["last_update"]);
+                    setLocationMap(data?.response);
+
+                    setdataTempAprox(
+                        data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                    );
+
+                    var isNews = false;
+
+                    arrDataDashBoardA.forEach((element) => {
+                        isNews =
+                            Object.keys(
+                                data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                            ).length > 0 ||
+                            Object.keys(
+                                data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                            ).length > 0 ||
+                            Object.keys(
+                                data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                            ).length > 0 ||
+                            Object.keys(
+                                data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                            ).length > 0;
                     });
 
-                fetch(
-                    `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
-                )
-                    .then((res) => res.json())
-                    .then((data) => {
-                        if (data.error) {
-                            setIsSnackBarActive(true);
-                            setMessageSnackBar(data.error);
-                        }
+                    setisAlertsOrWarnings(isNews);
+                })
+                .catch((error) => {
+                    setIsSnackBarActive(true);
+                    setMessageSnackBar(String(error));
+                })
+                .finally(() => {
+                    setAuxState(false);
+                });
+        },
 
-                        setClimateAlert(data);
-                        setTemperature(
-                            data.response.Temperatura.Temperatura.IndicatorGraph.data
-                        );
-                        setRadiacionUV(
-                            data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
-                        );
-                        setLocation(data.response["last_updated"]);
-                        setdataTempAprox(
-                            data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
-                        );
+        (error) => {
 
-                        var isNews = false;
+            // Si el navegador tarda más de 5 segundos,
+            // usamos la última ubicación guardada.
+            if (error.code === error.TIMEOUT) {
 
-                        arrDataDashBoardA.forEach((element) => {
-                            isNews =
-                                Object.keys(
-                                    data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
-                                ).length > 0;
+                const lat = sessionStorage.getItem('Latitud');
+                const lon = sessionStorage.getItem('Longitud');
+
+                if (lat && lon) {
+
+                    console.warn(
+                        'Tiempo de geolocalización agotado. Usando última ubicación almacenada.'
+                    );
+
+                    const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+                    setMapUrlState(mapUrl);
+
+                    const anio = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+
+                    fetch(
+                        `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+                    )
+                        .then((res) => res.json())
+                        .then((data) => {
+                            setOficialAlerts(data);
+                        })
+                        .catch((error) => {
+                            console.error(error);
                         });
 
-                        setisAlertsOrWarnings(isNews);
-                    })
-                    .catch((error) => {
-                        setIsSnackBarActive(true);
-                        setMessageSnackBar(String(error));
-                    })
-                    .finally(() => {
-                        setAuxState(false);
-                    });
-            },
-            (error) => {
-                setAuxState(false);
-                setIsSnackBarActive(true);
-                setMessageSnackBar(`Error al obtener ubicación: ${String(error)}`);
-            },
-            {
-                enableHighAccuracy: false, // clave: evita esperar el fix de GPS
-                timeout: 5000,             // corta si tarda demasiado
-                maximumAge: 600000         // acepta una posición cacheada de hasta 10 min
+                    fetch(
+                        `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+                    )
+                        .then((res) => res.json())
+                        .then((data) => {
+
+                            if (data.error) {
+                                setIsSnackBarActive(true);
+                                setMessageSnackBar(data.error);
+                            }
+
+                            setClimateAlert(data);
+
+                            setTemperature(
+                                data.response.Temperatura.Temperatura.IndicatorGraph.data
+                            );
+
+                            setRadiacionUV(
+                                data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                            );
+
+                            setLocation(data.response["last_update"]);
+                            setLocationMap(data?.response);
+
+                            setdataTempAprox(
+                                data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                            );
+
+                            var isNews = false;
+
+                            arrDataDashBoardA.forEach((element) => {
+                                isNews =
+                                    Object.keys(
+                                        data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                                    ).length > 0 ||
+                                    Object.keys(
+                                        data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                                    ).length > 0 ||
+                                    Object.keys(
+                                        data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                                    ).length > 0 ||
+                                    Object.keys(
+                                        data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                                    ).length > 0;
+                            });
+
+                            setisAlertsOrWarnings(isNews);
+                        })
+                        .catch((error) => {
+                            setIsSnackBarActive(true);
+                            setMessageSnackBar(String(error));
+                        })
+                        .finally(() => {
+                            setAuxState(false);
+                        });
+
+                    return;
+                }
             }
-        );
-    };
+
+            // Si NO fue timeout, entonces sí mostramos el error.
+            setAuxState(false);
+            setIsSnackBarActive(true);
+            setMessageSnackBar(
+                `Error al obtener ubicación: ${String(error)}`
+            );
+        },
+
+        {
+            enableHighAccuracy: false,
+            timeout: 3000,
+            maximumAge: 600000
+        }
+    );
+};
 
     const getColor = async (param) => {
         try {
@@ -547,7 +649,7 @@ const MainMenu = () => {
                                         }}
                                     />
                                 }
-                                label={location}
+                                label={location?.data}
                                 variant="outlined"
                                 sx={{
                                     height: '34px',

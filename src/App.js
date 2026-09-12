@@ -13,6 +13,20 @@ import { Test_context } from './Context/test-context';
 
 
 import MainPanel from './componentes/Migration/mainPanel';
+navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude; 
+
+                sessionStorage.setItem("Latitud",latitude);
+                sessionStorage.setItem("Longitud",longitude);
+            },
+            (error) => {
+               alert(`Ocurrio un error al obtener la ubicación: ${error}`)
+            },{ enableHighAccuracy: false}
+        );
+
+
 
 function App() {
   const { SingleRSSMap } = useContext(Test_context);
