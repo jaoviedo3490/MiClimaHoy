@@ -177,7 +177,7 @@ const MainMenu = () => {
                 });
 
             fetch(
-                `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+                `http://localhost:4000/api/v1/wheater/current?lat=${lat}&lon=${lon}`
             )
                 .then((res) => res.json())
                 .then((data) => {

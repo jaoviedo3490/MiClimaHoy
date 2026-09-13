@@ -139,7 +139,7 @@ const Pronostics = (props) => {
     useEffect(() => {
 
         const is_day = (climateAlert.response.is_day.data === 0) ? "nigth" : "day";
-        const pronostic = climateAlert.response.pronostic.text.replaceAll(" ", "-")
+        const pronostic = climateAlert.response.pronostic.text.replaceAll(" ", "-");
         //const pronosticFormat = pronostic.replaceAll(" ", "-");
 
 
@@ -1298,8 +1298,9 @@ const Pronostics = (props) => {
                                             variant="filled"
                                             severity="info"
                                             sx={{
-                                                backgroundColor: '#4fd6ff7a',
-                                                borderRadius: '5px'
+                                                borderRadius: '10px',
+                                                backgroundColor: 'rgba(79,214,255,0.20)',
+                                                border: '1px solid rgba(79,214,255,0.15)'
                                             }}
                                         >
                                             <AlertTitle>
@@ -1312,44 +1313,63 @@ const Pronostics = (props) => {
                                             </Typography>
                                         </Alert>
                                     </Box>
-
-                                    <Stack>
-                                        <Stack direction="row" spacing={1}>
-                                            <Box
-                                                sx={{
-                                                    backgroundColor: 'rgba(10, 92, 175, 0.92)',
-                                                    height: '15px',
-                                                    width: '15px',
-                                                    borderRadius: '5%'
-                                                }}
-                                            />
-
-                                            <Typography
-                                                color="rgba(255, 255, 255, 0.77)"
-                                                variant="caption"
+                                    <Box
+                                        sx={{
+                                            p: 1.5,
+                                            borderRadius: '10px',
+                                            backgroundColor: 'rgba(255,255,255,0.02)',
+                                            border: '1px solid rgba(255,255,255,0.05)'
+                                        }}
+                                    >
+                                        <Stack spacing={1}>
+                                            <Stack
+                                                direction="row"
+                                                spacing={1}
+                                                alignItems="center"
                                             >
-                                                Valor Actual ({dataModal})
-                                            </Typography>
-                                        </Stack>
+                                                <Box
+                                                    sx={{
+                                                        backgroundColor: 'rgba(10,92,175,0.82)',
+                                                        height: '12px',
+                                                        width: '12px',
+                                                        borderRadius: '3px',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
 
-                                        <Stack direction="row" spacing={1}>
-                                            <Box
-                                                sx={{
-                                                    backgroundColor: 'rgba(142, 228, 72, 0.92)',
-                                                    height: '15px',
-                                                    width: '15px',
-                                                    borderRadius: '5%'
-                                                }}
-                                            />
+                                                <Typography
+                                                    color="rgba(255, 255, 255, 0.77)"
+                                                    variant="caption"
+                                                >
+                                                    Valor Actual ({dataModal})
+                                                </Typography>
+                                            </Stack>
 
-                                            <Typography
-                                                color="rgba(255, 255, 255, 0.77)"
-                                                variant="caption"
+                                            <Stack
+                                                direction="row"
+                                                spacing={1}
+                                                alignItems="center"
                                             >
-                                                {'Limite Recomendable'} ({dataOptional})
-                                            </Typography>
+                                                <Box
+                                                    sx={{
+                                                        backgroundColor: 'rgba(142,228,72,0.82)',
+                                                        height: '12px',
+                                                        width: '12px',
+                                                        borderRadius: '3px',
+                                                        flexShrink: 0
+                                                    }}
+                                                />
+
+                                                <Typography
+                                                    color="rgba(255, 255, 255, 0.77)"
+                                                    variant="caption"
+                                                >
+                                                    {'Limite Recomendable'} ({dataOptional})
+                                                </Typography>
+                                            </Stack>
                                         </Stack>
-                                    </Stack>
+                                    </Box>
+
                                 </Stack>
                             </>
                         ) : typeModal === 'Pronostico' ? (
@@ -1369,8 +1389,9 @@ const Pronostics = (props) => {
                                         variant="filled"
                                         severity="info"
                                         sx={{
-                                            backgroundColor: '#4fd6ff7a',
-                                            borderRadius: '5px'
+                                            borderRadius: '10px',
+                                            backgroundColor: 'rgba(79,214,255,0.20)',
+                                            border: '1px solid rgba(79,214,255,0.15)'
                                         }}
                                     >
                                         <AlertTitle>

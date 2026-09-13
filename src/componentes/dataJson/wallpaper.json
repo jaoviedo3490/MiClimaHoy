@@ -89,7 +89,11 @@
     "nigth-Heavy-snow":"nigth-Heavy-snow_dark.png",
     "nigth-Patchy-rain-nearby":"nigth-Patchy-rain-nearby_dark.png",
     "nigth-Moderate-or-heavy-rain-shower":"nigth-Moderate-or-heavy-rain-shower_dark.png",
-    "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"]
+    "day-Light-rain-shower":"day-Light-rain-shower_light.png",
+    "day-Patchy-light-rain":"day-Patchy-light-rain_light.png",
+    "nigth-Smoky-haze":"nigth-Smoky-haze_dark.png",
+    "Default_wallpapers":["/wall_def_dark.webp","/wall_def1_light.webp","/wall_def2_dark.webp"
+  ]
   }
 }
 
