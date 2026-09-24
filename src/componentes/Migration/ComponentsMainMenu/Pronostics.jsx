@@ -13,6 +13,9 @@ import {
     IconButton,
     LinearProgress
 } from "@mui/material";
+import PublicIcon from '@mui/icons-material/Public';
+import LanguageIcon from '@mui/icons-material/Language';
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
 import Chip from "@mui/material/Chip";
@@ -95,6 +98,10 @@ const Pronostics = (props) => {
     const [Ozono, setOzono] = useState('');
     const [Pm2_5, setPm2_5] = useState([]);
     const [Pm10, setPm10] = useState([]);
+    const [locationName, setLocationN] = useState("");
+    //const [location, setLocation] = useState("");
+    const [locationRegion, setLocationRegion] = useState("");
+    const [locationCountry, setLocationCountry] = useState("")
     //const location_last = climateAlert.response.last_update.data;
 
 
@@ -144,6 +151,9 @@ const Pronostics = (props) => {
 
 
         const location_last = climateAlert.response.last_update.data;
+        const location_name = climateAlert?.response?.name?.data;
+        const location_region = climateAlert?.response?.region?.data;
+        const location_country = climateAlert?.response?.country?.data;
 
 
         const Ozono = isMobile ? (((climateAlert.response.QualityMetrics.Ozono.data * 24.45) / 47.998) / 1000).toFixed(2) : (((climateAlert.response.QualityMetrics.Ozono.data * 24.45) / 47.998) / 1000).toFixed(5);
@@ -302,7 +312,16 @@ const Pronostics = (props) => {
         setQualityAirDetails(qualityAirJson);
         setPronosticInitial(pronostic);
         setPronostic(pronostic);
+
         setLocation(location_last);
+        setLocationN(location_name);
+        setLocationRegion(location_region);
+        setLocationCountry(location_country);
+
+
+
+
+
         setIsDay(is_day);
 
         setNubosidad(nubosidad);
@@ -339,6 +358,26 @@ const Pronostics = (props) => {
 
     const handleCloseModal = () => {
         if (typeof setOpenModal === "function") setOpenModal(false);
+    };
+
+    const formatLastUpdate = (value) => {
+        if (!value) return "";
+
+        const date = new Date(String(value).replace(" ", "T"));
+
+        if (isNaN(date.getTime())) {
+            return String(value);
+        }
+
+        return new Intl.DateTimeFormat("es-ES", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        }).format(date);
     };
 
     return (
@@ -396,60 +435,278 @@ const Pronostics = (props) => {
                                 </Typography>
                             </Stack>
 
-                            <Chip
-                                icon={
-                                    <LocationOnIcon
+                            <Stack
+                                direction={isMobile ? "column" : "row"}
+                                spacing={0.8}
+                                sx={{
+                                    width: "100%",
+                                    alignItems: isMobile ? "stretch" : "center",
+                                    justifyContent: isMobile ? "flex-start" : "flex-end",
+                                    mt: 0.5
+                                }}
+                            >
+                                {/* CIUDAD */}
+                                {locationName && (
+                                    <Chip
+                                        icon={
+                                            <LocationOnIcon
+                                                sx={{
+                                                    fontSize: "19px !important",
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.95)"
+                                                        : "rgba(30,41,59,0.80)"
+                                                }}
+                                            />
+                                        }
+                                        label={locationName}
+                                        variant="outlined"
                                         sx={{
-                                            fontSize: '18px !important',
+                                            height: "36px",
+                                            maxWidth: isMobile ? "100%" : "220px",
+                                            borderRadius: "12px",
+
                                             color: isDay_global
-                                                ? 'rgba(255,255,255,0.85)'
-                                                : 'rgba(0,0,0,0.60)'
+                                                ? "rgba(255,255,255,0.95)"
+                                                : "rgba(15,23,42,0.85)",
+
+                                            borderColor: isDay_global
+                                                ? "rgba(255,255,255,0.25)"
+                                                : "rgba(15,23,42,0.12)",
+
+                                            background: isDay_global
+                                                ? "linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.035))"
+                                                : "linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,255,255,0.35))",
+
+                                            boxShadow: isDay_global
+                                                ? "0 4px 14px rgba(0,0,0,0.08)"
+                                                : "0 4px 14px rgba(15,23,42,0.06)",
+
+                                            backdropFilter: "blur(10px)",
+
+                                            "& .MuiChip-label": {
+                                                px: 1.4,
+                                                fontSize: "0.84rem",
+                                                fontWeight: 600,
+                                                letterSpacing: "0.01em",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis"
+                                            },
+
+                                            "&:hover": {
+                                                transform: "translateY(-1px)",
+
+                                                background: isDay_global
+                                                    ? "linear-gradient(135deg, rgba(255,255,255,0.17), rgba(255,255,255,0.06))"
+                                                    : "linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,255,255,0.45))",
+
+                                                borderColor: isDay_global
+                                                    ? "rgba(255,255,255,0.38)"
+                                                    : "rgba(15,23,42,0.18)",
+
+                                                boxShadow: isDay_global
+                                                    ? "0 6px 18px rgba(0,0,0,0.12)"
+                                                    : "0 6px 18px rgba(15,23,42,0.09)"
+                                            },
+
+                                            transition: "all .2s ease"
                                         }}
                                     />
-                                }
-                                label={location}
-                                variant="outlined"
-                                sx={{
-                                    height: '34px',
-                                    maxWidth: '100%',
-                                    borderRadius: '18px',
+                                )}
 
-                                    color: isDay_global
-                                        ? 'rgba(255,255,255,0.90)'
-                                        : 'rgba(0,0,0,0.70)',
+                                {/* REGIÓN */}
+                                {locationRegion && (
+                                    <Chip
+                                        icon={
+                                            <PublicIcon
+                                                sx={{
+                                                    fontSize: "18px !important",
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.78)"
+                                                        : "rgba(30,41,59,0.62)"
+                                                }}
+                                            />
+                                        }
+                                        label={locationRegion}
+                                        variant="outlined"
+                                        sx={{
+                                            height: "34px",
+                                            maxWidth: isMobile ? "100%" : "200px",
+                                            borderRadius: "11px",
 
-                                    borderColor: isDay_global
-                                        ? 'rgba(255,255,255,0.18)'
-                                        : 'rgba(0,0,0,0.10)',
+                                            color: isDay_global
+                                                ? "rgba(255,255,255,0.82)"
+                                                : "rgba(15,23,42,0.68)",
 
-                                    backgroundColor: isDay_global
-                                        ? 'rgba(255,255,255,0.035)'
-                                        : 'rgba(255,255,255,0.20)',
+                                            borderColor: isDay_global
+                                                ? "rgba(255,255,255,0.16)"
+                                                : "rgba(15,23,42,0.09)",
 
-                                    backdropFilter: 'blur(6px)',
+                                            backgroundColor: isDay_global
+                                                ? "rgba(255,255,255,0.045)"
+                                                : "rgba(255,255,255,0.30)",
 
-                                    '& .MuiChip-label': {
-                                        px: 1.2,
-                                        fontSize: '0.82rem',
-                                        fontWeight: 500,
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    },
+                                            backdropFilter: "blur(8px)",
 
-                                    '&:hover': {
-                                        backgroundColor: isDay_global
-                                            ? 'rgba(255,255,255,0.07)'
-                                            : 'rgba(255,255,255,0.35)',
+                                            "& .MuiChip-label": {
+                                                px: 1.2,
+                                                fontSize: "0.78rem",
+                                                fontWeight: 500,
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis"
+                                            },
 
-                                        borderColor: isDay_global
-                                            ? 'rgba(255,255,255,0.28)'
-                                            : 'rgba(0,0,0,0.16)'
-                                    },
+                                            "&:hover": {
+                                                backgroundColor: isDay_global
+                                                    ? "rgba(255,255,255,0.085)"
+                                                    : "rgba(255,255,255,0.48)",
 
-                                    transition: 'all .2s ease'
-                                }}
-                            />
+                                                borderColor: isDay_global
+                                                    ? "rgba(255,255,255,0.25)"
+                                                    : "rgba(15,23,42,0.14)"
+                                            },
+
+                                            transition: "all .2s ease"
+                                        }}
+                                    />
+                                )}
+
+                                {/* PAÍS */}
+                                {locationCountry && (
+                                    <Chip
+                                        icon={
+                                            <LanguageIcon
+                                                sx={{
+                                                    fontSize: "18px !important",
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.72)"
+                                                        : "rgba(30,41,59,0.58)"
+                                                }}
+                                            />
+                                        }
+                                        label={locationCountry}
+                                        variant="outlined"
+                                        sx={{
+                                            height: "34px",
+                                            maxWidth: isMobile ? "100%" : "170px",
+                                            borderRadius: "11px",
+
+                                            color: isDay_global
+                                                ? "rgba(255,255,255,0.78)"
+                                                : "rgba(15,23,42,0.62)",
+
+                                            borderColor: isDay_global
+                                                ? "rgba(255,255,255,0.14)"
+                                                : "rgba(15,23,42,0.08)",
+
+                                            backgroundColor: isDay_global
+                                                ? "rgba(255,255,255,0.035)"
+                                                : "rgba(255,255,255,0.24)",
+
+                                            backdropFilter: "blur(8px)",
+
+                                            "& .MuiChip-label": {
+                                                px: 1.2,
+                                                fontSize: "0.77rem",
+                                                fontWeight: 500,
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis"
+                                            },
+
+                                            "&:hover": {
+                                                backgroundColor: isDay_global
+                                                    ? "rgba(255,255,255,0.07)"
+                                                    : "rgba(255,255,255,0.40)",
+
+                                                borderColor: isDay_global
+                                                    ? "rgba(255,255,255,0.22)"
+                                                    : "rgba(15,23,42,0.13)"
+                                            },
+
+                                            transition: "all .2s ease"
+                                        }}
+                                    />
+                                )}
+                                {/* FECHA */}
+                                {location && (
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: isMobile ? "flex-start" : "center",
+                                            width: isMobile ? "100%" : "auto",
+                                            minWidth: 0
+                                        }}
+                                    >
+                                        <Chip
+                                            icon={
+                                                <AccessTimeRoundedIcon
+                                                    sx={{
+                                                        fontSize: isMobile
+                                                            ? "16px !important"
+                                                            : "17px !important",
+                                                        color: isDay_global
+                                                            ? "rgba(255,255,255,0.62)"
+                                                            : "rgba(30,41,59,0.52)"
+                                                    }}
+                                                />
+                                            }
+                                            label={
+                                                isMobile
+                                                    ? formatLastUpdate(location)
+                                                    : `Actualizado · ${formatLastUpdate(location)}`
+                                            }
+                                            variant="outlined"
+                                            sx={{
+                                                height: isMobile ? "30px" : "32px",
+
+                                                width: isMobile ? "100%" : "auto",
+                                                maxWidth: isMobile ? "100%" : "350px",
+
+                                                borderRadius: isMobile ? "9px" : "10px",
+
+                                                color: isDay_global
+                                                    ? "rgba(255,255,255,0.62)"
+                                                    : "rgba(15,23,42,0.52)",
+
+                                                borderColor: isDay_global
+                                                    ? "rgba(255,255,255,0.09)"
+                                                    : "rgba(15,23,42,0.065)",
+
+                                                backgroundColor: isDay_global
+                                                    ? "rgba(255,255,255,0.02)"
+                                                    : "rgba(255,255,255,0.14)",
+
+                                                backdropFilter: "blur(8px)",
+
+                                                "& .MuiChip-label": {
+                                                    px: isMobile ? 0.8 : 1.1,
+
+                                                    fontSize: isMobile
+                                                        ? "0.68rem"
+                                                        : "0.72rem",
+
+                                                    fontWeight: 500,
+                                                    letterSpacing: "0.01em",
+
+                                                    whiteSpace: "nowrap",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis"
+                                                },
+
+                                                "& .MuiChip-icon": {
+                                                    marginLeft: isMobile ? "8px" : "9px",
+                                                    marginRight: isMobile ? "-2px" : "-1px"
+                                                },
+
+                                                transition: "all .2s ease"
+                                            }}
+                                        />
+                                    </Box>
+                                )}
+                            </Stack>
                         </Stack>
 
                         <Divider

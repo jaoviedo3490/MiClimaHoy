@@ -9,6 +9,10 @@ import {
     Alert,
     AlertTitle, Button
 } from "@mui/material";
+import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
+import LanguageIcon from '@mui/icons-material/Language';
+import MapIcon from '@mui/icons-material/Map';
+import PublicIcon from '@mui/icons-material/Public';
 import Chip from "@mui/material/Chip";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -46,8 +50,10 @@ const MainMenu = () => {
     const [Temperatura, setTemperature] = useState("");
     const [dataTempAprox, setdataTempAprox] = useState("");
     const [radiacionUV, setRadiacionUV] = useState("");
+    const [locationName, setLocationN] = useState("");
     const [location, setLocation] = useState("");
-    const [locationMap,setLocationMap] = useState("");
+    const [locationRegion, setLocationRegion] = useState("");
+    const [locationCountry, setLocationCountry] = useState("");
     const [messageSnackBar, setMessageSnackBar] = useState();
     const [isSnackBarActive, setIsSnackBarActive] = useState(false);
     const [isLocalizeExec] = useState(false);
@@ -143,203 +149,207 @@ const MainMenu = () => {
 
     };
     const localize = () => {
-    setAuxState(true);
+        setAuxState(true);
 
-    navigator.geolocation.getCurrentPosition(
-        (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
 
-            const lat = customLocation
-                ? localStorage.getItem('Latitud')
-                : latitude;
+                const lat = customLocation
+                    ? localStorage.getItem('Latitud')
+                    : latitude;
 
-            const lon = customLocation
-                ? localStorage.getItem('Longitud')
-                : longitude;
+                const lon = customLocation
+                    ? localStorage.getItem('Longitud')
+                    : longitude;
 
-            const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-            setMapUrlState(mapUrl);
+                const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+                setMapUrlState(mapUrl);
 
-            const anio = d.getFullYear();
-            const month = String(d.getMonth() + 1).padStart(2, '0');
-            const day = String(d.getDate()).padStart(2, '0');
+                const anio = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
 
-            fetch(
-                `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
-            )
-                .then((res) => res.json())
-                .then((data) => {
-                    setOficialAlerts(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-
-            fetch(
-                `http://localhost:4000/api/v1/wheater/current?lat=${lat}&lon=${lon}`
-            )
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data.error) {
-                        setIsSnackBarActive(true);
-                        setMessageSnackBar(data.error);
-                    }
-
-                    setClimateAlert(data);
-
-                    setTemperature(
-                        data.response.Temperatura.Temperatura.IndicatorGraph.data
-                    );
-
-                    setRadiacionUV(
-                        data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
-                    );
-
-                    setLocation(data.response["last_update"]);
-                    setLocationMap(data?.response);
-
-                    setdataTempAprox(
-                        data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
-                    );
-
-                    var isNews = false;
-
-                    arrDataDashBoardA.forEach((element) => {
-                        isNews =
-                            Object.keys(
-                                data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
-                            ).length > 0 ||
-                            Object.keys(
-                                data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
-                            ).length > 0 ||
-                            Object.keys(
-                                data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
-                            ).length > 0 ||
-                            Object.keys(
-                                data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
-                            ).length > 0;
+                fetch(
+                    `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setOficialAlerts(data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
                     });
 
-                    setisAlertsOrWarnings(isNews);
-                })
-                .catch((error) => {
-                    setIsSnackBarActive(true);
-                    setMessageSnackBar(String(error));
-                })
-                .finally(() => {
-                    setAuxState(false);
-                });
-        },
+                fetch(
+                    `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+                )
+                    .then((res) => res.json())
+                    .then((data) => {
+                        if (data.error) {
+                            setIsSnackBarActive(true);
+                            setMessageSnackBar(data.error);
+                        }
 
-        (error) => {
+                        setClimateAlert(data);
 
-            // Si el navegador tarda más de 5 segundos,
-            // usamos la última ubicación guardada.
-            if (error.code === error.TIMEOUT) {
+                        setTemperature(
+                            data.response.Temperatura.Temperatura.IndicatorGraph.data
+                        );
 
-                const lat = sessionStorage.getItem('Latitud');
-                const lon = sessionStorage.getItem('Longitud');
+                        setRadiacionUV(
+                            data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                        );
 
-                if (lat && lon) {
+                        setLocation(data.response["last_update"]?.data);
+                        setLocationN(data?.response["name"]?.data);
+                        setLocationRegion(data?.response["region"]?.data);
+                        setLocationCountry(data?.response["country"]?.data);
 
-                    console.warn(
-                        'Tiempo de geolocalización agotado. Usando última ubicación almacenada.'
-                    );
+                        setdataTempAprox(
+                            data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                        );
 
-                    const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-                    setMapUrlState(mapUrl);
+                        var isNews = false;
 
-                    const anio = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const day = String(d.getDate()).padStart(2, '0');
-
-                    fetch(
-                        `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
-                    )
-                        .then((res) => res.json())
-                        .then((data) => {
-                            setOficialAlerts(data);
-                        })
-                        .catch((error) => {
-                            console.error(error);
+                        arrDataDashBoardA.forEach((element) => {
+                            isNews =
+                                Object.keys(
+                                    data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                                ).length > 0 ||
+                                Object.keys(
+                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                                ).length > 0;
                         });
 
-                    fetch(
-                        `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
-                    )
-                        .then((res) => res.json())
-                        .then((data) => {
+                        setisAlertsOrWarnings(isNews);
+                    })
+                    .catch((error) => {
+                        setIsSnackBarActive(true);
+                        setMessageSnackBar(String(error));
+                    })
+                    .finally(() => {
+                        setAuxState(false);
+                    });
+            },
 
-                            if (data.error) {
-                                setIsSnackBarActive(true);
-                                setMessageSnackBar(data.error);
-                            }
+            (error) => {
 
-                            setClimateAlert(data);
+                // Si el navegador tarda más de 5 segundos,
+                // usamos la última ubicación guardada.
+                if (error.code === error.TIMEOUT) {
 
-                            setTemperature(
-                                data.response.Temperatura.Temperatura.IndicatorGraph.data
-                            );
+                    const lat = sessionStorage.getItem('Latitud');
+                    const lon = sessionStorage.getItem('Longitud');
 
-                            setRadiacionUV(
-                                data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
-                            );
+                    if (lat && lon) {
 
-                            setLocation(data.response["last_update"]);
-                            setLocationMap(data?.response);
+                        console.warn(
+                            'Tiempo de geolocalización agotado. Usando última ubicación almacenada.'
+                        );
 
-                            setdataTempAprox(
-                                data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
-                            );
+                        const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+                        setMapUrlState(mapUrl);
 
-                            var isNews = false;
+                        const anio = d.getFullYear();
+                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                        const day = String(d.getDate()).padStart(2, '0');
 
-                            arrDataDashBoardA.forEach((element) => {
-                                isNews =
-                                    Object.keys(
-                                        data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
-                                    ).length > 0 ||
-                                    Object.keys(
-                                        data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
-                                    ).length > 0 ||
-                                    Object.keys(
-                                        data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
-                                    ).length > 0 ||
-                                    Object.keys(
-                                        data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
-                                    ).length > 0;
+                        fetch(
+                            `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+                        )
+                            .then((res) => res.json())
+                            .then((data) => {
+                                setOficialAlerts(data);
+                            })
+                            .catch((error) => {
+                                console.error(error);
                             });
 
-                            setisAlertsOrWarnings(isNews);
-                        })
-                        .catch((error) => {
-                            setIsSnackBarActive(true);
-                            setMessageSnackBar(String(error));
-                        })
-                        .finally(() => {
-                            setAuxState(false);
-                        });
+                        fetch(
+                            `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+                        )
+                            .then((res) => res.json())
+                            .then((data) => {
 
-                    return;
+                                if (data.error) {
+                                    setIsSnackBarActive(true);
+                                    setMessageSnackBar(data.error);
+                                }
+
+                                setClimateAlert(data);
+
+                                setTemperature(
+                                    data.response.Temperatura.Temperatura.IndicatorGraph.data
+                                );
+
+                                setRadiacionUV(
+                                    data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                                );
+
+                                setLocation(data.response["last_update"]?.data);
+                                setLocationN(data?.response["name"]?.data);
+                                setLocationRegion(data?.response["region"]?.data);
+                                setLocationCountry(data?.response["country"]?.data);
+
+                                setdataTempAprox(
+                                    data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                                );
+
+                                var isNews = false;
+
+                                arrDataDashBoardA.forEach((element) => {
+                                    isNews =
+                                        Object.keys(
+                                            data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                                        ).length > 0 ||
+                                        Object.keys(
+                                            data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                                        ).length > 0 ||
+                                        Object.keys(
+                                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                                        ).length > 0 ||
+                                        Object.keys(
+                                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                                        ).length > 0;
+                                });
+
+                                setisAlertsOrWarnings(isNews);
+                            })
+                            .catch((error) => {
+                                setIsSnackBarActive(true);
+                                setMessageSnackBar(String(error));
+                            })
+                            .finally(() => {
+                                setAuxState(false);
+                            });
+
+                        return;
+                    }
                 }
+
+                // Si NO fue timeout, entonces sí mostramos el error.
+                setAuxState(false);
+                setIsSnackBarActive(true);
+                setMessageSnackBar(
+                    `Error al obtener ubicación: ${String(error)}`
+                );
+            },
+
+            {
+                enableHighAccuracy: false,
+                timeout: 3000,
+                maximumAge: 600000
             }
-
-            // Si NO fue timeout, entonces sí mostramos el error.
-            setAuxState(false);
-            setIsSnackBarActive(true);
-            setMessageSnackBar(
-                `Error al obtener ubicación: ${String(error)}`
-            );
-        },
-
-        {
-            enableHighAccuracy: false,
-            timeout: 3000,
-            maximumAge: 600000
-        }
-    );
-};
+        );
+    };
 
     const getColor = async (param) => {
         try {
@@ -430,7 +440,24 @@ const MainMenu = () => {
         }
     }
 
+    const formatLastUpdate = (value) => {
+        if (!value) return "";
 
+        const date = new Date(value.replace(" ", "T"));
+
+        if (isNaN(date.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat("es-ES", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        }).format(date);
+    };
 
     return (
         <>
@@ -596,16 +623,15 @@ const MainMenu = () => {
                                     direction={isMobile ? 'column' : 'row'}
                                     justifyContent="space-between"
                                     alignItems={isMobile ? 'flex-start' : 'center'}
-                                    spacing={0.5}
+                                    spacing={1}
                                 >
 
+                                    {/* TITULO */}
                                     <Box>
                                         <Typography
                                             variant="h6"
                                             sx={{
-                                                color: isDay_global
-                                                    ? 'white'
-                                                    : '#222',
+                                                color: isDay_global ? 'white' : '#222',
                                                 fontWeight: 600,
                                                 letterSpacing: '-0.2px'
                                             }}
@@ -625,74 +651,283 @@ const MainMenu = () => {
                                         </Typography>
                                     </Box>
 
-                                    <Box
+
+                                    {/* ================================================= */}
+                                    {/* UBICACIÓN */}
+                                    {/* ================================================= */}
+
+                                    <Stack
+                                        direction={isMobile ? "column" : "row"}
+                                        spacing={0.8}
                                         sx={{
-                                            px: 1.5,
-                                            py: 0.7,
-                                            borderRadius: '20px',
-                                            backgroundColor: isDay_global
-                                                ? 'rgba(255,255,255,0.05)'
-                                                : 'rgba(0,0,0,0.02)',
-                                            border: isDay_global
-                                                ? '1px solid rgba(255,255,255,0.08)'
-                                                : '1px solid rgba(0,0,0,0.04)'
+                                            width: "100%",
+                                            alignItems: isMobile ? "stretch" : "center",
+                                            justifyContent: isMobile ? "flex-start" : "flex-end",
+                                            mt: 0.5
                                         }}
                                     >
-                                        <Chip
-                                icon={
-                                    <LocationOnIcon
-                                        sx={{
-                                            fontSize: '18px !important',
-                                            color: isDay_global
-                                                ? 'rgba(255,255,255,0.85)'
-                                                : 'rgba(0,0,0,0.60)'
-                                        }}
-                                    />
-                                }
-                                label={location?.data}
-                                variant="outlined"
-                                sx={{
-                                    height: '34px',
-                                    maxWidth: '100%',
-                                    borderRadius: '18px',
+                                        {/* CIUDAD */}
+                                        {locationName && (
+                                            <Chip
+                                                icon={
+                                                    <LocationOnIcon
+                                                        sx={{
+                                                            fontSize: "19px !important",
+                                                            color: isDay_global
+                                                                ? "rgba(255,255,255,0.95)"
+                                                                : "rgba(30,41,59,0.80)"
+                                                        }}
+                                                    />
+                                                }
+                                                label={locationName}
+                                                variant="outlined"
+                                                sx={{
+                                                    height: "36px",
+                                                    maxWidth: isMobile ? "100%" : "220px",
+                                                    borderRadius: "12px",
 
-                                    color: isDay_global
-                                        ? 'rgba(255,255,255,0.90)'
-                                        : 'rgba(0,0,0,0.70)',
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.95)"
+                                                        : "rgba(15,23,42,0.85)",
 
-                                    borderColor: isDay_global
-                                        ? 'rgba(255,255,255,0.18)'
-                                        : 'rgba(0,0,0,0.10)',
+                                                    borderColor: isDay_global
+                                                        ? "rgba(255,255,255,0.25)"
+                                                        : "rgba(15,23,42,0.12)",
 
-                                    backgroundColor: isDay_global
-                                        ? 'rgba(255,255,255,0.035)'
-                                        : 'rgba(255,255,255,0.20)',
+                                                    background: isDay_global
+                                                        ? "linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.035))"
+                                                        : "linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,255,255,0.35))",
 
-                                    backdropFilter: 'blur(6px)',
+                                                    boxShadow: isDay_global
+                                                        ? "0 4px 14px rgba(0,0,0,0.08)"
+                                                        : "0 4px 14px rgba(15,23,42,0.06)",
 
-                                    '& .MuiChip-label': {
-                                        px: 1.2,
-                                        fontSize: '0.82rem',
-                                        fontWeight: 500,
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis'
-                                    },
+                                                    backdropFilter: "blur(10px)",
 
-                                    '&:hover': {
-                                        backgroundColor: isDay_global
-                                            ? 'rgba(255,255,255,0.07)'
-                                            : 'rgba(255,255,255,0.35)',
+                                                    "& .MuiChip-label": {
+                                                        px: 1.4,
+                                                        fontSize: "0.84rem",
+                                                        fontWeight: 600,
+                                                        letterSpacing: "0.01em",
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis"
+                                                    },
 
-                                        borderColor: isDay_global
-                                            ? 'rgba(255,255,255,0.28)'
-                                            : 'rgba(0,0,0,0.16)'
-                                    },
+                                                    "&:hover": {
+                                                        transform: "translateY(-1px)",
 
-                                    transition: 'all .2s ease'
-                                }}
-                            />
-                                    </Box>
+                                                        background: isDay_global
+                                                            ? "linear-gradient(135deg, rgba(255,255,255,0.17), rgba(255,255,255,0.06))"
+                                                            : "linear-gradient(135deg, rgba(255,255,255,0.88), rgba(255,255,255,0.45))",
+
+                                                        borderColor: isDay_global
+                                                            ? "rgba(255,255,255,0.38)"
+                                                            : "rgba(15,23,42,0.18)",
+
+                                                        boxShadow: isDay_global
+                                                            ? "0 6px 18px rgba(0,0,0,0.12)"
+                                                            : "0 6px 18px rgba(15,23,42,0.09)"
+                                                    },
+
+                                                    transition: "all .2s ease"
+                                                }}
+                                            />
+                                        )}
+
+                                        {/* REGIÓN */}
+                                        {locationRegion && (
+                                            <Chip
+                                                icon={
+                                                    <PublicIcon
+                                                        sx={{
+                                                            fontSize: "18px !important",
+                                                            color: isDay_global
+                                                                ? "rgba(255,255,255,0.78)"
+                                                                : "rgba(30,41,59,0.62)"
+                                                        }}
+                                                    />
+                                                }
+                                                label={locationRegion}
+                                                variant="outlined"
+                                                sx={{
+                                                    height: "34px",
+                                                    maxWidth: isMobile ? "100%" : "200px",
+                                                    borderRadius: "11px",
+
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.82)"
+                                                        : "rgba(15,23,42,0.68)",
+
+                                                    borderColor: isDay_global
+                                                        ? "rgba(255,255,255,0.16)"
+                                                        : "rgba(15,23,42,0.09)",
+
+                                                    backgroundColor: isDay_global
+                                                        ? "rgba(255,255,255,0.045)"
+                                                        : "rgba(255,255,255,0.30)",
+
+                                                    backdropFilter: "blur(8px)",
+
+                                                    "& .MuiChip-label": {
+                                                        px: 1.2,
+                                                        fontSize: "0.78rem",
+                                                        fontWeight: 500,
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis"
+                                                    },
+
+                                                    "&:hover": {
+                                                        backgroundColor: isDay_global
+                                                            ? "rgba(255,255,255,0.085)"
+                                                            : "rgba(255,255,255,0.48)",
+
+                                                        borderColor: isDay_global
+                                                            ? "rgba(255,255,255,0.25)"
+                                                            : "rgba(15,23,42,0.14)"
+                                                    },
+
+                                                    transition: "all .2s ease"
+                                                }}
+                                            />
+                                        )}
+
+                                        {/* PAÍS */}
+                                        {locationCountry && (
+                                            <Chip
+                                                icon={
+                                                    <LanguageIcon
+                                                        sx={{
+                                                            fontSize: "18px !important",
+                                                            color: isDay_global
+                                                                ? "rgba(255,255,255,0.72)"
+                                                                : "rgba(30,41,59,0.58)"
+                                                        }}
+                                                    />
+                                                }
+                                                label={locationCountry}
+                                                variant="outlined"
+                                                sx={{
+                                                    height: "34px",
+                                                    maxWidth: isMobile ? "100%" : "170px",
+                                                    borderRadius: "11px",
+
+                                                    color: isDay_global
+                                                        ? "rgba(255,255,255,0.78)"
+                                                        : "rgba(15,23,42,0.62)",
+
+                                                    borderColor: isDay_global
+                                                        ? "rgba(255,255,255,0.14)"
+                                                        : "rgba(15,23,42,0.08)",
+
+                                                    backgroundColor: isDay_global
+                                                        ? "rgba(255,255,255,0.035)"
+                                                        : "rgba(255,255,255,0.24)",
+
+                                                    backdropFilter: "blur(8px)",
+
+                                                    "& .MuiChip-label": {
+                                                        px: 1.2,
+                                                        fontSize: "0.77rem",
+                                                        fontWeight: 500,
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis"
+                                                    },
+
+                                                    "&:hover": {
+                                                        backgroundColor: isDay_global
+                                                            ? "rgba(255,255,255,0.07)"
+                                                            : "rgba(255,255,255,0.40)",
+
+                                                        borderColor: isDay_global
+                                                            ? "rgba(255,255,255,0.22)"
+                                                            : "rgba(15,23,42,0.13)"
+                                                    },
+
+                                                    transition: "all .2s ease"
+                                                }}
+                                            />
+                                        )}
+                                        {/* FECHA */}
+                                        {location && (
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: isMobile ? "flex-start" : "center",
+                                                    width: isMobile ? "100%" : "auto",
+                                                    minWidth: 0
+                                                }}
+                                            >
+                                                <Chip
+                                                    icon={
+                                                        <AccessTimeRoundedIcon
+                                                            sx={{
+                                                                fontSize: isMobile
+                                                                    ? "16px !important"
+                                                                    : "17px !important",
+                                                                color: isDay_global
+                                                                    ? "rgba(255,255,255,0.62)"
+                                                                    : "rgba(30,41,59,0.52)"
+                                                            }}
+                                                        />
+                                                    }
+                                                    label={
+                                                        isMobile
+                                                            ? formatLastUpdate(location)
+                                                            : `Actualizado · ${formatLastUpdate(location)}`
+                                                    }
+                                                    variant="outlined"
+                                                    sx={{
+                                                        height: isMobile ? "30px" : "32px",
+
+                                                        width: isMobile ? "100%" : "auto",
+                                                        maxWidth: isMobile ? "100%" : "350px",
+
+                                                        borderRadius: isMobile ? "9px" : "10px",
+
+                                                        color: isDay_global
+                                                            ? "rgba(255,255,255,0.62)"
+                                                            : "rgba(15,23,42,0.52)",
+
+                                                        borderColor: isDay_global
+                                                            ? "rgba(255,255,255,0.09)"
+                                                            : "rgba(15,23,42,0.065)",
+
+                                                        backgroundColor: isDay_global
+                                                            ? "rgba(255,255,255,0.02)"
+                                                            : "rgba(255,255,255,0.14)",
+
+                                                        backdropFilter: "blur(8px)",
+
+                                                        "& .MuiChip-label": {
+                                                            px: isMobile ? 0.8 : 1.1,
+
+                                                            fontSize: isMobile
+                                                                ? "0.68rem"
+                                                                : "0.72rem",
+
+                                                            fontWeight: 500,
+                                                            letterSpacing: "0.01em",
+
+                                                            whiteSpace: "nowrap",
+                                                            overflow: "hidden",
+                                                            textOverflow: "ellipsis"
+                                                        },
+
+                                                        "& .MuiChip-icon": {
+                                                            marginLeft: isMobile ? "8px" : "9px",
+                                                            marginRight: isMobile ? "-2px" : "-1px"
+                                                        },
+
+                                                        transition: "all .2s ease"
+                                                    }}
+                                                />
+                                            </Box>
+                                        )}
+                                    </Stack>
 
                                 </Stack>
                             </Box>
@@ -772,9 +1007,11 @@ const MainMenu = () => {
                                             {/* ===================================== */}
 
                                             <Stack
-                                                direction={isMobile
-                                                    ? 'column'
-                                                    : 'row'}
+                                                direction={
+                                                    isMobile
+                                                        ? 'column'
+                                                        : 'row'
+                                                }
                                                 spacing={2}
                                                 sx={{
                                                     width: '100%',
@@ -805,7 +1042,13 @@ const MainMenu = () => {
                                                         data={Temperatura || 0}
                                                         optionalData={dataTempAprox || 0}
                                                         color={
-                                                            climateAlert?.response?.Temperatura?.Temperatura?.IndicatorGraph?.MetricsData?.color
+                                                            climateAlert
+                                                                ?.response
+                                                                ?.Temperatura
+                                                                ?.Temperatura
+                                                                ?.IndicatorGraph
+                                                                ?.MetricsData
+                                                                ?.color
                                                         }
                                                         recomendedLimit={
                                                             Temperatura < 0
@@ -814,6 +1057,7 @@ const MainMenu = () => {
                                                         }
                                                     />
                                                 </Box>
+
 
                                                 <Box
                                                     sx={{
@@ -836,7 +1080,14 @@ const MainMenu = () => {
                                                         indicator="UV"
                                                         split={5}
                                                         color={
-                                                            climateAlert?.response?.["Radiacion UV"]?.["Radiacion UV"]?.IndicatorGraph?.MetricsData?.color
+                                                            climateAlert
+                                                                ?.response?.[
+                                                                "Radiacion UV"
+                                                            ]
+                                                                ?.["Radiacion UV"]
+                                                                ?.IndicatorGraph
+                                                                ?.MetricsData
+                                                                ?.color
                                                         }
                                                         data={radiacionUV}
                                                         optionalData={3}
@@ -872,13 +1123,20 @@ const MainMenu = () => {
                                                         alignItems="center"
                                                         spacing={1}
                                                     >
+
                                                         <Box
                                                             sx={{
                                                                 width: '8px',
                                                                 height: '8px',
                                                                 borderRadius: '50%',
-                                                                backgroundColor: isAlertsOrWarnings ? '#f44336' : '#3698f4',
-                                                                boxShadow:isAlertsOrWarnings ? '0 0 0 4px rgba(244,67,54,0.08)' : '0 0 0 4px rgba(54, 174, 244, 0.08)'
+                                                                backgroundColor:
+                                                                    isAlertsOrWarnings
+                                                                        ? '#f44336'
+                                                                        : '#3698f4',
+                                                                boxShadow:
+                                                                    isAlertsOrWarnings
+                                                                        ? '0 0 0 4px rgba(244,67,54,0.08)'
+                                                                        : '0 0 0 4px rgba(54,174,244,0.08)'
                                                             }}
                                                         />
 
@@ -893,7 +1151,9 @@ const MainMenu = () => {
                                                         >
                                                             Panel de Alertas
                                                         </Typography>
+
                                                     </Stack>
+
 
                                                     <Typography
                                                         variant="caption"
@@ -934,14 +1194,28 @@ const MainMenu = () => {
                                                             (element, idx) => {
 
                                                                 const Alerts =
-                                                                    climateAlert.response[element][element]?.Alerts;
+                                                                    climateAlert
+                                                                        ?.response?.[
+                                                                        element
+                                                                    ]?.[
+                                                                        element
+                                                                    ]?.Alerts || [];
 
                                                                 const Warnings =
-                                                                    climateAlert.response[element][element]?.Warnings;
+                                                                    climateAlert
+                                                                        ?.response?.[
+                                                                        element
+                                                                    ]?.[
+                                                                        element
+                                                                    ]?.Warnings || [];
 
                                                                 return (
-                                                                    Object.keys(Alerts[0]).length > 0 ||
-                                                                    Object.keys(Warnings[0]).length > 0
+                                                                    Object.keys(
+                                                                        Alerts[0] || {}
+                                                                    ).length > 0 ||
+                                                                    Object.keys(
+                                                                        Warnings[0] || {}
+                                                                    ).length > 0
                                                                 ) ? (
 
                                                                     <Stack
@@ -950,11 +1224,17 @@ const MainMenu = () => {
                                                                     >
 
                                                                         {/* ALERTAS */}
-                                                                        {Object.keys(Alerts[0]).length === 0 ? (
+
+                                                                        {Object.keys(
+                                                                            Alerts[0] || {}
+                                                                        ).length === 0 ? (
                                                                             <></>
                                                                         ) : (
                                                                             Alerts.map(
-                                                                                (object, inx) => (
+                                                                                (
+                                                                                    object,
+                                                                                    inx
+                                                                                ) => (
                                                                                     <Alert
                                                                                         key={`alert-${idx}-${inx}`}
                                                                                         variant="filled"
@@ -967,12 +1247,14 @@ const MainMenu = () => {
                                                                                                 'rgba(211,47,47,0.72)',
                                                                                             boxShadow:
                                                                                                 '0 3px 10px rgba(211,47,47,0.10)',
-                                                                                            '& .MuiAlert-message': {
+                                                                                            '& .MuiAlert-message':
+                                                                                            {
                                                                                                 width: '100%',
                                                                                                 minWidth: 0
                                                                                             }
                                                                                         }}
                                                                                     >
+
                                                                                         <AlertTitle
                                                                                             sx={{
                                                                                                 mb: 0.3,
@@ -981,7 +1263,9 @@ const MainMenu = () => {
                                                                                             }}
                                                                                         >
                                                                                             ¡
-                                                                                            {object?.alertBody?.titulo ||
+                                                                                            {object
+                                                                                                ?.alertBody
+                                                                                                ?.titulo ||
                                                                                                 "No Disponible"}
                                                                                             !
                                                                                         </AlertTitle>
@@ -995,6 +1279,7 @@ const MainMenu = () => {
                                                                                             {object?.type ||
                                                                                                 "No disponible"}
                                                                                         </Typography>
+
                                                                                     </Alert>
                                                                                 )
                                                                             )
@@ -1002,11 +1287,17 @@ const MainMenu = () => {
 
 
                                                                         {/* ADVERTENCIAS */}
-                                                                        {Object.keys(Warnings[0]).length === 0 ? (
+
+                                                                        {Object.keys(
+                                                                            Warnings[0] || {}
+                                                                        ).length === 0 ? (
                                                                             <></>
                                                                         ) : (
                                                                             Warnings.map(
-                                                                                (object, inx) => (
+                                                                                (
+                                                                                    object,
+                                                                                    inx
+                                                                                ) => (
                                                                                     <Alert
                                                                                         key={`warning-${idx}-${inx}`}
                                                                                         variant="filled"
@@ -1019,12 +1310,14 @@ const MainMenu = () => {
                                                                                                 'rgba(237,108,2,0.72)',
                                                                                             boxShadow:
                                                                                                 '0 3px 10px rgba(237,108,2,0.09)',
-                                                                                            '& .MuiAlert-message': {
+                                                                                            '& .MuiAlert-message':
+                                                                                            {
                                                                                                 width: '100%',
                                                                                                 minWidth: 0
                                                                                             }
                                                                                         }}
                                                                                     >
+
                                                                                         <AlertTitle
                                                                                             sx={{
                                                                                                 mb: 0.3,
@@ -1033,7 +1326,9 @@ const MainMenu = () => {
                                                                                             }}
                                                                                         >
                                                                                             ¡
-                                                                                            {object?.alertBody?.titulo ||
+                                                                                            {object
+                                                                                                ?.alertBody
+                                                                                                ?.titulo ||
                                                                                                 idx}
                                                                                             !
                                                                                         </AlertTitle>
@@ -1047,6 +1342,7 @@ const MainMenu = () => {
                                                                                             {object?.type ||
                                                                                                 "No disponible"}
                                                                                         </Typography>
+
                                                                                     </Alert>
                                                                                 )
                                                                             )
@@ -1166,7 +1462,7 @@ const MainMenu = () => {
                     <GenericModal
                         open={openModal}
                         element={
-                            (typeModal === 'GAUGE') ? (
+                            typeModal === 'GAUGE' ? (
                                 <>
                                     <Suspense
                                         fallback={
@@ -1218,8 +1514,11 @@ const MainMenu = () => {
                                                 variant="caption"
                                             >
                                                 {
-                                                    climateAlert.response[dataType][dataType]
-                                                        .IndicatorGraph.MetricsData.Message
+                                                    climateAlert
+                                                        ?.response?.[dataType]?.[
+                                                        dataType
+                                                    ]?.IndicatorGraph
+                                                        ?.MetricsData?.Message
                                                 }
                                             </Typography>
                                         </Alert>
@@ -1241,9 +1540,11 @@ const MainMenu = () => {
                                                     spacing={1}
                                                     alignItems="center"
                                                 >
+
                                                     <Box
                                                         sx={{
-                                                            backgroundColor: 'rgba(10,92,175,0.82)',
+                                                            backgroundColor:
+                                                                'rgba(10,92,175,0.82)',
                                                             height: '12px',
                                                             width: '12px',
                                                             borderRadius: '3px',
@@ -1257,6 +1558,7 @@ const MainMenu = () => {
                                                     >
                                                         Valor Actual ({dataModal})
                                                     </Typography>
+
                                                 </Stack>
 
 
@@ -1265,9 +1567,11 @@ const MainMenu = () => {
                                                     spacing={1}
                                                     alignItems="center"
                                                 >
+
                                                     <Box
                                                         sx={{
-                                                            backgroundColor: 'rgba(142,228,72,0.82)',
+                                                            backgroundColor:
+                                                                'rgba(142,228,72,0.82)',
                                                             height: '12px',
                                                             width: '12px',
                                                             borderRadius: '3px',
@@ -1281,20 +1585,25 @@ const MainMenu = () => {
                                                     >
                                                         {dataType === 'Temperatura'
                                                             ? 'Valor Actual'
-                                                            : 'Limite Recomendable'} ({dataOptional})
+                                                            : 'Limite Recomendable'}{' '}
+                                                        ({dataOptional})
                                                     </Typography>
+
                                                 </Stack>
 
 
                                                 {dataType === 'Temperatura' ? (
+
                                                     <Stack
                                                         direction="row"
                                                         spacing={1}
                                                         alignItems="center"
                                                     >
+
                                                         <Box
                                                             sx={{
-                                                                backgroundColor: 'rgba(238,225,51,0.88)',
+                                                                backgroundColor:
+                                                                    'rgba(238,225,51,0.88)',
                                                                 height: '12px',
                                                                 width: '12px',
                                                                 borderRadius: '3px',
@@ -1306,12 +1615,14 @@ const MainMenu = () => {
                                                             color="rgba(255,255,255,0.70)"
                                                             variant="caption"
                                                         >
-                                                            Limite Recomendado{" "}
+                                                            Limite Recomendado{' '}
                                                             {dataModal < 0
                                                                 ? '(0 C° : -20 C°)'
                                                                 : '(0 C° : 37 C°)'}
                                                         </Typography>
+
                                                     </Stack>
+
                                                 ) : (
                                                     ''
                                                 )}
@@ -1323,7 +1634,7 @@ const MainMenu = () => {
                                     </Stack>
                                 </>
 
-                            ) : (typeModal === 'CustomLocation') ? (
+                            ) : typeModal === 'CustomLocation' ? (
 
                                 <Stack
                                     direction="column"
@@ -1334,6 +1645,7 @@ const MainMenu = () => {
                                 >
 
                                     <Box>
+
                                         <Typography
                                             variant="h6"
                                             sx={{
@@ -1351,6 +1663,7 @@ const MainMenu = () => {
                                         >
                                             Selecciona la ubicación que deseas consultar.
                                         </Typography>
+
                                     </Box>
 
 
@@ -1379,6 +1692,7 @@ const MainMenu = () => {
 
 
                                         {cities.length > 0 && (
+
                                             <Box sx={{ mt: 2 }}>
 
                                                 <InputLabel>
@@ -1393,17 +1707,22 @@ const MainMenu = () => {
                                                     onChange={onChangeCity}
                                                     value={SeleccionadoC}
                                                 >
+
                                                     {cities.map((temp) => (
+
                                                         <MenuItem
                                                             key={`${temp.latitude}-${temp.longitude}`}
                                                             value={temp.value}
                                                         >
                                                             {temp.value}
                                                         </MenuItem>
+
                                                     ))}
+
                                                 </Select>
 
                                             </Box>
+
                                         )}
 
 
@@ -1430,11 +1749,9 @@ const MainMenu = () => {
 
                                 </Stack>
 
-                            ) : (typeModal === "Cap:Alertas") ? (
+                            ) : typeModal === "Cap:Alertas" ? (
 
-                                <>
-                                    <ListItems />
-                                </>
+                                <ListItems />
 
                             ) : (
                                 'undefined'
