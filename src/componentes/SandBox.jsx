@@ -3,7 +3,8 @@ import { DataContext } from "../Context/MetricsContext";
 import Select from "react-select";
 import UpdateDate from "./updateDate";
 import ViewData from "./viewData";
-import Countries_Cities from './dataJson/countries_cities.json'
+import { obtenerCiudades, obtenerPaises } from '../servicios/ubicaciones.js'
+import { urlClimaPorCiudad } from '../servicios/climaPorCiudad.js'
 
 
 
@@ -27,7 +28,7 @@ const SandBox = () => {
     const button = (event) => {
         event.preventDefault();
         setLoading(true);
-        fetch(`https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_APIKEY}&q=${SeleccionadoC.value}&aqi=yes`)
+        fetch(urlClimaPorCiudad(SeleccionadoC.value))
 
             .then(response => {
                 if (!response.ok) {
@@ -81,15 +82,19 @@ const SandBox = () => {
 
     }, [cities])
 
-    const handleEvent = (opcion) => {
+    const handleEvent = async (opcion) => {
         setCountry(opcion.value);
         setSelectC(null);
-        const cities_select = Countries_Cities.find((city_element) => city_element.name === opcion.value)
-        //console.log(`JSON: ${cities_select} , pais: ${cities_select.name} : opcion: ${opcion.value}`);
-        //console.log(cities_select.cities);
-
-        let json = cities_select.cities.map((name) => ({ value: name.name, label: name.name }));
-        setCities(json);
+        setCities([]);
+        try {
+            // restcountries entrega el nombre del país; las ciudades están por id del país
+            const pais = (await obtenerPaises()).find((p) => p.name === opcion.value);
+            if (!pais) return;
+            const ciudades = await obtenerCiudades(pais.id);
+            setCities(ciudades.map((c) => ({ value: c.value, label: c.value })));
+        } catch (error) {
+            alert(`No se pudieron cargar las ciudades: ${error.message}`);
+        }
 
         /* fetch('https://countriesnow.space/api/v0.1/countries/cities', {
              method: "POST",

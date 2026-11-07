@@ -1,5 +1,6 @@
 import { Suspense, useContext, useEffect, useState ,lazy} from "react";
 import { DataContext } from "../Context/MetricsContext";
+import { urlClimaPorCiudad } from "../servicios/climaPorCiudad";
 
 
 import Image from "../../src/clima.jpg";
@@ -26,16 +27,9 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
     //const [json , setJson] = useState('');
     const { ClimateAlert, setClimateAlert } = useContext(DataContext);
-    const { langSearch, apiSearch } = useContext(DataContext);
     const { cities, setCities } = useContext(DataContext);
     const [pushButton, setPushButton] = useState(false);
-    const [CitiesHottest, setCitiesHottest] = useState([]);
-    const [CittiesFresh, setCitiesFresh] = useState([]);
     const { migrateVersion, setMigrateVersion } = useContext(DataContext);
-    const fetchCities = async () => {
-        await apiSearch('Colombia', 'Dame 5 ciudades mas frias', setCitiesFresh);
-        await apiSearch('Colombia', 'Dame 5 ciudades mas calidas', setCitiesHottest);
-    }
     const handleMigrateVersion = () => {
         setMigrateVersion(true);
     }
@@ -62,7 +56,7 @@ const Home = () => {
                         } else {
                             const ciudad = data.address.city;
 
-                            fetch(`https://api.weatherapi.com/v1/current.json?key=${process.env.REACT_APP_APIKEY}&q=${ciudad}&aqi=yes`)
+                            fetch(urlClimaPorCiudad(ciudad))
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error(`Error en la solicitud: ${response.status}`);

@@ -30,37 +30,6 @@ const UserProvide = ({ children }) => {
     
     const [customCoords,setCustomCoords] = useState([]);
 
-    const apiSearch = async (value, query, setCities) => {
-        let data = {
-            query: `${query} de ${value}`,
-            freshness: "onLimit",
-            summary: true,
-            count: 1,
-        };
-
-        fetch("https://api.langsearch.com/v1/web-search", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${process.env.REACT_APP_LANG_SEARCH_TOKEN}`,
-            },
-            body: JSON.stringify(data),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`Ocurrio un error en la solicitud: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                let regex = /\d+\.\s*[A-Za-zÀ-ÖØ-öø-ÿ]+/g;
-                let ciudades = data.data.webPages.value[0].summary.match(regex);
-                let array = ciudades.map((elemento) => elemento.replace(/\d+\.\s*/, ""));
-                let no_repeat = [...new Set(array)];
-                setCities(no_repeat);
-            });
-    };
-
     return (
         <DataContext.Provider
             value={{
@@ -104,7 +73,6 @@ const UserProvide = ({ children }) => {
                 setClimateAlert,
                 langSearch,
                 setSearch,
-                apiSearch,
                 cities,
                 setCities,
                 isDay,
