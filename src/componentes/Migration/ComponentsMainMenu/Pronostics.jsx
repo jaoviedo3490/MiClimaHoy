@@ -50,6 +50,19 @@ import React from "react";
 const IndicatorDetails = lazy(() => import("../Graphics/indicatorDetails.jsx"));
 const TreeGraph = lazy(() => import("../Graphics/TreeGraphic.jsx"));
 const IndicatorGraph = lazy(() => import("../Graphics/Indicator.jsx"));
+
+// Textos que ve el usuario. Los nombres internos ("Mono-Carbono", "nigth"…) se siguen usando como
+// claves de datos e imágenes, así que solo se traducen al mostrarlos.
+const NOMBRE_CONTAMINANTE = {
+    PM2_5: 'PM2.5',
+    PM10: 'PM10',
+    Ozono: 'Ozono (O₃)',
+    'Mono-Carbono': 'CO',
+    'Dio-Nitrogeno': 'NO₂',
+    'Dio-Azufre': 'SO₂',
+};
+const momentoDelDia = (valor) => (valor === 'nigth' ? 'night' : valor);
+
 const Pronostics = (props) => {
     const {
         setOptionTab,
@@ -121,7 +134,14 @@ const Pronostics = (props) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    setOptionTab(false);
+    // Por debajo de 1200 px las dos tarjetas quedan arriba y los gráficos debajo, a todo el ancho
+    // (antes los tres bloques iban en una fila y en tablets se salían por la derecha)
+    const isCompacto = useMediaQuery(theme.breakpoints.down("lg"));
+    // Antes se llamaba en el cuerpo del componente: cambiaba estado del contexto en cada render
+    // (React lo advierte y provoca renders de más). Basta con hacerlo al montar.
+    useEffect(() => {
+        setOptionTab(false);
+    }, []);
 
     const nubosidad = climateAlert.response.PronosticsMetrics.Nubosidad.data;
     const humidity = climateAlert.response.PronosticsMetrics.Humedad.data;
@@ -410,9 +430,9 @@ const Pronostics = (props) => {
 
                         {/* ENCABEZADO */}
                         <Stack
-                            direction={isMobile ? "column" : "row"}
+                            direction={isCompacto ? "column" : "row"}
                             justifyContent="space-between"
-                            alignItems={isMobile ? "flex-start" : "center"}
+                            alignItems={isCompacto ? "flex-start" : "center"}
                             spacing={1}
                             sx={{ mb: 1 }}
                         >
@@ -431,17 +451,20 @@ const Pronostics = (props) => {
                                         fontWeight: 600
                                     }}
                                 >
-                                    Pronostico Hoy
+                                    Pronóstico de hoy
                                 </Typography>
                             </Stack>
 
+                            {/* Los chips bajan de línea si no caben */}
                             <Stack
                                 direction={isMobile ? "column" : "row"}
                                 spacing={0.8}
+                                useFlexGap
+                                flexWrap="wrap"
                                 sx={{
                                     width: "100%",
                                     alignItems: isMobile ? "stretch" : "center",
-                                    justifyContent: isMobile ? "flex-start" : "flex-end",
+                                    justifyContent: isCompacto ? "flex-start" : "flex-end",
                                     mt: 0.5
                                 }}
                             >
@@ -716,7 +739,12 @@ const Pronostics = (props) => {
                             }}
                         />
 
-                        <Stack direction={isMobile ? "column" : "row"}>
+                        <Stack
+                            direction={isMobile ? "column" : "row"}
+                            useFlexGap
+                            flexWrap={isCompacto ? "wrap" : "nowrap"}
+                            rowGap={2}
+                        >
 
                             {/* PRONOSTICO */}
                             <Stack
@@ -740,7 +768,7 @@ const Pronostics = (props) => {
                                             fontWeight: 600
                                         }}
                                     >
-                                        {`${isDay} ${PronosticInitial}`}
+                                        {`${momentoDelDia(isDay)} ${PronosticInitial}`}
                                     </Typography>
                                 </Stack>
 
@@ -773,10 +801,13 @@ const Pronostics = (props) => {
                                                     mb: 1
                                                 }}
                                             >
+                                                {/* mui-image aparece en 3 s por defecto: la tarjeta se veía vacía */}
                                                 <Image
                                                     src={JsonPronosticImage}
+                                                    alt={`Ilustración del pronóstico: ${PronosticInitial}`}
                                                     width={250}
                                                     height={300}
+                                                    duration={400}
                                                 />
 
                                                 <Box
@@ -788,7 +819,7 @@ const Pronostics = (props) => {
                                                 >
                                                     <Chip
                                                         size="small"
-                                                        label={isDay}
+                                                        label={momentoDelDia(isDay)}
                                                         icon={
                                                             <CloudOutlinedIcon
                                                                 sx={{ fontSize: 15 }}
@@ -1090,8 +1121,10 @@ const Pronostics = (props) => {
                                             >
                                                 <Image
                                                     src={AirQualityImage}
+                                                    alt="Ilustración del nivel de calidad del aire"
                                                     width={250}
                                                     height={300}
+                                                    duration={400}
                                                 />
 
                                                 <Box
@@ -1140,7 +1173,7 @@ const Pronostics = (props) => {
                                                                     tipo={
                                                                         <Chip
                                                                             size="small"
-                                                                            label={element.Name}
+                                                                            label={NOMBRE_CONTAMINANTE[element.Name] ?? element.Name}
                                                                             icon={
                                                                                 <AirOutlinedIcon
                                                                                     sx={{ fontSize: 15 }}
@@ -1252,10 +1285,14 @@ const Pronostics = (props) => {
                                 </Stack>
                             </Stack>
 
-                            {/* GRAFICOS */}
-                            <Stack direction="column">
+                            {/* GRAFICOS: en pantallas compactas bajan a su propia fila, a todo el ancho */}
+                            <Stack
+                                direction="column"
+                                sx={isCompacto ? { flexBasis: '100%', width: '100%' } : undefined}
+                            >
                                 <Stack
                                     direction={isMobile ? 'column' : 'row'}
+                                    justifyContent={isCompacto && !isMobile ? 'space-around' : 'flex-start'}
                                 >
                                     <Suspense
                                         fallback={
@@ -1268,6 +1305,7 @@ const Pronostics = (props) => {
                                             min={0}
                                             max={6}
                                             type="Quality-Air"
+                                            titulo="Calidad del aire"
                                             indicator="ppm"
                                             split={5}
                                             color={
@@ -1294,6 +1332,7 @@ const Pronostics = (props) => {
                                             min={0}
                                             max={40}
                                             type="Precipitacion"
+                                            titulo="Precipitación"
                                             indicator="Dm"
                                             split={5}
                                             data={precipitacion / 100}
@@ -1313,6 +1352,7 @@ const Pronostics = (props) => {
                                             min={0}
                                             max={100}
                                             type="Velocidad-Viento"
+                                            titulo="Velocidad del viento"
                                             indicator="kph"
                                             split={5}
                                             data={velocidadViento}
@@ -1375,9 +1415,13 @@ const Pronostics = (props) => {
                                 <Box
                                     sx={{
                                         width: '100%',
-                                        height: isMobile
-                                            ? '300px'
-                                            : '300px',
+                                        // Apilado y sin alertas, el panel se ajusta al mensaje
+                                        height: isCompacto && !isAlertsOrWarningsB ? 'auto' : '300px',
+                                        minHeight: isCompacto && !isAlertsOrWarningsB ? '110px' : undefined,
+                                        ...(isCompacto && !isAlertsOrWarningsB && {
+                                            display: 'flex',
+                                            alignItems: 'center'
+                                        }),
                                         borderRadius: '10px',
                                         backgroundColor: isDay_global
                                             ? 'rgba(0,0,0,0.035)'

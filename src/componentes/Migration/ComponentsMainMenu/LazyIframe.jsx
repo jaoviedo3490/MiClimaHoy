@@ -10,6 +10,7 @@ const LazyIframe = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     return (<iframe
         src={mapUrlState}
+        title="Mapa de la ubicación consultada"
         width={isMobile ? "100%" : "100%"}
         height={isMobile ? "400px" : "460px"}
         style={{ border: 0, borderRadius: "8px" }}

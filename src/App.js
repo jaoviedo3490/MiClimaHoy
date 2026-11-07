@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootswatch/dist/lux/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import Home from './componentes/home';
-import sandBox from './componentes/SandBox';
+import SandBox from './componentes/SandBox';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -13,18 +13,7 @@ import { Test_context } from './Context/test-context';
 
 
 import MainPanel from './componentes/Migration/mainPanel';
-navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude; 
-
-                sessionStorage.setItem("Latitud",latitude);
-                sessionStorage.setItem("Longitud",longitude);
-            },
-            (error) => {
-               alert(`Ocurrio un error al obtener la ubicación: ${error}`)
-            },{ enableHighAccuracy: false}
-        );
+// La ubicación la pide MainMenu (localize) y la recuerda servicios/ubicacionAproximada.js
 
 
 
@@ -39,18 +28,10 @@ function App() {
           <Home />
         </div>} />
         <Route path='/sandBox' element={<div className="container">
-          <sandBox />
+          <SandBox />
         </div>} />
-        <Route path='/NewVersion' element={(
-          document.body.style.backgroundImage = `url(${Image})`,
-          document.body.style.backgroundSize = "cover",
-          document.body.style.backgroundRepeat = "no-repeat",
-
-          document.body.style.backgroundAttachment = "fixed",
-
-          <MainPanel />
-
-        )} />
+        {/* El fondo lo pone mainPanel; su tamaño y posición están en index.css */}
+        <Route path='/NewVersion' element={<MainPanel />} />
         <Route path='/viewerDetails' element={<ViewerDetails rss={SingleRSSMap} />}/>
       </Routes>
     </BrowserRouter>

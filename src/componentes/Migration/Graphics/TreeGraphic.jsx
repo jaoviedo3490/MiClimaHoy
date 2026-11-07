@@ -153,7 +153,6 @@ const TreeGraph = (props) => {
                   ? AQI_func(props.data.PM10, 505, 604, 401, 500)
                   : props.data.PM10
   ];
-console.log(data_2)
 
   const data = [
     {

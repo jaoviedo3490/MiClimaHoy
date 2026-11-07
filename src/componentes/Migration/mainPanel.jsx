@@ -66,8 +66,9 @@ const MainPanel = () => {
                         textColor='inherit'
                         sx={{ color: isDay_global ? 'white' : 'black' }}
                     >
-                        <Tab icon={<DeviceThermostatIcon />} iconPosition="start" label={isMobile ? 'Temperatura...' : 'Temperatura y Radiacion UV'} value='1' />
-                        <Tab icon={<AirIcon />} iconPosition="start" label={isMobile ? 'Pronostico...' : 'Pronostico y Calidad de Aire'} value='2' />
+                        {/* En celular, nombres cortos completos en lugar de textos cortados con "..." */}
+                        <Tab icon={<DeviceThermostatIcon />} iconPosition="start" label={isMobile ? 'Clima hoy' : 'Temperatura y radiación UV'} value='1' />
+                        <Tab icon={<AirIcon />} iconPosition="start" label={isMobile ? 'Pronóstico' : 'Pronóstico y calidad del aire'} value='2' />
                     </TabList>
                 </Box>
                 <Box>

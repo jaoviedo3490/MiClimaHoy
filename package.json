@@ -3,8 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@canvasjs/charts": "^3.14.3",
-    "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.4",
@@ -18,34 +16,26 @@
     "@vercel/speed-insights": "^1.2.0",
     "ajv": "^8.17.1",
     "ajv-keywords": "^5.1.0",
-    "apexcharts": "^5.3.5",
     "bootstrap": "^5.3.3",
     "bootswatch": "^5.3.3",
     "echarts-for-react": "^3.0.2",
     "fast-xml-parser": "^5.4.2",
-    "i18next": "^23.16.4",
-    "jquery": "^3.7.1",
     "mui-image": "^1.0.9",
-    "node-vibrant": "^4.0.3",
     "plotly.js": "^3.1.1",
     "react": "^18.3.1",
-    "react-apexcharts": "^1.8.0",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
-    "react-i18next": "^14.0.0",
     "react-plotly.js": "^2.6.0",
     "react-router-dom": "^7.13.1",
     "react-scripts": "^5.0.1",
     "react-select": "^5.10.2",
-    "select2": "^4.1.0-rc.0",
-    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test"
-},
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -66,7 +56,6 @@
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
-    "javascript-obfuscator": "^4.1.1",
     "source-map-explorer": "^2.5.3"
   }
 }

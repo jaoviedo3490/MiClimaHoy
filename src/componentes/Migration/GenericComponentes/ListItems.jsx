@@ -23,7 +23,6 @@ export default function ListItems() {
     const items = OficialAlerts?.response?.[Pais] || [];
     const [search, setSearch] = useState("");
 
-    console.log(items);
 
     const filteredItems = items.filter((element) => {
         return element?.title?.toLowerCase().includes(search.toLowerCase());

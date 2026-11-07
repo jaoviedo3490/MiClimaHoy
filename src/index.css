@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  /* El fondo dinámico (según la temperatura) lo asigna mainPanel; aquí solo cómo se ve */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 code {

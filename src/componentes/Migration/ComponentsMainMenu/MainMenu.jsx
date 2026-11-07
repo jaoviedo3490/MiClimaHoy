@@ -20,7 +20,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 import Divider from '@mui/material/Divider';
-import { useState, useMemo, useContext, useEffect, lazy, Suspense } from "react";
+import { useState, useContext, useEffect, lazy, Suspense } from "react";
 import { DataContext } from "../../../Context/MetricsContext.js"
 import { Ui_Context } from "../../../Context/Ui-Context.js";
 import { Test_context } from "../../../Context/test-context.js";
@@ -28,12 +28,15 @@ import IndicatorGraph from "../Graphics/Indicator.jsx";
 import GenericModal from "../Modal/GenericModal.jsx";
 import Snackbar from '@mui/material/Snackbar';
 import JsonImage from '../../dataJson/wallpaper.json';
-import { Vibrant } from "node-vibrant/browser";
 import Skeleton from '@mui/material/Skeleton';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import CircularProgress from '@mui/material/CircularProgress';
 import CrisisAlertIcon from '@mui/icons-material/CrisisAlert';
-import Countries_Cities from '../../dataJson/countries_cities.json'
+import { obtenerCiudades, obtenerPaises } from '../../../servicios/ubicaciones.js'
+import {
+    aproximar, distanciaKm, guardarUbicacion, leerUbicacion, DISTANCIA_MINIMA_KM, EDAD_MAXIMA_UBICACION_MS
+} from '../../../servicios/ubicacionAproximada.js'
+import { categoriaFondo, elegirFondo } from '../../../servicios/fondoPorTemperatura.js'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import ListItems from "../GenericComponentes/ListItems.jsx";
@@ -61,6 +64,8 @@ const MainMenu = () => {
     const [custom_longitude, SetCustomLongitude] = useState('');
     const [SeleccionadoC, setSelectC] = useState(localStorage.getItem('seleccionado'));
     const [cities, setCities] = useState([]);
+    const [paises, setPaises] = useState([]);
+    const [cargandoCiudades, setCargandoCiudades] = useState(false);
     const [auxState, setAuxState] = useState(false);
     const [arrDataDashBoardA, setArrDataDashBoardA] = useState(["Temperatura", "Radiacion UV"])
     const [isAlertsOrWarnings, setisAlertsOrWarnings] = useState(false);
@@ -79,6 +84,9 @@ const MainMenu = () => {
     const { Trigger, OficialAlerts, setOficialAlerts, mapUrlState, setMapUrlState } = useContext(Test_context);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    // Por debajo de 1200 px (tablets, laptops pequeñas, media pantalla) el mapa y los medidores no
+    // caben uno al lado del otro: se apilan. isMobile sigue decidiendo solo los detalles de celular.
+    const isCompacto = useMediaQuery(theme.breakpoints.down("lg"));
 
 
 
@@ -123,7 +131,9 @@ const MainMenu = () => {
     };
 
     useEffect(() => {
-        if (!customLocation) localStorage.clear()
+        // Sin localización personalizada se borra solo la ciudad escogida (antes localStorage.clear()
+        // borraba todo, incluida la última ubicación conocida)
+        if (!customLocation) ['seleccionado', 'Latitud', 'Longitud'].forEach((k) => localStorage.removeItem(k))
     }, [])
 
     useEffect(() => {
@@ -132,303 +142,182 @@ const MainMenu = () => {
         }
     }, [])
 
-    const handleEvent = (event) => {
-        //console.log(event.target.value)
+    // La lista de países se pide la primera vez que se abre la localización personalizada
+    useEffect(() => {
+        if (!openModal || typeModal !== 'CustomLocation' || paises.length > 0) return;
+        obtenerPaises()
+            .then(setPaises)
+            .catch((error) => {
+                setIsSnackBarActive(true);
+                setMessageSnackBar(`No se pudo cargar la lista de países: ${error.message}`);
+            });
+    }, [openModal, typeModal, paises.length]);
 
-
-        const cities_select = Countries_Cities.find((city_element) => city_element.id === event.target.value)
-        let json = cities_select.cities.map((name) => ({ value: name.name, latitude: name.latitude, longitude: name.longitude }));
-        //alert(event.target.key)
-
-        if (json.length < 1) {
+    // Las ciudades se piden solo del país escogido
+    const handleEvent = async (event) => {
+        setCities([]);
+        setCargandoCiudades(true);
+        try {
+            const ciudades = await obtenerCiudades(event.target.value);
+            if (ciudades.length < 1) {
+                setIsSnackBarActive(true);
+                setMessageSnackBar(`Ciudades no listadas , por favor escoger otro Pais`);
+            }
+            setCities(ciudades);
+        } catch (error) {
             setIsSnackBarActive(true);
-            setMessageSnackBar(`Ciudades no listadas , por favor escoger otro Pais`);
+            setMessageSnackBar(`No se pudieron cargar las ciudades: ${error.message}`);
+        } finally {
+            setCargandoCiudades(false);
         }
-
-        setCities(json);
-
     };
-    const localize = () => {
-        setAuxState(true);
+    // Pide el clima y las alertas de unas coordenadas y actualiza la pantalla.
+    // conIndicador = false cuando es una actualización en segundo plano: no se tapa la pantalla con
+    // el spinner, solo se reemplazan los datos al llegar.
+    const cargarClima = (lat, lon, conIndicador = true) => {
+        if (conIndicador) setAuxState(true);
 
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
+        const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+        setMapUrlState(mapUrl);
 
-                const lat = customLocation
-                    ? localStorage.getItem('Latitud')
-                    : latitude;
+        const anio = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
 
-                const lon = customLocation
-                    ? localStorage.getItem('Longitud')
-                    : longitude;
+        fetch(
+            `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                setOficialAlerts(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
 
-                const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-                setMapUrlState(mapUrl);
-
-                const anio = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-
-                fetch(
-                    `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
-                )
-                    .then((res) => res.json())
-                    .then((data) => {
-                        setOficialAlerts(data);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-
-                fetch(
-                    `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
-                )
-                    .then((res) => res.json())
-                    .then((data) => {
-                        if (data.error) {
-                            setIsSnackBarActive(true);
-                            setMessageSnackBar(data.error);
-                        }
-
-                        setClimateAlert(data);
-
-                        setTemperature(
-                            data.response.Temperatura.Temperatura.IndicatorGraph.data
-                        );
-
-                        setRadiacionUV(
-                            data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
-                        );
-
-                        setLocation(data.response["last_update"]?.data);
-                        setLocationN(data?.response["name"]?.data);
-                        setLocationRegion(data?.response["region"]?.data);
-                        setLocationCountry(data?.response["country"]?.data);
-
-                        setdataTempAprox(
-                            data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
-                        );
-
-                        var isNews = false;
-
-                        arrDataDashBoardA.forEach((element) => {
-                            isNews =
-                                Object.keys(
-                                    data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
-                                ).length > 0 ||
-                                Object.keys(
-                                    data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
-                                ).length > 0;
-                        });
-
-                        setisAlertsOrWarnings(isNews);
-                    })
-                    .catch((error) => {
-                        setIsSnackBarActive(true);
-                        setMessageSnackBar(String(error));
-                    })
-                    .finally(() => {
-                        setAuxState(false);
-                    });
-            },
-
-            (error) => {
-
-                // Si el navegador tarda más de 5 segundos,
-                // usamos la última ubicación guardada.
-                if (error.code === error.TIMEOUT) {
-
-                    const lat = sessionStorage.getItem('Latitud');
-                    const lon = sessionStorage.getItem('Longitud');
-
-                    if (lat && lon) {
-
-                        console.warn(
-                            'Tiempo de geolocalización agotado. Usando última ubicación almacenada.'
-                        );
-
-                        const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-                        setMapUrlState(mapUrl);
-
-                        const anio = d.getFullYear();
-                        const month = String(d.getMonth() + 1).padStart(2, '0');
-                        const day = String(d.getDate()).padStart(2, '0');
-
-                        fetch(
-                            `https://clima-app-server.vercel.app/api/v1/wheater/alerts?lat=${lat}&lon=${lon}&anio=${anio}&month=${month}&day=${day}`
-                        )
-                            .then((res) => res.json())
-                            .then((data) => {
-                                setOficialAlerts(data);
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                            });
-
-                        fetch(
-                            `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
-                        )
-                            .then((res) => res.json())
-                            .then((data) => {
-
-                                if (data.error) {
-                                    setIsSnackBarActive(true);
-                                    setMessageSnackBar(data.error);
-                                }
-
-                                setClimateAlert(data);
-
-                                setTemperature(
-                                    data.response.Temperatura.Temperatura.IndicatorGraph.data
-                                );
-
-                                setRadiacionUV(
-                                    data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
-                                );
-
-                                setLocation(data.response["last_update"]?.data);
-                                setLocationN(data?.response["name"]?.data);
-                                setLocationRegion(data?.response["region"]?.data);
-                                setLocationCountry(data?.response["country"]?.data);
-
-                                setdataTempAprox(
-                                    data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
-                                );
-
-                                var isNews = false;
-
-                                arrDataDashBoardA.forEach((element) => {
-                                    isNews =
-                                        Object.keys(
-                                            data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
-                                        ).length > 0 ||
-                                        Object.keys(
-                                            data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
-                                        ).length > 0 ||
-                                        Object.keys(
-                                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
-                                        ).length > 0 ||
-                                        Object.keys(
-                                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
-                                        ).length > 0;
-                                });
-
-                                setisAlertsOrWarnings(isNews);
-                            })
-                            .catch((error) => {
-                                setIsSnackBarActive(true);
-                                setMessageSnackBar(String(error));
-                            })
-                            .finally(() => {
-                                setAuxState(false);
-                            });
-
-                        return;
-                    }
+        fetch(
+            `https://clima-app-server.vercel.app/api/v1/wheater/current?lat=${lat}&lon=${lon}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.error) {
+                    setIsSnackBarActive(true);
+                    setMessageSnackBar(data.error);
                 }
 
-                // Si NO fue timeout, entonces sí mostramos el error.
+                setClimateAlert(data);
+
+                setTemperature(
+                    data.response.Temperatura.Temperatura.IndicatorGraph.data
+                );
+
+                setRadiacionUV(
+                    data.response["Radiacion UV"]["Radiacion UV"].IndicatorGraph.data
+                );
+
+                setLocation(data.response["last_update"]?.data);
+                setLocationN(data?.response["name"]?.data);
+                setLocationRegion(data?.response["region"]?.data);
+                setLocationCountry(data?.response["country"]?.data);
+
+                setdataTempAprox(
+                    data.response.Temperatura.Temperatura.IndicatorGraph.optionalData
+                );
+
+                var isNews = false;
+
+                arrDataDashBoardA.forEach((element) => {
+                    isNews =
+                        Object.keys(
+                            data?.response?.Temperatura?.Temperatura?.Warnings?.[0] ?? {}
+                        ).length > 0 ||
+                        Object.keys(
+                            data?.response?.Temperatura?.Temperatura?.Alerts?.[0] ?? {}
+                        ).length > 0 ||
+                        Object.keys(
+                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Warnings?.[0] ?? {}
+                        ).length > 0 ||
+                        Object.keys(
+                            data?.response?.["Radiacion UV"]?.["Radiacion UV"]?.Alerts?.[0] ?? {}
+                        ).length > 0;
+                });
+
+                setisAlertsOrWarnings(isNews);
+            })
+            .catch((error) => {
+                setIsSnackBarActive(true);
+                setMessageSnackBar(String(error));
+            })
+            .finally(() => {
+                if (conIndicador) setAuxState(false);
+            });
+    };
+
+    const localize = () => {
+        // Ciudad escogida a mano: no hace falta preguntarle nada al navegador
+        if (customLocation) {
+            cargarClima(localStorage.getItem('Latitud'), localStorage.getItem('Longitud'));
+            return;
+        }
+
+        // Con la última ubicación conocida el clima se pide de inmediato, sin esperar al navegador
+        const guardada = leerUbicacion();
+        if (guardada) {
+            cargarClima(guardada.lat, guardada.lon);
+        } else {
+            setAuxState(true);
+        }
+
+        // En paralelo se confirma la ubicación. Se acepta una de hasta 1 hora: con ~10 km de
+        // tolerancia no vale la pena esperar una nueva (el navegador responde al instante).
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const actual = aproximar(position.coords.latitude, position.coords.longitude);
+                guardarUbicacion(actual);
+
+                if (!guardada) {
+                    cargarClima(actual.lat, actual.lon);
+                } else if (distanciaKm(guardada, actual) > DISTANCIA_MINIMA_KM) {
+                    // Se movió lo suficiente: se actualiza sin tapar la pantalla
+                    cargarClima(actual.lat, actual.lon, false);
+                }
+            },
+            (error) => {
+                // Si ya se mostró el clima con la ubicación guardada, no se interrumpe al usuario
+                if (guardada) return;
+
                 setAuxState(false);
                 setIsSnackBarActive(true);
                 setMessageSnackBar(
-                    `Error al obtener ubicación: ${String(error)}`
+                    error.code === error.PERMISSION_DENIED
+                        ? 'Activa el permiso de ubicación o escoge una "Localización Personalizada".'
+                        : `No fue posible obtener la ubicación: ${error.message}`
                 );
             },
-
             {
                 enableHighAccuracy: false,
-                timeout: 3000,
-                maximumAge: 600000
+                timeout: guardada ? 15000 : 5000,
+                maximumAge: EDAD_MAXIMA_UBICACION_MS
             }
         );
     };
 
-    const getColor = async (param) => {
-        try {
-            const palette = await Vibrant.from(param).getPalette(); // <-- espera a la promesa
-            const dominant = palette.Vibrant || palette.Muted;
-
-            if (!dominant) return "#000000";
-
-            const [r, g, b] = dominant.rgb;
-            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-
-            return brightness > 128 ? "#000000" : "#FFFFFF";
-        } catch (error) {
-            setIsSnackBarActive(true);
-            setMessageSnackBar(`Error al calcular el color: ${String(error)}`);
-            return "#000000";
-        }
-    };
-
-
-    useMemo(() => {
+    // La ubicación se pide al montar y cada vez que cambia el disparador o la localización
+    // personalizada. Es un efecto secundario: va en useEffect (useMemo es para calcular valores y
+    // React puede volver a ejecutarlo o descartarlo cuando quiera).
+    useEffect(() => {
         localize();
     }, [Trigger, customLocation]);
 
+    // Fondo según la temperatura (reglas en servicios/fondoPorTemperatura.js). El color de las letras
+    // lo decide mainPanel según el fondo elegido.
     useEffect(() => {
-        if (Temperatura <= -5) {
-
-            const images = JsonImage.wallPapersCategory.low_temp_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp_fatal.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-            console.log(images)
-
-
-            setIsDay_global(false);
-        } else if (Temperatura < 0 && Temperatura >= -5) {
-
-            const images = JsonImage.wallPapersCategory.low_temp_non_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp_non_fatal.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-            console.log(images)
-
-            setDarkLetters(themeD);
-        } else if (Temperatura >= 0 && Temperatura <= 20) {
-
-            const images = JsonImage.wallPapersCategory.low_temp[Math.floor(Math.random() * JsonImage.wallPapersCategory.low_temp.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-
-            console.log(images)
-            setIsDay_global(false);
-        } else if (Temperatura >= 20 && Temperatura <= 30) {
-
-            const images = JsonImage.wallPapersCategory.normal_temp[Math.floor(Math.random() * JsonImage.wallPapersCategory.normal_temp.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-            console.log(images)
-            setIsDay_global(false);
-        } else if (Temperatura >= 30 && Temperatura <= 36) {
-
-            const images = JsonImage.wallPapersCategory.hight_temp_non_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.hight_temp_non_fatal.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-            console.log(images)
-            setIsDay_global(false);
-        } else if (Temperatura >= 36) {
-
-            const images = JsonImage.wallPapersCategory.hight_temp_fatal[Math.floor(Math.random() * JsonImage.wallPapersCategory.hight_temp_fatal.length)];
-            setBackground(images);
-            const themeD = getColor(images);
-
-            console.log(images)
-            setIsDay_global(false);
-        }
-
+        const categoria = categoriaFondo(Temperatura);
+        if (!categoria) return;
+        const fondo = elegirFondo(categoria, JsonImage.wallPapersCategory);
+        if (!fondo) return;
+        setBackground(fondo);
+        setIsDay_global(false);
     }, [Temperatura, customLocation]);
 
     const locate = (param) => {
@@ -620,9 +509,9 @@ const MainMenu = () => {
                                 }}
                             >
                                 <Stack
-                                    direction={isMobile ? 'column' : 'row'}
+                                    direction={isCompacto ? 'column' : 'row'}
                                     justifyContent="space-between"
-                                    alignItems={isMobile ? 'flex-start' : 'center'}
+                                    alignItems={isCompacto ? 'flex-start' : 'center'}
                                     spacing={1}
                                 >
 
@@ -656,13 +545,16 @@ const MainMenu = () => {
                                     {/* UBICACIÓN */}
                                     {/* ================================================= */}
 
+                                    {/* Los chips bajan de línea si no caben (antes la fecha se salía por la derecha) */}
                                     <Stack
                                         direction={isMobile ? "column" : "row"}
                                         spacing={0.8}
+                                        useFlexGap
+                                        flexWrap="wrap"
                                         sx={{
                                             width: "100%",
                                             alignItems: isMobile ? "stretch" : "center",
-                                            justifyContent: isMobile ? "flex-start" : "flex-end",
+                                            justifyContent: isCompacto ? "flex-start" : "flex-end",
                                             mt: 0.5
                                         }}
                                     >
@@ -954,7 +846,7 @@ const MainMenu = () => {
                                 {mapUrlState ? (
 
                                     <Stack
-                                        direction={isMobile ? 'column' : 'row'}
+                                        direction={isCompacto ? 'column' : 'row'}
                                         spacing={2}
                                         sx={{
                                             width: '100%',
@@ -969,7 +861,7 @@ const MainMenu = () => {
                                         <Box
                                             sx={{
                                                 width: '100%',
-                                                flex: isMobile
+                                                flex: isCompacto
                                                     ? 'none'
                                                     : '1.35 1 0',
                                                 minWidth: 0,
@@ -995,7 +887,7 @@ const MainMenu = () => {
                                             spacing={2}
                                             sx={{
                                                 width: '100%',
-                                                flex: isMobile
+                                                flex: isCompacto
                                                     ? 'none'
                                                     : '1 1 0',
                                                 minWidth: 0
@@ -1077,6 +969,7 @@ const MainMenu = () => {
                                                         min={0}
                                                         max={20}
                                                         type="Radiacion UV"
+                                                        titulo="Radiación UV"
                                                         indicator="UV"
                                                         split={5}
                                                         color={
@@ -1172,9 +1065,20 @@ const MainMenu = () => {
                                                 <Box
                                                     sx={{
                                                         width: '100%',
-                                                        height: isMobile
-                                                            ? '300px'
-                                                            : '215px',
+                                                        // Apilado y sin alertas, el panel se ajusta al
+                                                        // mensaje "Sin novedades" en vez de dejar un hueco
+                                                        height: isCompacto && !isAlertsOrWarnings
+                                                            ? 'auto'
+                                                            : isMobile
+                                                                ? '300px'
+                                                                : '215px',
+                                                        minHeight: isCompacto && !isAlertsOrWarnings
+                                                            ? '110px'
+                                                            : undefined,
+                                                        ...(isCompacto && !isAlertsOrWarnings && {
+                                                            display: 'flex',
+                                                            alignItems: 'center'
+                                                        }),
                                                         borderRadius: '10px',
                                                         backgroundColor: isDay_global
                                                             ? 'rgba(0,0,0,0.035)'
@@ -1680,7 +1584,11 @@ const MainMenu = () => {
                                             label="Location"
                                             onChange={handleEvent}
                                         >
-                                            {Countries_Cities.map((temp) => (
+                                            {paises.length === 0 ? (
+                                                <MenuItem disabled value="">
+                                                    Cargando países...
+                                                </MenuItem>
+                                            ) : paises.map((temp) => (
                                                 <MenuItem
                                                     key={temp.id}
                                                     value={temp.id}
@@ -1689,6 +1597,13 @@ const MainMenu = () => {
                                                 </MenuItem>
                                             ))}
                                         </Select>
+
+                                        {cargandoCiudades && (
+                                            <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
+                                                <CircularProgress size={16} />
+                                                <Typography variant="caption">Cargando ciudades...</Typography>
+                                            </Stack>
+                                        )}
 
 
                                         {cities.length > 0 && (

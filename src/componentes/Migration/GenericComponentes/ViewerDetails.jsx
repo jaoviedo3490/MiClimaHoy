@@ -18,7 +18,6 @@ export default function ViewerDetails(props) {
             const json = rssLightParser.parse(xml)
             setJson(json)
 
-            console.log(json)
         })()
     }, [])
     return (

@@ -1,73 +1,70 @@
 # MiClimaHoy
-Una Aplicacion que puede darte recomendaciones dependiendo del clima local , en funcion a la temperatura , radiacion UV , Actualmente esta en fase de desarrollo
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación web que muestra el clima de tu ubicación con recomendaciones: temperatura, radiación UV, pronóstico, calidad del aire y alertas meteorológicas oficiales. El fondo de pantalla cambia según la temperatura.
 
-## Available Scripts
+**Demo:** https://mi-clima-hoy-main.vercel.app/NewVersion
 
-In the project directory, you can run:
+![Vista de escritorio](docs/capturas/escritorio-clima.png)
 
-### `npm start`
+| Tablet · Pronóstico y calidad del aire | Celular · Clima de hoy |
+|---|---|
+| ![Tablet](docs/capturas/tablet-pronostico.png) | ![Celular](docs/capturas/celular-clima.png) |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Funcionalidades
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Clima actual** de tu ubicación con mapa, temperatura y radiación UV en medidores con el rango recomendado.
+- **Pronóstico y calidad del aire:** nubosidad, humedad, visibilidad, PM2.5, PM10, ozono y otros contaminantes, precipitación y viento.
+- **Alertas oficiales** de entidades gubernamentales (por ahora Colombia) y panel de alertas por métrica.
+- **Localización personalizada:** consulta el clima de cualquier ciudad del mundo (250 países, ~150.000 ciudades).
+- **Fondo dinámico** según la temperatura, con letras claras u oscuras según el fondo.
+- Diseño responsivo para celular, tablet y escritorio.
 
-### `npm test`
+## Arquitectura
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+Navegador (React)  ──►  Mi-Clima-Hoy-Backend (Vercel)  ──►  WeatherAPI, fuentes de alertas
+       │
+       └── public/datos/  países y ciudades estáticos, se descargan solo cuando se necesitan
+```
 
-### `npm run build`
+- **Frontend (este repositorio):** React 18, Material UI 7, ECharts (medidores y gráficos), React Router. Desplegado en Vercel.
+- **Backend:** [Mi-Clima-Hoy-Backend](https://github.com/jaoviedo3490/Mi-Clima-Hoy-Backend), que consulta los servicios de clima y arma las métricas, alertas y recomendaciones.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Decisiones técnicas
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **Carga bajo demanda de países y ciudades.** El catálogo original era un JSON de 28 MB importado en el código, que se descargaba completo al abrir la app. `scripts/dividir-paises-ciudades.js` lo divide en `public/datos/paises.json` (2 KB comprimido) y un archivo por país que se pide solo al escogerlo (Colombia: 15 KB). El JavaScript inicial pasó de **2,9 MB a 0,2 MB comprimido**.
+- **Medidores en ECharts en lugar de Plotly.** Plotly pesaba 1,3 MB comprimido solo para dos medidores; ECharts ya estaba en la app. `medidorEcharts.js` reproduce el mismo diseño (rango, franjas, límite recomendado, diferencia). Abrir la pantalla principal pasó de **~4,2 MB a ~0,6 MB** comprimido.
+- **Ubicación aproximada y recordada.** El clima no necesita la ubicación exacta: se redondea a ~1 km, se guarda entre visitas y se usa de inmediato al abrir la app; la ubicación actual se confirma en segundo plano y solo se vuelve a pedir el clima si la persona se movió más de 5 km.
+- **Lógica de negocio en funciones puras con pruebas** (`src/servicios/`, `medidorEcharts.js`): fondo según la temperatura, ubicación, catálogos y medidores.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Estructura
 
-### `npm run eject`
+```
+src/
+  servicios/                 lógica pura: ubicación, catálogos, fondo por temperatura (con pruebas)
+  componentes/Migration/     versión actual de la interfaz (ruta /NewVersion)
+    ComponentsMainMenu/      pestañas de clima actual y pronóstico
+    Graphics/                medidores y gráficos (medidorEcharts.js + pruebas)
+  Context/                   estado compartido
+public/datos/                países y ciudades generados por el script
+scripts/                     utilidades (división del catálogo de ciudades)
+datos-fuente/                catálogo original de países y ciudades
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Cómo correrlo
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm install
+npm start          # http://localhost:3000/NewVersion
+npm test           # pruebas unitarias
+npm run build      # build de producción
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Si se actualiza `datos-fuente/countries_cities.json`, regenerar los archivos con `node scripts/dividir-paises-ciudades.js`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Pendiente
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
+- Mover a `Mi-Clima-Hoy-Backend` las llamadas que todavía se hacen desde el navegador con clave (WeatherAPI en la versión anterior y la búsqueda de LangSearch), para que ninguna clave viaje en el JavaScript público.
+- Dividir `MainMenu.jsx` y `Pronostics.jsx` en componentes más pequeños.
+- Pasar el árbol de Pronósticos de Plotly a ECharts y retirar Plotly.
+- Retirar la versión anterior de la interfaz (ruta `/`).
